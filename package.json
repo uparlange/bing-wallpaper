@@ -6,7 +6,7 @@
   "author": "Ugo Parlange",
   "license": "ISC",
   "build": {
-    "productName": "Bing Wallpaper",
+    "productName": "BingWallpaper",
     "appId": "fr.lapli.bing-wallpaper",
     "mac": {
       "category": "public.app-category.utilities"
