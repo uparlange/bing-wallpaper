@@ -81,21 +81,7 @@ const generateB64Wallpaper = (path) => {
 };
 
 const setBingWallpaper = () => {
-    loggerManager.getLogger().info("Set Bing Wallpaper");
-    fetchBingPage().then((htmlContent) => {
-        parseBingPage(htmlContent).then((imageUrl) => {
-            model.bingWallpaperUrl = imageUrl;
-            downloadBingImage(imageUrl).then((imagePath) => {
-                setWallpaper(imagePath).then((imagePath) => {
-                    model.wallpaperPath = imagePath;
-                    generateB64Wallpaper(imagePath).then((data) => {
-                        model.b64Wallpaper = data;
-                        refreshRendererWallpaper();
-                    });
-                });
-            });
-        });
-    });
+    applyBingWallpaper();
 };
 
 const copyFile = (source, destination) => {
@@ -112,18 +98,15 @@ const copyFile = (source, destination) => {
     });
 };
 
-const setUserWallpaper = () => {
-    loggerManager.getLogger().info("Set User Wallpaper");
-    setWallpaper(model.wallpaperPath).then((imagePath) => {
-        generateB64Wallpaper(imagePath).then((data) => {
-            model.b64Wallpaper = data;
-            refreshRendererWallpaper();
-        });
+const setUserWallpaper = (path) => {
+    copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
+        model.wallpaperPath = imagePath;
+        applyUserWallpaper();
     });
 };
 
 const refreshRendererWallpaper = () => {
-    eventbusManager.sendRendererMessage("dataChanged", {
+    eventbusManager.sendRendererMessage("updateData", {
         key: "b64Wallpaper",
         value: model.b64Wallpaper
     });
@@ -139,6 +122,33 @@ const isBingWallpaper = () => {
 
 const isUserWallpaper = () => {
     return (model.wallpaperPath == USER_WALLPAPER_PATH);
+};
+
+const completeApplyWallpaper = () => {
+    setWallpaper(model.wallpaperPath).then((imagePath) => {
+        generateB64Wallpaper(imagePath).then((data) => {
+            model.b64Wallpaper = data;
+            refreshRendererWallpaper();
+        });
+    });
+};    
+
+const applyBingWallpaper = () => {
+    loggerManager.getLogger().info("Set Bing Wallpaper");
+    fetchBingPage().then((htmlContent) => {
+        parseBingPage(htmlContent).then((imageUrl) => {
+            model.bingWallpaperUrl = imageUrl;
+            downloadBingImage(imageUrl).then((imagePath) => {
+                model.wallpaperPath = imagePath;
+                completeApplyWallpaper();
+            });
+        });
+    });
+};
+
+const applyUserWallpaper = () => {
+    loggerManager.getLogger().info("Set User Wallpaper");
+    completeApplyWallpaper();
 };
 
 const checkWallpaper = () => {
@@ -161,17 +171,12 @@ const init = async () => {
         loggerManager.getLogger().info("PowerMonitor : unlock-screen");
         checkWallpaper();
     });
-    eventbusManager.onRendererMessage("setUserWallpaper", (event) => {
-        copyFile(event.path, USER_WALLPAPER_PATH).then((imagePath) => {
-            model.wallpaperPath = imagePath;
-            setUserWallpaper();
-        });
-    });
     checkWallpaper();
 };
 
 module.exports = {
     init: init,
     refreshRendererWallpaper: refreshRendererWallpaper,
-    setBingWallpaper: setBingWallpaper
+    setBingWallpaper: setBingWallpaper,
+    setUserWallpaper: setUserWallpaper
 };

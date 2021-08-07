@@ -1,11 +1,20 @@
 const { app, Menu } = require("electron");
+
 const wallpaperManager = require("./wallpaper-manager");
+const eventbusManager = require("./eventbus-manager");
 
 const init = () => {
     const template = [
         {
             label: app.getName(),
             submenu: [
+                {
+                    label: "Set Bing Wallpaper",
+                    click: () => {
+                        wallpaperManager.setBingWallpaper();
+                    }
+                },
+                { type: "separator" },
                 { role: "quit" }
             ]
         },
@@ -13,9 +22,18 @@ const init = () => {
             label: "View",
             submenu: [
                 {
-                    label: "Set Bing Wallpaper",
+                    label: "Wallpaper",
                     click: () => {
-                        wallpaperManager.setBingWallpaper();
+                        eventbusManager.sendRendererMessage("showView", {
+                            view: "wallpaper"
+                        });
+                    }
+                }, {
+                    label: "About",
+                    click: () => {
+                        eventbusManager.sendRendererMessage("showView", {
+                            view: "about"
+                        });
                     }
                 },
                 { type: "separator" },

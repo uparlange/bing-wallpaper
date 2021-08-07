@@ -1,44 +1,60 @@
 import { createApp } from "./node_modules/vue/dist/vue.esm-browser.prod.js";
 
+const WALLPAPER_VIEW = "wallpaper";
+const ABOUT_VIEW = "about";
+
 const app = createApp({
     data() {
         return {
             b64Wallpaper: null,
             dropActive: false,
-            versions: {}
+            versions: {},
+            currentView: WALLPAPER_VIEW
         }
     },
+    watch: {
+        b64Wallpaper: function (val) {
+            this.currentView = WALLPAPER_VIEW;
+        },
+    },
     created() {
-        this.initEventBus();
+        this.initEvents();
+        this.initDragDrop();
     },
     methods: {
-        initEventBus: function () {
+        initDragDrop: function () {
+            const that = this;
+            window.ondragover = (event) => {
+                event.preventDefault();
+            };
+            window.ondragenter = (event) => {
+                that.dropActive = true;``
+                event.preventDefault();
+            };
+            window.ondragleave = (event) => {
+                that.dropActive = false;
+                event.preventDefault();
+            };
+            window.ondrop = (event) => {
+                that.dropActive = false;
+                if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+                    const path = event.dataTransfer.files[0].path;
+                    that.sendMainMessage("setUserWallpaper", { path: path });
+                }
+                event.preventDefault();
+            }
+        },
+        initEvents: function () {
             const that = this;
             window.api.receive("fromMain", (event) => {
-                if (event.name == "dataChanged") {
-                    that[event.message.key] = event.message.value;
+                switch (event.name) {
+                    case "updateData": that[event.message.key] = event.message.value; break;
+                    case "showView": that.currentView = event.message.view; break;
                 }
             });
         },
-        dragEnter: function (event) {
-            event.preventDefault();
-            if (event.target.className.includes("dropzone")) {
-                this.dropActive = true;
-            }
-        },
-        dragLeave: function (event) {
-            event.preventDefault();
-            this.dropActive = false;
-        },
-        dragDrop: function (event) {
-            event.preventDefault();
-            this.dropActive = false;
-            if (event.target.className.includes("dropzone")) {
-                if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-                    const path = event.dataTransfer.files[0].path;
-                    this.sendMainMessage("setUserWallpaper", { path: path });
-                }
-            }
+        openExternal: function (url) {
+            this.sendMainMessage("openExternal", { url: url });
         },
         sendMainMessage: function (name, message) {
             window.api.send("toMain", {
