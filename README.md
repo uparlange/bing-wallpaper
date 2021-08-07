@@ -6,7 +6,7 @@
 
 # Downloads
 
-* [MacOS](https://github.com/uparlange/bing-wallpaper/raw/master/releases/BingWallpaper-1.0.0-arm64.dmg) 
+* [MacOS](https://lapli.fr/bin-wallpaper/BingWallpaper-1.0.0-arm64.dmg)
 * [Win](In progress)
 * [Linux](Todo, maybe ....)
 
