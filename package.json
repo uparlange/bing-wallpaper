@@ -1,0 +1,34 @@
+{
+  "name": "bing-wallpaper",
+  "version": "1.0.0",
+  "description": "Bing Wallpaper",
+  "main": "electron-main.js",
+  "author": "Ugo Parlange",
+  "license": "ISC",
+  "build": {
+    "productName": "Bing Wallpaper",
+    "appId": "fr.lapli.bing-wallpaper",
+    "mac": {
+      "category": "public.app-category.utilities"
+    }
+  },
+  "scripts": {
+    "postinstall": "electron-builder install-app-deps",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^14.0.0-beta.19",
+    "electron-builder": "^22.11.7"
+  },
+  "dependencies": {
+    "download": "^8.0.0",
+    "htmlparser2": "^6.1.0",
+    "image-to-base64": "^2.2.0",
+    "log4js": "^6.3.0",
+    "node-fetch": "^2.6.1",
+    "vue": "^3.1.5",
+    "wallpaper": "^5.0.1"
+  }
+}

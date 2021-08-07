@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Bing Wallpaper</title>
+    <link rel="stylesheet" type="text/css" href="electron-renderer.css" media="all" />
+</head>
+
+<body>
+    <div id="app" :chrome-version="versions.chrome">
+        <img v-show="b64Wallpaper != null" :src="'data:image/png;base64,' + b64Wallpaper">
+        <div :class="{dropzone: true, dropactive: dropActive}" @dragover.prevent @dragenter="dragEnter($event)"
+            @dragleave="dragLeave($event)" @drop="dragDrop($event)"></div>
+    </div>
+    <script type="module" src="electron-renderer.js"></script>
+</body>
+
+</html>
