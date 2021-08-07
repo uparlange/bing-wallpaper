@@ -6,9 +6,9 @@
 
 # Downloads
 
-* [MacOS](https://lapli.fr/bin-wallpaper/BingWallpaper-1.0.0-arm64.dmg)
-* [Win](In progress)
-* [Linux](Todo, maybe ....)
+* [MacOS v1.0.0](https://lapli.fr/bing-wallpaper/BingWallpaper-1.0.0-arm64.dmg)
+* Win : In progress ...
+* Linux : Todo, maybe ....
 
 # Screenshots
 
