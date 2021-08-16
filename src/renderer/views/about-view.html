@@ -1,0 +1,19 @@
+<div class="view">
+    <ul>
+        <li>
+            <a href="#" @click="openExternal('https://github.com/uparlange/bing-wallpaper')">Application</a>
+            <ul>
+                <li>Version : {{ versions.application }}</li>
+            </ul>
+        </li>
+        <li>
+            <a href="#" @click="openExternal('https://www.electronjs.org/')">Electron</a>
+            <ul>
+                <li>Version : {{ versions.electron }}</li>
+                <li>Chrome : {{ versions.chrome }}</li>
+                <li>Node : {{ versions.node }}</li>
+            </ul>
+        </li>
+    </ul>
+    <img class="logo" src="assets/images/icon.png">
+</div>

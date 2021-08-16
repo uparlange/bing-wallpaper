@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bing Wallpaper</title>
+    <link rel="stylesheet" type="text/css" href="electron-renderer.css" media="all" />
+</head>
+
+<body>
+    <div id="app">
+        <div :class="{ dropzone: true, dropactive: dropActive }">
+            <router-view></router-view>
+        </div>
+    </div>
+    <script src="./../../node_modules/vue/dist/vue.global.js"></script>
+    <script src="./../../node_modules/vue-router/dist/vue-router.global.js"></script>
+    <script type="module" src="electron-renderer.js"></script>
+</body>
+
+</html>

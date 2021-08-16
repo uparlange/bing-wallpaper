@@ -9,7 +9,7 @@ const path = require("path");
 const imageToBase64 = require("image-to-base64");
 
 const loggerManager = require("./logger-manager");
-const eventbusManager = require("./eventbus-manager");
+const eventBusManager = require("./eventbus-manager");
 
 const BING_BASE_URL = "https://www.bing.com";
 const BING_WALLPAPER_PATH = path.join(app.getPath("userData"), "bingWallpaper.jpg");
@@ -81,7 +81,12 @@ const generateB64Wallpaper = (path) => {
 };
 
 const setBingWallpaper = () => {
-    applyBingWallpaper();
+    return new Promise((resolve, reject) => {
+        setB64Wallpaper(null);
+        applyBingWallpaper().then(() => {
+            resolve();
+        });
+    });
 };
 
 const copyFile = (source, destination) => {
@@ -99,16 +104,14 @@ const copyFile = (source, destination) => {
 };
 
 const setUserWallpaper = (path) => {
-    copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
-        model.wallpaperPath = imagePath;
-        applyUserWallpaper();
-    });
-};
-
-const refreshRendererWallpaper = () => {
-    eventbusManager.sendRendererMessage("updateData", {
-        key: "b64Wallpaper",
-        value: model.b64Wallpaper
+    return new Promise((resolve, reject) => {
+        setB64Wallpaper(null);
+        copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
+            model.wallpaperPath = imagePath;
+            applyUserWallpaper().then(() => {
+                resolve();
+            });
+        });
     });
 };
 
@@ -124,59 +127,92 @@ const isUserWallpaper = () => {
     return (model.wallpaperPath == USER_WALLPAPER_PATH);
 };
 
+const setB64Wallpaper = (b64Wallpaper) => {
+    model.b64Wallpaper = b64Wallpaper;
+    eventBusManager.sendRendererMessage("b64Wallpaper", model.b64Wallpaper);
+};
+
 const completeApplyWallpaper = () => {
-    setWallpaper(model.wallpaperPath).then((imagePath) => {
-        generateB64Wallpaper(imagePath).then((data) => {
-            model.b64Wallpaper = data;
-            refreshRendererWallpaper();
+    return new Promise((resolve, reject) => {
+        setWallpaper(model.wallpaperPath).then((imagePath) => {
+            generateB64Wallpaper(imagePath).then((data) => {
+                setB64Wallpaper(data);
+                resolve();
+            });
         });
     });
-};    
+};
 
 const applyBingWallpaper = () => {
-    loggerManager.getLogger().info("Set Bing Wallpaper");
-    fetchBingPage().then((htmlContent) => {
-        parseBingPage(htmlContent).then((imageUrl) => {
-            model.bingWallpaperUrl = imageUrl;
-            downloadBingImage(imageUrl).then((imagePath) => {
-                model.wallpaperPath = imagePath;
-                completeApplyWallpaper();
+    return new Promise((resolve, reject) => {
+        loggerManager.getLogger().info("Set Bing Wallpaper");
+        fetchBingPage().then((htmlContent) => {
+            parseBingPage(htmlContent).then((imageUrl) => {
+                model.bingWallpaperUrl = imageUrl;
+                downloadBingImage(imageUrl).then((imagePath) => {
+                    model.wallpaperPath = imagePath;
+                    completeApplyWallpaper().then(() => {
+                        resolve();
+                    });
+                });
             });
         });
     });
 };
 
 const applyUserWallpaper = () => {
-    loggerManager.getLogger().info("Set User Wallpaper");
-    completeApplyWallpaper();
+    return new Promise((resolve, reject) => {
+        loggerManager.getLogger().info("Set User Wallpaper");
+        completeApplyWallpaper().then(() => {
+            resolve();
+        });
+    });
 };
 
 const checkWallpaper = () => {
-    loggerManager.getLogger().info("Check Wallpaper");
-    if (isApplicationWallpaper()) {
-        loggerManager.getLogger().info("Application Wallpaper managed !");
-        if (isBingWallpaper()) {
-            setBingWallpaper();
+    return new Promise((resolve, reject) => {
+        loggerManager.getLogger().info("Check Wallpaper");
+        if (isApplicationWallpaper()) {
+            loggerManager.getLogger().info("Application Wallpaper managed !");
+            if (isBingWallpaper()) {
+                setBingWallpaper().then(() => {
+                    resolve();
+                });
+            } else {
+                applyUserWallpaper().then(() => {
+                    resolve();
+                });
+            }
         } else {
-            setUserWallpaper();
+            setBingWallpaper().then(() => {
+                resolve();
+            });
         }
-    } else {
-        setBingWallpaper();
-    }
+    });
 };
 
-const init = async () => {
-    model.wallpaperPath = await wallpaper.get();
-    electron.powerMonitor.on("unlock-screen", () => {
-        loggerManager.getLogger().info("PowerMonitor : unlock-screen");
-        checkWallpaper();
+const init = () => {
+    return new Promise((resolve, reject) => {
+        wallpaper.get().then((wallpaperPath) => {
+            model.wallpaperPath = wallpaperPath;
+            electron.powerMonitor.on("unlock-screen", () => {
+                loggerManager.getLogger().info("PowerMonitor : unlock-screen");
+                checkWallpaper();
+            });
+            checkWallpaper().then(() => {
+                resolve();
+            });
+        });
     });
-    checkWallpaper();
+};
+
+const getB64Wallpaper = () => {
+    return model.b64Wallpaper;
 };
 
 module.exports = {
     init: init,
-    refreshRendererWallpaper: refreshRendererWallpaper,
+    getB64Wallpaper: getB64Wallpaper,
     setBingWallpaper: setBingWallpaper,
     setUserWallpaper: setUserWallpaper
 };

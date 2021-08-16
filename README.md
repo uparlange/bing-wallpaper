@@ -12,6 +12,6 @@
 
 # Screenshots
 
-![Wallpaper screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/screenshots/wallpaper-screen.png?raw=true)
+![Wallpaper screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/resources/screenshots/wallpaper-screen.png?raw=true)
 
-![About screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/screenshots/about-screen.png?raw=true)
+![About screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/resources/screenshots/about-screen.png?raw=true)

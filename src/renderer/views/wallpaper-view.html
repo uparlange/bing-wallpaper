@@ -1,0 +1,4 @@
+<div class="view">
+    <img class="wallpaper" v-show="b64Wallpaper != null" :src="'data:image/png;base64,' + b64Wallpaper">
+    <img class="spinner" v-show="b64Wallpaper == null" src="assets/images/spinner.svg">
+</div>
