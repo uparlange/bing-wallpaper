@@ -4,5 +4,8 @@
     "DEBUG_LABEL": "Debug",
     "WALLPAPER_LABEL": "Wallpaper",
     "ABOUT_LABEL": "About",
-    "VIEW_LABEL": "View"
+    "VIEW_LABEL": "View",
+    "LANGUAGE_LABEL": "Language",
+    "FRENCH_LABEL": "Français",
+    "ENGLISH_LABEL": "English"
 }

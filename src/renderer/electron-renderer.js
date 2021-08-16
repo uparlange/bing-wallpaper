@@ -4,8 +4,8 @@ import aboutComponent from "./modules/about-component.js";
 
 const routes = [
     { path: "/", redirect: "/wallpaper" },
-    { path: "/wallpaper", component: wallpaperComponent },
-    { path: "/about", component: aboutComponent }
+    { path: "/wallpaper", component: wallpaperComponent, meta: { transition: null } },
+    { path: "/about", component: aboutComponent, meta: { transition: null } }
 ];
 
 const router = VueRouter.createRouter({

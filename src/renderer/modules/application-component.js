@@ -26,10 +26,7 @@ export default {
                 that.dropActive = false;
                 if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
                     const path = event.dataTransfer.files[0].path;
-                    window.api.send("toMain", {
-                        name: "setUserWallpaper",
-                        message: { path: path }
-                    });
+                    window.api.send("setUserWallpaper", path);
                 }
                 event.preventDefault();
             }

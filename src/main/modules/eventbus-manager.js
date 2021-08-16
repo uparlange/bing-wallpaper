@@ -2,7 +2,6 @@ const { ipcMain, contextBridge, ipcRenderer, BrowserWindow } = require("electron
 const EventEmitter = require("events");
 
 const eventEmitter = new EventEmitter();
-const receiveEventHandlers = [];
 
 const sendRendererMessage = (name, message) => {
     const win = BrowserWindow.getAllWindows()[0];
@@ -12,7 +11,9 @@ const sendRendererMessage = (name, message) => {
 };
 
 const onRendererMessage = (eventName, callback) => {
-    eventEmitter.on(eventName, callback);
+    ipcMain.on(eventName, (event, args) => {
+        callback(args);
+    });
 };
 
 const onRendererInvoke = (eventName, callback) => {
@@ -23,10 +24,9 @@ const onRendererInvoke = (eventName, callback) => {
 
 const initForMain = () => {
     return new Promise((resolve, reject) => {
-        ipcMain.on("toMain", (event, data) => {
-            eventEmitter.emit(data.name, data.message);
-        });
-        resolve();
+        setTimeout(() => {
+            resolve();
+        }, 0);
     });
 }
 
@@ -49,7 +49,9 @@ const initForRenderer = () => {
                 });
             }
         });
-        resolve();
+        setTimeout(() => {
+            resolve();
+        });
     });
 }
 

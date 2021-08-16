@@ -4,5 +4,8 @@
     "DEBUG_LABEL": "Déboguer",
     "WALLPAPER_LABEL": "Fond d'écran",
     "ABOUT_LABEL": "A propos",
-    "VIEW_LABEL": "Vue"
+    "VIEW_LABEL": "Vue",
+    "LANGUAGE_LABEL": "Langue",
+    "FRENCH_LABEL": "Français",
+    "ENGLISH_LABEL": "English"
 }

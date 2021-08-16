@@ -7,29 +7,28 @@ const wallpaperManager = require("./modules/wallpaper-manager");
 const eventbusManager = require("./modules/eventbus-manager");
 const menuManager = require("./modules/menu-manager");
 const i18nManager = require("./modules/i18n-manager");
+const storageManager = require("./modules/storage-manager");
+const viewManager = require("./modules/view-manager");
 
 let win = null;
 
 const createWindow = () => {
-    win = new BrowserWindow({
-        width: 640,
-        height: 400,
-        show: false,
-        resizable: applicationUtils.isDebug(),
-        icon: path.join(__dirname, "..", "renderer", "assets", "images", "icon.png"),
-        webPreferences: {
-            preload: path.join(__dirname, "electron-preload.js")
-        }
-    });
-    win.loadFile(path.join(__dirname, "..", "renderer", "index.html")).then(() => {
-
-    });
-    win.on("ready-to-show", function () {
-        win.show();
-        win.focus();
-    });
-    win.on("closed", () => {
-        win = null;
+    return new Promise((resolve, reject) => {
+        win = new BrowserWindow({
+            width: 640,
+            height: 400,
+            resizable: applicationUtils.isDebug(),
+            icon: path.join(__dirname, "..", "renderer", "assets", "images", "icon.png"),
+            webPreferences: {
+                preload: path.join(__dirname, "electron-preload.js")
+            }
+        });
+        win.loadFile(path.join(__dirname, "..", "renderer", "index.html")).then(() => {
+            resolve();
+        });
+        win.on("closed", () => {
+            win = null;
+        });
     });
 };
 
@@ -38,26 +37,32 @@ const initEventBus = () => {
         eventbusManager.onRendererInvoke("getVersions", () => {
             const versions = Object.assign({}, process.versions);
             versions.application = pkg.version;
+            versions.vue = pkg.dependencies.vue.replace("^", "");
+            versions.vueRouter = pkg.dependencies["vue-router"].replace("^", "");
             return versions;
         });
         eventbusManager.onRendererInvoke("getB64Wallpaper", () => {
             return wallpaperManager.getB64Wallpaper();
         });
-        eventbusManager.onRendererMessage("setUserWallpaper", (event) => {
-            wallpaperManager.setUserWallpaper(event.path);
+        eventbusManager.onRendererMessage("setUserWallpaper", (path) => {
+            wallpaperManager.setUserWallpaper(path);
         });
-        eventbusManager.onRendererMessage("openExternal", (event) => {
-            shell.openExternal(event.url);
+        eventbusManager.onRendererMessage("openExternal", (url) => {
+            shell.openExternal(url);
         });
     });
 };
 
 app.whenReady().then(() => {
-    createWindow();
     initEventBus();
-    wallpaperManager.init();
-    i18nManager.init().then(() => {
-        menuManager.init();
+    createWindow().then(() => {
+        storageManager.init().then(() => {
+            viewManager.init();
+            wallpaperManager.init();
+            i18nManager.init().then(() => {
+                menuManager.init();
+            });
+        });
     });
 });
 
@@ -66,5 +71,5 @@ app.on("activate", () => {
 });
 
 app.on("window-all-closed", () => {
-    if (!applicationUtils.isMac()) app.quit()
+    if (!applicationUtils.isMac()) applicationUtils.quit()
 });

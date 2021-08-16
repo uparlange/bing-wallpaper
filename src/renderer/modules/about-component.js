@@ -18,10 +18,7 @@ export default () => {
                 },
                 methods: {
                     openExternal: function (url) {
-                        window.api.send("toMain", {
-                            name: "openExternal",
-                            message: { url: url }
-                        });
+                        window.api.send("openExternal", url);
                     }
                 }
             });

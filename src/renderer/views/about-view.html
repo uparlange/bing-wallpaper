@@ -1,17 +1,39 @@
 <div class="view">
     <ul>
         <li>
-            <a href="#" @click="openExternal('https://github.com/uparlange/bing-wallpaper')">Application</a>
+            Author
             <ul>
-                <li>Version : {{ versions.application }}</li>
+                <li><a href="#" @click="openExternal('https://fr.linkedin.com/in/ugo-parlange-a0415117')">Ugo
+                        Parlange</a></li>
             </ul>
         </li>
+    </ul>
+    <ul>
         <li>
-            <a href="#" @click="openExternal('https://www.electronjs.org/')">Electron</a>
+            Application
+            <ul>
+                <li><a href="#" @click="openExternal('https://github.com/uparlange/bing-wallpaper')">Version : {{
+                        versions.application }}</a></li>
+            </ul>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            <a href="#" @click="openExternal('https://www.electronjs.org/')">Based on Electron</a>
             <ul>
                 <li>Version : {{ versions.electron }}</li>
                 <li>Chrome : {{ versions.chrome }}</li>
                 <li>Node : {{ versions.node }}</li>
+            </ul>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            Based on Vue
+            <ul>
+                <li><a href="#" @click="openExternal('https://v3.vuejs.org/')">VueJS : {{ versions.vue }}</a></li>
+                <li><a href="#" @click="openExternal('https://next.router.vuejs.org/')">VueRouter : {{
+                        versions.vueRouter }}</a></li>
             </ul>
         </li>
     </ul>
