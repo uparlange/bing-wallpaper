@@ -5,11 +5,5 @@ export default {
                 resolve(res.text());
             });
         });
-    },
-    sendMainMessage: (name, message) => {
-        window.api.send("toMain", {
-            name: name,
-            message: message
-        });
     }
 };

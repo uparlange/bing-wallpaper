@@ -6,7 +6,7 @@ const WALLPAPER_VIEW = "/wallpaper";
 const ABOUT_VIEW = "/about";
 
 const showView = (view) => {
-    loggerManager.getLogger().info("ViewManager - Show View : " + view);
+    loggerManager.getLogger().info("ViewManager - Show View '" + view + "'");
     storageManager.setData("view", view);
     eventbusManager.sendRendererMessage("showView", view);
 };

@@ -22,19 +22,19 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^14.0.0-beta.21",
+    "electron": "^15.0.0-alpha.8",
     "electron-builder": "^22.11.7"
   },
   "dependencies": {
     "download": "^8.0.0",
-    "htmlparser2": "^6.1.0",
+    "htmlparser2": "^7.0.0",
     "i18next": "^20.4.0",
     "i18next-electron-language-detector": "^0.0.10",
     "i18next-fs-backend": "^1.1.1",
     "image-to-base64": "^2.2.0",
     "log4js": "^6.3.0",
     "node-fetch": "^2.6.1",
-    "vue": "^3.2.2",
+    "vue": "^3.2.4",
     "vue-router": "^4.0.11",
     "wallpaper": "^5.0.1"
   }
