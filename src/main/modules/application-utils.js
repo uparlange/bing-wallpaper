@@ -7,7 +7,7 @@ const isMac = () => {
 }
 
 const isDebug = () => {
-    return process.env.DEBUG === "true";
+    return process.argv[2] == "--dev";
 }
 
 const quit = () => {

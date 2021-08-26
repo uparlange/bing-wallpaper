@@ -38,7 +38,7 @@ const getTranslation = (keys, options) => {
 };
 
 const getCurrentLanguage = () => {
-    return storageManager.getData("language", i18next.language).value;
+    return storageManager.getData("language", i18next.language.split("-")[0]).value;
 };
 
 const setLanguage = (lng) => {

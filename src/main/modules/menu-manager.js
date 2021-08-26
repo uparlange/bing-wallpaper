@@ -1,4 +1,4 @@
-const { app, Menu, BrowserWindow } = require("electron");
+const { Menu, BrowserWindow, app } = require("electron");
 
 const applicationUtils = require("./application-utils");
 const wallpaperManager = require("./wallpaper-manager");
@@ -14,15 +14,8 @@ const setActiveCheckbox = (list, active) => {
 const refresh = () => {
     const template = [
         {
-            label: app.getName(),
+            label: applicationUtils.isMac() ? app.getName() : "Application",
             submenu: [
-                {
-                    label: i18nManager.getTranslation("SET_BING_WALLPAPER_LABEL"),
-                    click: () => {
-                        wallpaperManager.setBingWallpaper();
-                    }
-                },
-                { type: "separator" },
                 {
                     label: i18nManager.getTranslation("DEBUG_LABEL"),
                     visible: applicationUtils.isDebug(),
@@ -31,6 +24,12 @@ const refresh = () => {
                         if (win != null) {
                             win.webContents.openDevTools();
                         }
+                    }
+                },
+                {
+                    label: i18nManager.getTranslation("SET_BING_WALLPAPER_LABEL"),
+                    click: () => {
+                        wallpaperManager.setBingWallpaper();
                     }
                 },
                 { type: "separator" },
