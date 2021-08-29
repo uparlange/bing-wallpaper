@@ -2,9 +2,10 @@
 
 * This application is a wallpaper manager
 * Originally planned to retrieve the daily [Bing Wallpaper](https://www.bing.com/)
-* You can define your custom wallpaper by drag&drop an image on the application main screen
+* You can define your custom wallpaper by drag and dropping an image on the application main screen
 * Multi-language support (French, English) with auto-detection and fallback to English 
 * User preferences support (last displayed view, language)
+* Online / Offline support
 
 # Downloads
 
