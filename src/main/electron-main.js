@@ -1,10 +1,8 @@
-const { app, BrowserWindow, shell } = require("electron");
+const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
-const pkg = require("./../../package.json");
 const applicationUtils = require("./modules/application-utils");
 const wallpaperManager = require("./modules/wallpaper-manager");
-const eventbusManager = require("./modules/eventbus-manager");
 const menuManager = require("./modules/menu-manager");
 const i18nManager = require("./modules/i18n-manager");
 const storageManager = require("./modules/storage-manager");
@@ -32,29 +30,7 @@ const createWindow = () => {
     });
 };
 
-const initEventBus = () => {
-    eventbusManager.initForMain().then(() => {
-        eventbusManager.onRendererInvoke("getVersions", () => {
-            const versions = Object.assign({}, process.versions);
-            versions.application = pkg.version;
-            versions.vue = pkg.dependencies.vue.replace("^", "");
-            versions.vueRouter = pkg.dependencies["vue-router"].replace("^", "");
-            return versions;
-        });
-        eventbusManager.onRendererInvoke("getB64Wallpaper", () => {
-            return wallpaperManager.getB64Wallpaper();
-        });
-        eventbusManager.onRendererMessage("setUserWallpaper", (path) => {
-            wallpaperManager.setUserWallpaper(path);
-        });
-        eventbusManager.onRendererMessage("openExternal", (url) => {
-            shell.openExternal(url);
-        });
-    });
-};
-
 app.whenReady().then(() => {
-    initEventBus();
     createWindow().then(() => {
         storageManager.init().then(() => {
             viewManager.init();

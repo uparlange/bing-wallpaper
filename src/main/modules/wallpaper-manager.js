@@ -9,8 +9,9 @@ const path = require("path");
 const imageToBase64 = require("image-to-base64");
 
 const loggerManager = require("./logger-manager");
-const eventBusManager = require("./eventbus-manager");
+const eventbusManager = require("./eventbus-manager");
 const storageManager = require("./storage-manager");
+const connectionManager = require("./connection-manager");
 
 const BING_BASE_URL = "https://www.bing.com";
 const BING_WALLPAPER_PATH = path.join(app.getPath("userData"), "bingWallpaper.jpg");
@@ -109,7 +110,7 @@ const isUserWallpaper = () => {
 
 const setB64Wallpaper = (b64Wallpaper) => {
     model.b64Wallpaper = b64Wallpaper;
-    eventBusManager.sendRendererMessage("b64Wallpaper", model.b64Wallpaper);
+    eventbusManager.sendRendererMessage("b64Wallpaper", model.b64Wallpaper);
 };
 
 const setRendererWallpaper = () => {
@@ -124,7 +125,7 @@ const setRendererWallpaper = () => {
 
 const completeApplyWallpaper = () => {
     return new Promise((resolve, reject) => {
-        setWallpaper(model.wallpaperPath).then((imagePath) => {
+        setWallpaper(model.wallpaperPath).then(() => {
             setRendererWallpaper().then(() => {
                 resolve();
             });
@@ -136,18 +137,25 @@ const setBingWallpaper = () => {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("WallpaperManager - Set Bing Wallpaper");
         setB64Wallpaper(null);
-        fetchBingPage().then((htmlContent) => {
-            parseBingPage(htmlContent).then((imageUrl) => {
-                storageManager.setData("bingWallpaperUrl", imageUrl);
-                downloadBingImage(imageUrl).then((imagePath) => {
-                    model.wallpaperPath = imagePath;
-                    loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
-                    completeApplyWallpaper().then(() => {
-                        resolve();
+        if (connectionManager.isOnLine()) {
+            fetchBingPage().then((htmlContent) => {
+                parseBingPage(htmlContent).then((imageUrl) => {
+                    storageManager.setData("bingWallpaperUrl", imageUrl);
+                    downloadBingImage(imageUrl).then((imagePath) => {
+                        model.wallpaperPath = imagePath;
+                        loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
+                        completeApplyWallpaper().then(() => {
+                            resolve();
+                        });
                     });
                 });
             });
-        });
+        } else {
+            loggerManager.getLogger().error("WallpaperManager - No connection available");
+            completeApplyWallpaper().then(() => {
+                resolve();
+            });
+        }
     });
 };
 
@@ -201,6 +209,10 @@ const init = () => {
                 loggerManager.getLogger().info("WallpaperManager - PowerMonitor 'unlock-screen'");
                 checkWallpaper();
             });
+            connectionManager.onConnectionChanged((onLine) => {
+                loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
+                checkWallpaper();
+            });
             checkWallpaper().then(() => {
                 resolve();
             });
@@ -208,13 +220,14 @@ const init = () => {
     });
 };
 
-const getB64Wallpaper = () => {
+eventbusManager.onRendererInvoke("getB64Wallpaper", () => {
     return model.b64Wallpaper;
-};
+});
+eventbusManager.onRendererMessage("setUserWallpaper", (path) => {
+    setUserWallpaper(path);
+});
 
 module.exports = {
     init: init,
-    getB64Wallpaper: getB64Wallpaper,
-    setBingWallpaper: setBingWallpaper,
-    setUserWallpaper: setUserWallpaper
+    setBingWallpaper: setBingWallpaper
 };

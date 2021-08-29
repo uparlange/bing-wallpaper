@@ -1,64 +1,31 @@
-const { ipcMain, contextBridge, ipcRenderer, BrowserWindow } = require("electron");
-const EventEmitter = require("events");
+const { ipcMain, ipcRenderer, BrowserWindow } = require("electron");
 
-const eventEmitter = new EventEmitter();
-
-const sendRendererMessage = (name, message) => {
+const sendRendererMessage = (eventName, message) => {
     const win = BrowserWindow.getAllWindows()[0];
     if (win != null) {
-        win.webContents.send(name, message);
+        win.webContents.send(eventName, message);
     }
 };
 
+const sendMainMessage = (eventName, message) => {
+    ipcRenderer.send(eventName, message);
+};
+
 const onRendererMessage = (eventName, callback) => {
-    ipcMain.on(eventName, (event, args) => {
-        callback(args);
+    ipcMain.on(eventName, (event, message) => {
+        callback(message);
     });
 };
 
 const onRendererInvoke = (eventName, callback) => {
-    ipcMain.handle(eventName, (event, params) => {
-        return callback(params);
+    ipcMain.handle(eventName, (event, message) => {
+        return callback(message);
     });
 };
 
-const initForMain = () => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve();
-        }, 0);
-    });
-}
-
-const initForRenderer = () => {
-    return new Promise((resolve, reject) => {
-        contextBridge.exposeInMainWorld("api", {
-            invoke: (name, params) => {
-                return new Promise((resolve, reject) => {
-                    ipcRenderer.invoke(name, params).then((result) => {
-                        resolve(result);
-                    });
-                });
-            },
-            send: (name, params) => {
-                ipcRenderer.send(name, params);
-            },
-            receive: (name, callback) => {
-                ipcRenderer.on(name, (event, ...args) => {
-                    callback(...args);
-                });
-            }
-        });
-        setTimeout(() => {
-            resolve();
-        });
-    });
-}
-
 module.exports = {
-    initForMain: initForMain,
-    initForRenderer: initForRenderer,
+    onRendererMessage: onRendererMessage,
     onRendererInvoke: onRendererInvoke,
     sendRendererMessage: sendRendererMessage,
-    onRendererMessage: onRendererMessage
+    sendMainMessage: sendMainMessage
 }

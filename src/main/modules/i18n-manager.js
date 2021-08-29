@@ -19,11 +19,11 @@ const init = () => {
             fallbackLng: "en",
             debug: applicationUtils.isDebug()
         });
-        i18next.on("initialized", function (options) {
+        i18next.on("initialized", (options) => {
             setLanguage(getCurrentLanguage());
             resolve();
         });
-        i18next.on("languageChanged", function (lng) {
+        i18next.on("languageChanged", (lng) => {
             eventEmitter.emit("languageChanged", lng);
         });
     });
