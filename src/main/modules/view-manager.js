@@ -15,14 +15,9 @@ const getCurrentView = () => {
     return storageManager.getData("view", WALLPAPER_VIEW).value;
 };
 
-const init = () => {
-    showView(getCurrentView());
-};
-
 module.exports = {
     WALLPAPER_VIEW: WALLPAPER_VIEW,
     ABOUT_VIEW: ABOUT_VIEW,
-    init: init,
     showView: showView,
     getCurrentView: getCurrentView
 };

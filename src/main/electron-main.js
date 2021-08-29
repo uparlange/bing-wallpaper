@@ -22,6 +22,7 @@ const createWindow = () => {
             }
         });
         win.loadFile(path.join(__dirname, "..", "renderer", "index.html")).then(() => {
+            viewManager.showView(viewManager.getCurrentView());
             resolve();
         });
         win.on("closed", () => {
@@ -35,7 +36,6 @@ app.whenReady().then(() => {
         i18nManager.init().then(() => {
             menuManager.init();
             createWindow().then(() => {
-                viewManager.init();
                 wallpaperManager.init();
             });     
         });
