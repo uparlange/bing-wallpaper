@@ -31,13 +31,13 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-    createWindow().then(() => {
-        storageManager.init().then(() => {
-            viewManager.init();
-            wallpaperManager.init();
-            i18nManager.init().then(() => {
-                menuManager.init();
-            });
+    storageManager.init().then(() => {
+        i18nManager.init().then(() => {
+            menuManager.init();
+            createWindow().then(() => {
+                viewManager.init();
+                wallpaperManager.init();
+            });     
         });
     });
 });

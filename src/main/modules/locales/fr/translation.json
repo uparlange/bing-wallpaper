@@ -7,5 +7,7 @@
     "VIEW_LABEL": "Vue",
     "LANGUAGE_LABEL": "Langue",
     "FRENCH_LABEL": "Français",
-    "ENGLISH_LABEL": "English"
+    "ENGLISH_LABEL": "English",
+    "AUTHOR_LABEL": "Auteur",
+    "BASED_ON_LABEL": "Basé sur"
 }

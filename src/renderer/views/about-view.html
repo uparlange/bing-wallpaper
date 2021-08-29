@@ -1,7 +1,7 @@
 <div class="view">
     <ul>
         <li>
-            Author
+            {{ translations.AUTHOR_LABEL }}
             <ul>
                 <li><a href="#" @click="openExternal('https://fr.linkedin.com/in/ugo-parlange-a0415117')">Ugo
                         Parlange</a></li>
@@ -19,7 +19,8 @@
     </ul>
     <ul>
         <li>
-            <a href="#" @click="openExternal('https://www.electronjs.org/')">Based on Electron</a>
+            <a href="#" @click="openExternal('https://www.electronjs.org/')">{{ translations.BASED_ON_LABEL }}
+                Electron</a>
             <ul>
                 <li>Version : {{ versions.electron }}</li>
                 <li>Chrome : {{ versions.chrome }}</li>
@@ -29,7 +30,7 @@
     </ul>
     <ul>
         <li>
-            Based on Vue
+            {{ translations.BASED_ON_LABEL }} Vue
             <ul>
                 <li><a href="#" @click="openExternal('https://v3.vuejs.org/')">VueJS : {{ versions.vue }}</a></li>
                 <li><a href="#" @click="openExternal('https://next.router.vuejs.org/')">VueRouter : {{

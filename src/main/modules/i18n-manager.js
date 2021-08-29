@@ -6,6 +6,7 @@ const EventEmitter = require("events");
 
 const applicationUtils = require("./application-utils");
 const storageManager = require("./storage-manager");
+const eventbusManager = require("./eventbus-manager");
 
 const eventEmitter = new EventEmitter();
 
@@ -20,11 +21,13 @@ const init = () => {
             debug: applicationUtils.isDebug()
         });
         i18next.on("initialized", (options) => {
-            setLanguage(getCurrentLanguage());
-            resolve();
+            setLanguage(getCurrentLanguage()).then(() => {
+                resolve();
+            });
         });
         i18next.on("languageChanged", (lng) => {
             eventEmitter.emit("languageChanged", lng);
+            eventbusManager.sendRendererMessage("languageChanged", lng);
         });
     });
 };
@@ -33,22 +36,34 @@ const onLanguageChanged = (callback) => {
     eventEmitter.on("languageChanged", callback);
 };
 
-const getTranslation = (keys, options) => {
-    return i18next.t(keys, options);
-};
-
 const getCurrentLanguage = () => {
     return storageManager.getData("language", i18next.language.split("-")[0]).value;
 };
 
 const setLanguage = (lng) => {
-    storageManager.setData("language", lng);
-    i18next.changeLanguage(lng);
+    return new Promise((resolve, reject) => {
+        storageManager.setData("language", lng);
+        i18next.changeLanguage(lng).then((t) => {
+            resolve();
+        });
+    });
 };
+
+const getTranslations = (keyList, options) => {
+    const translations = {};
+    keyList.forEach((key) => {
+        translations[key] = i18next.t(key, options);
+    });
+    return translations;
+};
+
+eventbusManager.onRendererInvoke("getTranslations", (keyList, options) => {
+    return getTranslations(keyList, options);
+});
 
 module.exports = {
     init: init,
-    getTranslation: getTranslation,
+    getTranslations: getTranslations,
     getCurrentLanguage: getCurrentLanguage,
     setLanguage: setLanguage,
     onLanguageChanged: onLanguageChanged

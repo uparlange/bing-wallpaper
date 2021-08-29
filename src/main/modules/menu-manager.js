@@ -12,12 +12,16 @@ const setActiveCheckbox = (list, active) => {
 };
 
 const refresh = () => {
+    const translations = i18nManager.getTranslations([
+        "DEBUG_LABEL", "SET_BING_WALLPAPER_LABEL", "QUIT_LABEL",
+        "VIEW_LABEL", "WALLPAPER_LABEL", "ABOUT_LABEL",
+        "LANGUAGE_LABEL", "FRENCH_LABEL", "ENGLISH_LABEL"]);
     const template = [
         {
             label: applicationUtils.isMac() ? app.getName() : "Application",
             submenu: [
                 {
-                    label: i18nManager.getTranslation("DEBUG_LABEL"),
+                    label: translations["DEBUG_LABEL"],
                     visible: applicationUtils.isDebug(),
                     click: () => {
                         const win = BrowserWindow.getAllWindows()[0];
@@ -27,14 +31,14 @@ const refresh = () => {
                     }
                 },
                 {
-                    label: i18nManager.getTranslation("SET_BING_WALLPAPER_LABEL"),
+                    label: translations["SET_BING_WALLPAPER_LABEL"],
                     click: () => {
                         wallpaperManager.setBingWallpaper();
                     }
                 },
                 { type: "separator" },
                 {
-                    label: i18nManager.getTranslation("QUIT_LABEL"),
+                    label: translations["QUIT_LABEL"],
                     click: () => {
                         applicationUtils.quit();
                     }
@@ -42,11 +46,11 @@ const refresh = () => {
             ]
         },
         {
-            label: i18nManager.getTranslation("VIEW_LABEL"),
+            label: translations["VIEW_LABEL"],
             submenu: [
                 {
                     id: "MENU_ITEM_WALLPAPER_ID",
-                    label: i18nManager.getTranslation("WALLPAPER_LABEL"),
+                    label: translations["WALLPAPER_LABEL"],
                     checked: viewManager.getCurrentView() == viewManager.WALLPAPER_VIEW,
                     type: "checkbox",
                     click: () => {
@@ -55,7 +59,7 @@ const refresh = () => {
                     }
                 }, {
                     id: "MENU_ITEM_ABOUT_ID",
-                    label: i18nManager.getTranslation("ABOUT_LABEL"),
+                    label: translations["ABOUT_LABEL"],
                     checked: viewManager.getCurrentView() == viewManager.ABOUT_VIEW,
                     type: "checkbox",
                     click: () => {
@@ -66,11 +70,11 @@ const refresh = () => {
             ]
         },
         {
-            label: i18nManager.getTranslation("LANGUAGE_LABEL"),
+            label: translations["LANGUAGE_LABEL"],
             submenu: [
                 {
                     id: "MENU_ITEM_FRENCH_ID",
-                    label: i18nManager.getTranslation("FRENCH_LABEL"),
+                    label: translations["FRENCH_LABEL"],
                     checked: i18nManager.getCurrentLanguage() == "fr",
                     type: "checkbox",
                     click: () => {
@@ -79,7 +83,7 @@ const refresh = () => {
                     }
                 }, {
                     id: "MENU_ITEM_ENGLISH_ID",
-                    label: i18nManager.getTranslation("ENGLISH_LABEL"),
+                    label: translations["ENGLISH_LABEL"],
                     checked: i18nManager.getCurrentLanguage() == "en",
                     type: "checkbox",
                     click: () => {

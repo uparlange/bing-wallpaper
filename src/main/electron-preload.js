@@ -1,8 +1,8 @@
-const { contextBridge, ipcRenderer, shell } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron");
 
 const eventbusManager = require("./modules/eventbus-manager");
 
-// EventbusManager
+// Eventbus Manager
 contextBridge.exposeInMainWorld("api", {
     invoke: (eventName, message) => {
         return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-const { app } = require("electron");
+const { app, shell } = require("electron");
 
 const pkg = require("./../../../package.json");
 const storageManager = require("./storage-manager");
