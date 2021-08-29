@@ -16,12 +16,7 @@ const getCurrentView = () => {
 };
 
 const init = () => {
-    return new Promise((resolve, reject) => {
-        showView(getCurrentView());
-        setTimeout(() => {
-            resolve();
-        }, 0);
-    });
+    showView(getCurrentView());
 };
 
 module.exports = {

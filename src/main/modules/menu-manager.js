@@ -99,14 +99,9 @@ const refresh = () => {
 };
 
 const init = () => {
-    return new Promise((resolve, reject) => {
+    refresh();
+    i18nManager.onLanguageChanged(() => {
         refresh();
-        i18nManager.onLanguageChanged(() => {
-            refresh();
-        });
-        setTimeout(() => {
-            resolve();
-        });
     });
 };
 

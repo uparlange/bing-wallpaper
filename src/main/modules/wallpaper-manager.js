@@ -22,16 +22,24 @@ const model = {
     b64Wallpaper: null
 };
 
-const parseBingPage = (html) => {
+// <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
+const bingImagePatternValidator = (name, attributes) => {
+    if (name === "link" &&
+        typeof (attributes.href) == "string" &&
+        attributes.href.indexOf("id=OHR") != -1) {
+        return BING_BASE_URL + attributes.href;
+    }
+    return null;
+};
+
+const parsePage = (html, patternValidator) => {
     return new Promise((resolve, reject) => {
         let wallpaperUrl = null;
         const parser = new htmlparser2.Parser({
             onopentag(name, attributes) {
-                // <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
-                if (name === "link" &&
-                    typeof (attributes.href) == "string" &&
-                    attributes.href.indexOf("id=OHR") != -1) {
-                    wallpaperUrl = BING_BASE_URL + attributes.href;
+                const url = patternValidator(name, attributes);
+                if (url != null) {
+                    wallpaperUrl = url;
                 }
             },
             onend() {
@@ -43,19 +51,19 @@ const parseBingPage = (html) => {
     });
 };
 
-const fetchBingPage = () => {
+const fetchPage = (url) => {
     return new Promise((resolve, reject) => {
-        fetch(BING_BASE_URL)
+        fetch(url)
             .then(res => res.text())
             .then(body => resolve(body));
     });
 };
 
-const downloadBingImage = (url) => {
+const downloadImage = (url, destination) => {
     return new Promise((resolve, reject) => {
-        const ws = fs.createWriteStream(BING_WALLPAPER_PATH);
+        const ws = fs.createWriteStream(destination);
         ws.on("finish", () => {
-            resolve(BING_WALLPAPER_PATH);
+            resolve(destination);
         });
         loggerManager.getLogger().info("WallpaperManager - Download image '" + url + "'");
         download(url).pipe(ws);
@@ -114,62 +122,45 @@ const setB64Wallpaper = (b64Wallpaper) => {
 };
 
 const setRendererWallpaper = () => {
-    return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
-        generateB64Wallpaper(model.wallpaperPath).then((data) => {
-            setB64Wallpaper(data);
-            resolve();
-        });
+    loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
+    generateB64Wallpaper(model.wallpaperPath).then((data) => {
+        setB64Wallpaper(data);
     });
 };
 
 const completeApplyWallpaper = () => {
-    return new Promise((resolve, reject) => {
-        setWallpaper(model.wallpaperPath).then(() => {
-            setRendererWallpaper().then(() => {
-                resolve();
-            });
-        });
+    setWallpaper(model.wallpaperPath).then(() => {
+        setRendererWallpaper();
     });
 };
 
 const setBingWallpaper = () => {
-    return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("WallpaperManager - Set Bing Wallpaper");
-        setB64Wallpaper(null);
-        if (connectionManager.isOnLine()) {
-            fetchBingPage().then((htmlContent) => {
-                parseBingPage(htmlContent).then((imageUrl) => {
-                    storageManager.setData("bingWallpaperUrl", imageUrl);
-                    downloadBingImage(imageUrl).then((imagePath) => {
-                        model.wallpaperPath = imagePath;
-                        loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
-                        completeApplyWallpaper().then(() => {
-                            resolve();
-                        });
-                    });
+    loggerManager.getLogger().info("WallpaperManager - Set Bing Wallpaper");
+    setB64Wallpaper(null);
+    if (connectionManager.isOnLine()) {
+        fetchPage(BING_BASE_URL).then((htmlContent) => {
+            parsePage(htmlContent, bingImagePatternValidator).then((imageUrl) => {
+                storageManager.setData("bingWallpaperUrl", imageUrl);
+                downloadImage(imageUrl, BING_WALLPAPER_PATH).then((imagePath) => {
+                    model.wallpaperPath = imagePath;
+                    loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
+                    completeApplyWallpaper();
                 });
             });
-        } else {
-            loggerManager.getLogger().error("WallpaperManager - No connection available");
-            completeApplyWallpaper().then(() => {
-                resolve();
-            });
-        }
-    });
+        });
+    } else {
+        loggerManager.getLogger().error("WallpaperManager - No connection available");
+        completeApplyWallpaper();
+    }
 };
 
 const setUserWallpaper = (path) => {
-    return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("WallpaperManager - Set User Wallpaper");
-        setB64Wallpaper(null);
-        copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
-            model.wallpaperPath = imagePath;
-            loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
-            completeApplyWallpaper().then(() => {
-                resolve();
-            });
-        });
+    loggerManager.getLogger().info("WallpaperManager - Set User Wallpaper");
+    setB64Wallpaper(null);
+    copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
+        model.wallpaperPath = imagePath;
+        loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
+        completeApplyWallpaper();
     });
 };
 
@@ -186,37 +177,27 @@ const bingWallpaperNeedUpdate = () => {
 }
 
 const checkWallpaper = () => {
-    return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-        if (!isApplicationWallpaper() ||
-            (isBingWallpaper() && bingWallpaperNeedUpdate())) {
-            setBingWallpaper().then(() => {
-                resolve();
-            });
-        } else {
-            setRendererWallpaper().then(() => {
-                resolve();
-            });
-        }
-    });
+    loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
+    if (!isApplicationWallpaper() ||
+        (isBingWallpaper() && bingWallpaperNeedUpdate())) {
+        setBingWallpaper();
+    } else {
+        setRendererWallpaper();
+    }
 };
 
 const init = () => {
-    return new Promise((resolve, reject) => {
-        wallpaper.get().then((wallpaperPath) => {
-            model.wallpaperPath = wallpaperPath;
-            electron.powerMonitor.on("unlock-screen", () => {
-                loggerManager.getLogger().info("WallpaperManager - PowerMonitor 'unlock-screen'");
-                checkWallpaper();
-            });
-            connectionManager.onConnectionChanged((onLine) => {
-                loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
-                checkWallpaper();
-            });
-            checkWallpaper().then(() => {
-                resolve();
-            });
+    wallpaper.get().then((wallpaperPath) => {
+        model.wallpaperPath = wallpaperPath;
+        electron.powerMonitor.on("unlock-screen", () => {
+            loggerManager.getLogger().info("WallpaperManager - PowerMonitor 'unlock-screen'");
+            checkWallpaper();
         });
+        connectionManager.onConnectionChanged((onLine) => {
+            loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
+            checkWallpaper();
+        });
+        checkWallpaper();
     });
 };
 
