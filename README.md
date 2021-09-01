@@ -4,14 +4,14 @@
 * Originally planned to retrieve the daily [Bing Wallpaper](https://www.bing.com/)
 * You can define your custom wallpaper by drag and dropping an image on the application main screen
 * Multi-language support (French, English) with auto-detection and fallback to English 
-* User preferences support (last displayed view, language)
+* User preferences support (last displayed view, language, launch at startup)
 * Online / Offline support
 
 # Downloads
 
-* [MacOS (Intel) : BingWallpaper-1.0.2.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2.dmg)
-* [MacOS (M1) : BingWallpaper-1.0.2-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.0.2-nsis64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2-nsis64.exe)
+* [MacOS (Intel) : BingWallpaper-1.0.3.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.3/BingWallpaper-1.0.3.dmg)
+* [MacOS (M1) : BingWallpaper-1.0.3-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.3/BingWallpaper-1.0.3-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.0.3-nsis64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.3/BingWallpaper-1.0.3-nsis64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
