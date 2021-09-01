@@ -1,7 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
-const applicationUtils = require("./modules/application-utils");
+const applicationManager = require("./modules/application-manager");
 const wallpaperManager = require("./modules/wallpaper-manager");
 const menuManager = require("./modules/menu-manager");
 const i18nManager = require("./modules/i18n-manager");
@@ -15,7 +15,7 @@ const createWindow = () => {
         win = new BrowserWindow({
             width: 640,
             height: 400,
-            resizable: applicationUtils.isDebug(),
+            resizable: applicationManager.isDebug(),
             icon: path.join(__dirname, "..", "renderer", "assets", "images", "icon.png"),
             webPreferences: {
                 preload: path.join(__dirname, "electron-preload.js")
@@ -32,12 +32,10 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-    storageManager.init().then(() => {
-        i18nManager.init().then(() => {
-            menuManager.init();
-            createWindow().then(() => {
-                wallpaperManager.init();
-            });     
+    storageManager.init().then(i18nManager.init).then(applicationManager.init).then(() => {
+        menuManager.init();
+        createWindow().then(() => {
+            wallpaperManager.init();
         });
     });
 });
@@ -47,5 +45,5 @@ app.on("activate", () => {
 });
 
 app.on("window-all-closed", () => {
-    if (!applicationUtils.isMac()) applicationUtils.quit()
+    if (!applicationManager.isMac()) applicationManager.quit()
 });

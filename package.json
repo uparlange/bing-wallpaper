@@ -1,6 +1,6 @@
 {
   "name": "bing-wallpaper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Bing Wallpaper",
   "main": "src/main/electron-main.js",
   "author": "Ugo Parlange",
@@ -46,13 +46,14 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^15.0.0-alpha.10",
+    "electron": "^15.0.0-beta.1",
     "electron-builder": "^22.13.1"
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "download": "^8.0.0",
-    "htmlparser2": "^7.1.0",
-    "i18next": "^20.4.0",
+    "htmlparser2": "^7.1.1",
+    "i18next": "^20.6.0",
     "i18next-electron-language-detector": "^0.0.10",
     "i18next-fs-backend": "^1.1.1",
     "image-to-base64": "^2.2.0",

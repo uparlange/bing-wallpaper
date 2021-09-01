@@ -302,6 +302,11 @@
     "semver" "^7.3.5"
     "temp-file" "^3.4.0"
 
+"applescript@^1.0.0":
+  "integrity" "sha1-u4evVoytA0pOSMS9r2Bno6JwExc="
+  "resolved" "https://registry.npmjs.org/applescript/-/applescript-1.0.0.tgz"
+  "version" "1.0.0"
+
 "archive-type@^4.0.0":
   "integrity" "sha1-+S5yIzBW38aWlHJ0nCZ72wRrHXA="
   "resolved" "https://registry.npmjs.org/archive-type/-/archive-type-4.0.0.tgz"
@@ -345,6 +350,17 @@
   "integrity" "sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg=="
   "resolved" "https://registry.npmjs.org/at-least-node/-/at-least-node-1.0.0.tgz"
   "version" "1.0.0"
+
+"auto-launch@^5.0.5":
+  "integrity" "sha512-ppdF4mihhYzMYLuCcx9H/c5TUOCev8uM7en53zWVQhyYAJrurd2bFZx3qQVeJKF2jrc7rsPRNN5cD+i23l6PdA=="
+  "resolved" "https://registry.npmjs.org/auto-launch/-/auto-launch-5.0.5.tgz"
+  "version" "5.0.5"
+  dependencies:
+    "applescript" "^1.0.0"
+    "mkdirp" "^0.5.1"
+    "path-is-absolute" "^1.0.0"
+    "untildify" "^3.0.2"
+    "winreg" "1.2.4"
 
 "balanced-match@^1.0.0":
   "integrity" "sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw=="
@@ -970,10 +986,10 @@
     "lazy-val" "^1.0.5"
     "mime" "^2.5.2"
 
-"electron@^15.0.0-alpha.10":
-  "integrity" "sha512-UgUg0226YKzPQ2WE7Jc920qMV+HN8mdlqjMNKQkKacnlQKQYTNqMzJSVD+KGEzqZGT87xq+cJ/PVAg5RHiX9zw=="
-  "resolved" "https://registry.npmjs.org/electron/-/electron-15.0.0-alpha.10.tgz"
-  "version" "15.0.0-alpha.10"
+"electron@^15.0.0-beta.1":
+  "integrity" "sha512-j1/Xr67uZg9psgDSRsIwA7W93KGUNui2OHjgS1prEAXkeFtaV2/FXRPxoYb3mLG8iIY5eWHKWKqFg+FG9+zuuw=="
+  "resolved" "https://registry.npmjs.org/electron/-/electron-15.0.0-beta.1.tgz"
+  "version" "15.0.0-beta.1"
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^14.6.2"
@@ -1375,10 +1391,10 @@
   dependencies:
     "lru-cache" "^6.0.0"
 
-"htmlparser2@^7.1.0":
-  "integrity" "sha512-C5W4WAg8imoK0gklCyLSaRR4aL8oyBmaMsYDXtQsIEIpTTJq9bv4ewHQpxaTaGK2kqwyZnsu34tqGlRG23LW/Q=="
-  "resolved" "https://registry.npmjs.org/htmlparser2/-/htmlparser2-7.1.0.tgz"
-  "version" "7.1.0"
+"htmlparser2@^7.1.1":
+  "integrity" "sha512-hZb0lfG0hbhR/hB879zbBr8Opv0Be9Zp+JYHgqTw5epF++aotu/zmMTPLy/60iJyR1MaD/3pYRp7xYteXsZMEA=="
+  "resolved" "https://registry.npmjs.org/htmlparser2/-/htmlparser2-7.1.1.tgz"
+  "version" "7.1.1"
   dependencies:
     "domelementtype" "^2.0.1"
     "domhandler" "^4.0.0"
@@ -1405,10 +1421,10 @@
   "resolved" "https://registry.npmjs.org/i18next-fs-backend/-/i18next-fs-backend-1.1.1.tgz"
   "version" "1.1.1"
 
-"i18next@^20.4.0":
-  "integrity" "sha512-89iWWJudmaHJwzIdJ/1eu98GtsJnwBhOUWwlAre70itPMuTE/NTPtgVeaS1CGaB8Q3XrYBGpEqlq4jsScDx9kg=="
-  "resolved" "https://registry.npmjs.org/i18next/-/i18next-20.4.0.tgz"
-  "version" "20.4.0"
+"i18next@^20.6.0":
+  "integrity" "sha512-sgt7AkvxUQbW5dsA7p5AYq7tBOIdm9K7c4wAppsbt5l0Hynqs7FTsa0bA0Exy+PUR17+IOcg3KVCaILc1OAOxQ=="
+  "resolved" "https://registry.npmjs.org/i18next/-/i18next-20.6.0.tgz"
+  "version" "20.6.0"
   dependencies:
     "@babel/runtime" "^7.12.0"
 
@@ -1760,7 +1776,7 @@
   "resolved" "https://registry.npmjs.org/minimist/-/minimist-1.2.5.tgz"
   "version" "1.2.5"
 
-"mkdirp@^0.5.4":
+"mkdirp@^0.5.1", "mkdirp@^0.5.4":
   "integrity" "sha512-NKmAlESf6jMGym1++R0Ra7wvhV+wFW63FaSOFPwRahvea0gMUcGUhVeAg/0BC0wiv9ih5NYPB1Wn1UEI1/L+xQ=="
   "resolved" "https://registry.npmjs.org/mkdirp/-/mkdirp-0.5.5.tgz"
   "version" "0.5.5"
@@ -2462,6 +2478,11 @@
   "resolved" "https://registry.npmjs.org/universalify/-/universalify-2.0.0.tgz"
   "version" "2.0.0"
 
+"untildify@^3.0.2":
+  "integrity" "sha512-iSk/J8efr8uPT/Z4eSUywnqyrQU7DSdMfdqK4iWEaUVVmcP5JcnpRqmVMwcwcnmI1ATFNgC5V90u09tBynNFKA=="
+  "resolved" "https://registry.npmjs.org/untildify/-/untildify-3.0.3.tgz"
+  "version" "3.0.3"
+
 "update-notifier@^5.1.0":
   "integrity" "sha512-ItnICHbeMh9GqUy31hFPrD1kcuZ3rpxDZbf4KUDavXwS0bW5m7SLbDQpGX3UYr072cbrF5hFUs3r5tUsPwjfHw=="
   "resolved" "https://registry.npmjs.org/update-notifier/-/update-notifier-5.1.0.tgz"
@@ -2554,6 +2575,11 @@
   "version" "3.1.0"
   dependencies:
     "string-width" "^4.0.0"
+
+"winreg@1.2.4":
+  "integrity" "sha1-ugZWKbepJRMOFXeRCM9UCZDpjRs="
+  "resolved" "https://registry.npmjs.org/winreg/-/winreg-1.2.4.tgz"
+  "version" "1.2.4"
 
 "wrap-ansi@^7.0.0":
   "integrity" "sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q=="

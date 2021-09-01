@@ -9,5 +9,7 @@
     "FRENCH_LABEL": "Français",
     "ENGLISH_LABEL": "English",
     "AUTHOR_LABEL": "Auteur",
-    "BASED_ON_LABEL": "Basé sur"
+    "BASED_ON_LABEL": "Basé sur",
+    "PREFERENCES_LABEL": "Préférences",
+    "LAUNCH_AT_STARTUP_LABEL": "Lancer au démarrage"
 }

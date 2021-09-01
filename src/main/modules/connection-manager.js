@@ -16,9 +16,11 @@ const onConnectionChanged = (callback) => {
 };
 
 eventbusManager.onRendererMessage("connectionChanged", (status) => {
-    loggerManager.getLogger().info("ConnectionManager - Online '" + status + "'");
-    onLine = status;
-    eventEmitter.emit("connectionChanged", status);
+    if (status != onLine) {
+        loggerManager.getLogger().info("ConnectionManager - Online '" + status + "'");
+        onLine = status;
+        eventEmitter.emit("connectionChanged", status);
+    }
 });
 
 module.exports = {

@@ -11,7 +11,7 @@
 
 * [MacOS (Intel) : BingWallpaper-1.0.2.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2.dmg)
 * [MacOS (M1) : BingWallpaper-1.0.2-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2-arm64.dmg)
-* [Windows : BingWallpaper-1.0.2-nsis64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2-nsis64.exe)
+* [Windows (x64) : BingWallpaper-1.0.2-nsis64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.2/BingWallpaper-1.0.2-nsis64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
