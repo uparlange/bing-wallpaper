@@ -1,6 +1,6 @@
 {
   "name": "bing-wallpaper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Bing Wallpaper",
   "main": "src/main/electron-main.js",
   "author": "Ugo Parlange",
@@ -59,7 +59,7 @@
     "image-to-base64": "^2.2.0",
     "log4js": "^6.3.0",
     "node-fetch": "^2.6.1",
-    "vue": "^3.2.6",
+    "vue": "^3.2.7",
     "vue-router": "^4.0.11",
     "wallpaper": "^5.0.1"
   }

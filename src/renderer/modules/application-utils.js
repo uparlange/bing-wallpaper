@@ -1,7 +1,10 @@
 export default {
-    loadTemplate: (url) => {
+    loadTemplate: (componentUrl) => {
         return new Promise((resolve, reject) => {
-            fetch(url).then((res) => {
+            const componentName = new URL(componentUrl).pathname.split("/").pop();
+            const viewName = componentName.split("-")[0];
+            const viewUrl = "views/" + viewName + "-view.html";
+            fetch(viewUrl).then((res) => {
                 resolve(res.text());
             });
         });

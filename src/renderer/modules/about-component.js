@@ -2,7 +2,7 @@ import applicationUtils from "./application-utils.js";
 
 export default () => {
     return new Promise((resolve, reject) => {
-        applicationUtils.loadTemplate("views/about-view.html").then((template) => {
+        applicationUtils.loadTemplate(import.meta.url).then((template) => {
             resolve({
                 template: template,
                 data() {
@@ -13,10 +13,12 @@ export default () => {
                 },
                 created() {
                     const that = this;
+                    // translations
                     that.refreshTranslations();
                     window.api.receive("languageChanged", () => {
                         that.refreshTranslations();
                     });
+                    // version infos
                     window.api.invoke("getVersions").then((versions) => {
                         that.versions = versions;
                     });

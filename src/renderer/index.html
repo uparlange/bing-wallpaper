@@ -9,13 +9,11 @@
 
 <body>
     <div id="app">
-        <div :class="{ dropzone: true, dropactive: dropActive }">
-            <router-view v-slot="{ Component, route }">
-                <transition :name="route.meta.transition || 'fade'">
-                    <component :is="Component" />
-                </transition>
-            </router-view>
-        </div>
+        <router-view v-slot="{ Component, route }">
+            <transition :name="route.meta.transition || 'fade'">
+                <component :is="Component" />
+            </transition>
+        </router-view>
     </div>
     <script src="./../../node_modules/vue/dist/vue.global.prod.js"></script>
     <script src="./../../node_modules/vue-router/dist/vue-router.global.prod.js"></script>

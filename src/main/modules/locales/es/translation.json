@@ -1,0 +1,16 @@
+{
+    "QUIT_LABEL": "Dejar",
+    "SET_BING_WALLPAPER_LABEL": "Aplicar el fondo de pantalla de Bing",
+    "DEBUG_LABEL": "Depurar",
+    "WALLPAPER_LABEL": "Fondo de pantalla",
+    "ABOUT_LABEL": "A proposito",
+    "VIEW_LABEL": "Vista",
+    "LANGUAGE_LABEL": "Idioma",
+    "FRENCH_LABEL": "Français",
+    "ENGLISH_LABEL": "English",
+    "SPANISH_LABEL": "Español",
+    "AUTHOR_LABEL": "Autor",
+    "BASED_ON_LABEL": "Basado sobre",
+    "PREFERENCES_LABEL": "Preferencias",
+    "LAUNCH_AT_STARTUP_LABEL": "Lanzar al inicio"
+}

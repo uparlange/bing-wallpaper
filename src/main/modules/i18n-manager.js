@@ -17,6 +17,7 @@ const init = () => {
                 loadPath: path.join(__dirname, "locales", "{{lng}}", "{{ns}}.json"),
                 addPath: path.join(__dirname, "locales", "{{lng}}", "{{ns}}.missing.json")
             },
+            supportedLngs: ["fr", "en", "es"],
             fallbackLng: "en",
             debug: applicationManager.isDebug()
         });

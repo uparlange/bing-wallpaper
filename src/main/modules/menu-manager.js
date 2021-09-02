@@ -20,7 +20,7 @@ const refresh = () => {
         "DEBUG_LABEL", "SET_BING_WALLPAPER_LABEL", "QUIT_LABEL",
         "VIEW_LABEL", "WALLPAPER_LABEL", "ABOUT_LABEL",
         "LANGUAGE_LABEL", "FRENCH_LABEL", "ENGLISH_LABEL",
-        "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL"]);
+        "SPANISH_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL"]);
     const template = [
         {
             label: applicationManager.isMac() ? app.getName() : "Application",
@@ -95,7 +95,7 @@ const refresh = () => {
                             checked: i18nManager.getCurrentLanguage() == "fr",
                             type: "checkbox",
                             click: () => {
-                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID"], "MENU_ITEM_FRENCH_ID");
+                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID", "MENU_ITEM_SPANISH_ID"], "MENU_ITEM_FRENCH_ID");
                                 i18nManager.setLanguage("fr");
                             }
                         }, {
@@ -104,8 +104,17 @@ const refresh = () => {
                             checked: i18nManager.getCurrentLanguage() == "en",
                             type: "checkbox",
                             click: () => {
-                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID"], "MENU_ITEM_FRENCH_ID");
+                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID", "MENU_ITEM_SPANISH_ID"], "MENU_ITEM_FRENCH_ID");
                                 i18nManager.setLanguage("en");
+                            }
+                        }, {
+                            id: "MENU_ITEM_SPANISH_ID",
+                            label: translations["SPANISH_LABEL"],
+                            checked: i18nManager.getCurrentLanguage() == "es",
+                            type: "checkbox",
+                            click: () => {
+                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID", "MENU_ITEM_SPANISH_ID"], "MENU_ITEM_SPANISH_ID");
+                                i18nManager.setLanguage("es");
                             }
                         }
                     ]
