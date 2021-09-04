@@ -1,16 +1,19 @@
 {
     "QUIT_LABEL": "Quit",
-    "SET_BING_WALLPAPER_LABEL": "Set Bing Wallpaper",
     "DEBUG_LABEL": "Debug",
-    "WALLPAPER_LABEL": "Wallpaper",
-    "ABOUT_LABEL": "About",
     "VIEW_LABEL": "View",
+    "WALLPAPER_VIEW_LABEL": "Wallpaper",
+    "ABOUT_VIEW_LABEL": "About",
     "LANGUAGE_LABEL": "Language",
-    "FRENCH_LABEL": "Français",
-    "ENGLISH_LABEL": "English",
-    "SPANISH_LABEL": "Español",
+    "FR_LANGUAGE_LABEL": "Français",
+    "EN_LANGUAGE_LABEL": "English",
+    "ES_LANGUAGE_LABEL": "Español",
     "AUTHOR_LABEL": "Author",
     "BASED_ON_LABEL": "Based on",
     "PREFERENCES_LABEL": "Preferences",
-    "LAUNCH_AT_STARTUP_LABEL": "Launch at startup"
+    "LAUNCH_AT_STARTUP_LABEL": "Launch at startup",
+    "WALLPAPER_LABEL": "Wallpaper",
+    "BING_WALLPAPER_SOURCE_LABEL": "Bing",
+    "NATIONALGEOGRAPHIC_WALLPAPER_SOURCE_LABEL": "National Geographic",
+    "USER_WALLPAPER_SOURCE_LABEL": "User"
 }

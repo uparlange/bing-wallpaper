@@ -1,23 +1,17 @@
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge } = require("electron");
 
 const eventbusManager = require("./modules/eventbus-manager");
 
 // Eventbus Manager
-contextBridge.exposeInMainWorld("api", {
-    invoke: (eventName, message) => {
-        return new Promise((resolve, reject) => {
-            ipcRenderer.invoke(eventName, message).then((result) => {
-                resolve(result);
-            });
-        });
+contextBridge.exposeInMainWorld("eventbus", {
+    invoke: (eventName, ...message) => {
+        return eventbusManager.sendMainInvoke(eventName, ...message);
     },
-    send: (eventName, message) => {
-        eventbusManager.sendMainMessage(eventName, message);
+    send: (eventName, ...message) => {
+        eventbusManager.sendMainMessage(eventName, ...message);
     },
     receive: (eventName, callback) => {
-        ipcRenderer.on(eventName, (event, ...message) => {
-            callback(...message);
-        });
+        eventbusManager.onMainMessage(eventName, callback);
     }
 });
 

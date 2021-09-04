@@ -1,7 +1,7 @@
 export default {
     created() {
         const that = this;
-        window.api.receive("showView", (view) => {
+        window.eventbus.receive("showView", (view) => {
             that.$router.push(view);
         });
     }

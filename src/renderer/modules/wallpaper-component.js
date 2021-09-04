@@ -14,10 +14,10 @@ export default () => {
                 created() {
                     const that = this;
                     // wallpaper data
-                    window.api.invoke("getB64Wallpaper").then((b64Wallpaper) => {
+                    window.eventbus.invoke("getB64Wallpaper").then((b64Wallpaper) => {
                         that.b64Wallpaper = b64Wallpaper;
                     });
-                    window.api.receive("b64Wallpaper", (b64Wallpaper) => {
+                    window.eventbus.receive("b64Wallpaper", (b64Wallpaper) => {
                         that.b64Wallpaper = b64Wallpaper;
                     });
                 },
@@ -37,7 +37,7 @@ export default () => {
                         this.dropActive = false;
                         if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
                             const path = event.dataTransfer.files[0].path;
-                            window.api.send("setUserWallpaper", path);
+                            window.eventbus.send("setUserWallpaper", path);
                         }
                         event.preventDefault();
                     }

@@ -15,12 +15,85 @@ const setActiveMenuItemOfList = (menuItemIds, activeMenuItemId) => {
     });
 };
 
+const getMenuItemId = (name) => {
+    return "MENU_ITEM_" + name + "_ID";
+};
+
+const getMenuItemLabelKey = (name, type) => {
+    return name + "_" + type + "_LABEL";
+};
+
+const getAvailableWallpaperSources = () => {
+    const availableWallpaperSources = [];
+    wallpaperManager.getAvailableWallpaperSources().forEach(source => {
+        const menuItemName = source.toUpperCase();
+        const menuItemId = getMenuItemId(menuItemName);
+        const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "WALLPAPER_SOURCE");
+        availableWallpaperSources.push({
+            id: menuItemId,
+            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
+            checked: wallpaperManager.getCurrentWallpaperSource() == source,
+            type: "checkbox",
+            click: () => {
+                setActiveMenuItemOfList(wallpaperManager.getAvailableWallpaperSources().map((element) => {
+                    return getMenuItemId(element.toUpperCase());
+                }), menuItemId);
+                wallpaperManager.setWallpaper(source);
+            }
+        });
+    });
+    return availableWallpaperSources;
+};
+
+const getAvailableViews = () => {
+    const availableViews = [];
+    viewManager.getAvailableViews().forEach(view => {
+        const menuItemName = view.toUpperCase().substr(1);
+        const menuItemId = getMenuItemId(menuItemName);
+        const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "VIEW");
+        availableViews.push({
+            id: menuItemId,
+            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
+            checked: viewManager.getCurrentView() == view,
+            type: "checkbox",
+            click: () => {
+                setActiveMenuItemOfList(viewManager.getAvailableViews().map((element) => {
+                    return getMenuItemId(element.toUpperCase().substr(1));
+                }), menuItemId);
+                viewManager.showView(view);
+            }
+        });
+    });
+    return availableViews;
+};
+
+const getAvailableLanguages = () => {
+    const availableLanguages = [];
+    i18nManager.getAvailableLanguages().forEach(language => {
+        const menuItemName = language.toUpperCase();
+        const menuItemId = getMenuItemId(menuItemName);
+        const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "LANGUAGE");
+        availableLanguages.push({
+            id: menuItemId,
+            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
+            checked: i18nManager.getCurrentLanguage() == language,
+            type: "checkbox",
+            click: () => {
+                setActiveMenuItemOfList(i18nManager.getAvailableLanguages().map((element) => {
+                    return getMenuItemId(element.toUpperCase());
+                }), menuItemId);
+                i18nManager.setLanguage(language);
+            }
+        });
+    });
+    return availableLanguages;
+};
+
 const refresh = () => {
     const translations = i18nManager.getTranslations([
-        "DEBUG_LABEL", "SET_BING_WALLPAPER_LABEL", "QUIT_LABEL",
-        "VIEW_LABEL", "WALLPAPER_LABEL", "ABOUT_LABEL",
-        "LANGUAGE_LABEL", "FRENCH_LABEL", "ENGLISH_LABEL",
-        "SPANISH_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL"]);
+        "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
+        "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
+        "WALLPAPER_LABEL"]);
     const template = [
         {
             label: applicationManager.isMac() ? app.getName() : "Application",
@@ -36,13 +109,6 @@ const refresh = () => {
                     }
                 },
                 {
-                    label: translations["SET_BING_WALLPAPER_LABEL"],
-                    click: () => {
-                        wallpaperManager.setBingWallpaper();
-                    }
-                },
-                { type: "separator" },
-                {
                     label: translations["QUIT_LABEL"],
                     click: () => {
                         applicationManager.quit();
@@ -52,27 +118,11 @@ const refresh = () => {
         },
         {
             label: translations["VIEW_LABEL"],
-            submenu: [
-                {
-                    id: "MENU_ITEM_WALLPAPER_ID",
-                    label: translations["WALLPAPER_LABEL"],
-                    checked: viewManager.getCurrentView() == viewManager.WALLPAPER_VIEW,
-                    type: "checkbox",
-                    click: () => {
-                        setActiveMenuItemOfList(["MENU_ITEM_WALLPAPER_ID", "MENU_ITEM_ABOUT_ID"], "MENU_ITEM_WALLPAPER_ID");
-                        viewManager.showView(viewManager.WALLPAPER_VIEW);
-                    }
-                }, {
-                    id: "MENU_ITEM_ABOUT_ID",
-                    label: translations["ABOUT_LABEL"],
-                    checked: viewManager.getCurrentView() == viewManager.ABOUT_VIEW,
-                    type: "checkbox",
-                    click: () => {
-                        setActiveMenuItemOfList(["MENU_ITEM_WALLPAPER_ID", "MENU_ITEM_ABOUT_ID"], "MENU_ITEM_ABOUT_ID");
-                        viewManager.showView(viewManager.ABOUT_VIEW);
-                    }
-                }
-            ]
+            submenu: getAvailableViews()
+        },
+        {
+            label: translations["WALLPAPER_LABEL"],
+            submenu: getAvailableWallpaperSources()
         },
         {
             label: translations["PREFERENCES_LABEL"],
@@ -88,36 +138,7 @@ const refresh = () => {
                 },
                 {
                     label: translations["LANGUAGE_LABEL"],
-                    submenu: [
-                        {
-                            id: "MENU_ITEM_FRENCH_ID",
-                            label: translations["FRENCH_LABEL"],
-                            checked: i18nManager.getCurrentLanguage() == "fr",
-                            type: "checkbox",
-                            click: () => {
-                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID", "MENU_ITEM_SPANISH_ID"], "MENU_ITEM_FRENCH_ID");
-                                i18nManager.setLanguage("fr");
-                            }
-                        }, {
-                            id: "MENU_ITEM_ENGLISH_ID",
-                            label: translations["ENGLISH_LABEL"],
-                            checked: i18nManager.getCurrentLanguage() == "en",
-                            type: "checkbox",
-                            click: () => {
-                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID", "MENU_ITEM_SPANISH_ID"], "MENU_ITEM_FRENCH_ID");
-                                i18nManager.setLanguage("en");
-                            }
-                        }, {
-                            id: "MENU_ITEM_SPANISH_ID",
-                            label: translations["SPANISH_LABEL"],
-                            checked: i18nManager.getCurrentLanguage() == "es",
-                            type: "checkbox",
-                            click: () => {
-                                setActiveMenuItemOfList(["MENU_ITEM_FRENCH_ID", "MENU_ITEM_ENGLISH_ID", "MENU_ITEM_SPANISH_ID"], "MENU_ITEM_SPANISH_ID");
-                                i18nManager.setLanguage("es");
-                            }
-                        }
-                    ]
+                    submenu: getAvailableLanguages()
                 }
             ]
         }
@@ -127,10 +148,15 @@ const refresh = () => {
 };
 
 const init = () => {
-    refresh();
+    wallpaperManager.onWallpaperChanged((source) => {
+        setActiveMenuItemOfList(wallpaperManager.getAvailableWallpaperSources().map((element) => {
+            return getMenuItemId(element.toUpperCase());
+        }), getMenuItemId(source.toUpperCase()));
+    });
     i18nManager.onLanguageChanged(() => {
         refresh();
     });
+    refresh();
 };
 
 module.exports = {

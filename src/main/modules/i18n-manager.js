@@ -10,6 +10,8 @@ const eventbusManager = require("./eventbus-manager");
 
 const eventEmitter = new EventEmitter();
 
+const availableLanguages = ["fr", "en", "es"];
+
 const init = () => {
     return new Promise((resolve, reject) => {
         i18next.use(LanguageDetector).use(backend).init({
@@ -17,7 +19,7 @@ const init = () => {
                 loadPath: path.join(__dirname, "locales", "{{lng}}", "{{ns}}.json"),
                 addPath: path.join(__dirname, "locales", "{{lng}}", "{{ns}}.missing.json")
             },
-            supportedLngs: ["fr", "en", "es"],
+            supportedLngs: availableLanguages,
             fallbackLng: "en",
             debug: applicationManager.isDebug()
         });
@@ -58,12 +60,13 @@ const getTranslations = (keyList, options) => {
     return translations;
 };
 
-eventbusManager.onRendererInvoke("getTranslations", (keyList, options) => {
-    return getTranslations(keyList, options);
-});
+const getAvailableLanguages = () => {
+    return availableLanguages;
+};
 
 module.exports = {
     init: init,
+    getAvailableLanguages: getAvailableLanguages,
     getTranslations: getTranslations,
     getCurrentLanguage: getCurrentLanguage,
     setLanguage: setLanguage,

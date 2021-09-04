@@ -7,15 +7,27 @@ const wallpaper = require("wallpaper");
 const fs = require("fs");
 const path = require("path");
 const imageToBase64 = require("image-to-base64");
+const EventEmitter = require("events");
 
 const loggerManager = require("./logger-manager");
 const eventbusManager = require("./eventbus-manager");
 const storageManager = require("./storage-manager");
 const connectionManager = require("./connection-manager");
 
+const eventEmitter = new EventEmitter();
+
+const BING_SOURCE = "bing";
 const BING_BASE_URL = "https://www.bing.com";
 const BING_WALLPAPER_PATH = path.join(app.getPath("userData"), "bingWallpaper.jpg");
+const BING_WALLPAPER_STORAGE_KEY = "bingWallpaperUrl";
+
+const USER_SOURCE = "user";
 const USER_WALLPAPER_PATH = path.join(app.getPath("userData"), "userWallpaper.jpg");
+
+const NATIONAL_GEOGRAPHIC_SOURCE = "nationalGeographic";
+const NATIONAL_GEOGRAPHIC_BASE_URL = "https://www.nationalgeographic.fr/photo-du-jour";
+const NATIONAL_GEOGRAPHIC_WALLPAPER_PATH = path.join(app.getPath("userData"), "nationalGeographicWallpaper.jpg");
+const NATIONAL_GEOGRAPHIC_STORAGE_KEY = "nationalGeographicWallpaperUrl";
 
 const model = {
     wallpaperPath: null,
@@ -32,14 +44,24 @@ const bingImagePatternValidator = (name, attributes) => {
     return null;
 };
 
+// <img src="https://static.nationalgeographic.fr/files/styles/image_3200/public/pod_310821.jpg?w=1190&amp;h=801" width="1190" height="801" alt="À la frontière" title="À la frontière" loading="lazy">
+const nationalGeographicImagePatternValidator = (name, attributes) => {
+    if (name === "img") {
+        return attributes.src;
+    }
+    return null;
+};
+
 const parsePage = (html, patternValidator) => {
     return new Promise((resolve, reject) => {
         let wallpaperUrl = null;
         const parser = new htmlparser2.Parser({
             onopentag(name, attributes) {
-                const url = patternValidator(name, attributes);
-                if (url != null) {
-                    wallpaperUrl = url;
+                if (wallpaperUrl == null) {
+                    const url = patternValidator(name, attributes);
+                    if (url != null) {
+                        wallpaperUrl = url;
+                    }
                 }
             },
             onend() {
@@ -70,7 +92,7 @@ const downloadImage = (url, destination) => {
     });
 };
 
-const setWallpaper = (path) => {
+const applyWallpaper = (path) => {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + path + "'");
         wallpaper.set(path).then(() => {
@@ -105,7 +127,7 @@ const copyFile = (source, destination) => {
 };
 
 const isApplicationWallpaper = () => {
-    return (isBingWallpaper() || isUserWallpaper());
+    return (isBingWallpaper() || isNationalGeographicWallpaper() || isUserWallpaper());
 };
 
 const isBingWallpaper = () => {
@@ -116,6 +138,10 @@ const isUserWallpaper = () => {
     return (model.wallpaperPath == USER_WALLPAPER_PATH);
 };
 
+const isNationalGeographicWallpaper = () => {
+    return (model.wallpaperPath == NATIONAL_GEOGRAPHIC_WALLPAPER_PATH);
+};
+
 const setB64Wallpaper = (b64Wallpaper) => {
     model.b64Wallpaper = b64Wallpaper;
     eventbusManager.sendRendererMessage("b64Wallpaper", model.b64Wallpaper);
@@ -123,13 +149,14 @@ const setB64Wallpaper = (b64Wallpaper) => {
 
 const setRendererWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
+    eventEmitter.emit("wallpaperChanged", getCurrentWallpaperSource());
     generateB64Wallpaper(model.wallpaperPath).then((data) => {
         setB64Wallpaper(data);
     });
 };
 
 const completeApplyWallpaper = () => {
-    setWallpaper(model.wallpaperPath).then(() => {
+    applyWallpaper(model.wallpaperPath).then(() => {
         setRendererWallpaper();
     });
 };
@@ -140,8 +167,28 @@ const setBingWallpaper = () => {
     if (connectionManager.isOnLine()) {
         fetchPage(BING_BASE_URL).then((htmlContent) => {
             parsePage(htmlContent, bingImagePatternValidator).then((imageUrl) => {
-                storageManager.setData("bingWallpaperUrl", imageUrl);
+                storageManager.setData(BING_WALLPAPER_STORAGE_KEY, imageUrl);
                 downloadImage(imageUrl, BING_WALLPAPER_PATH).then((imagePath) => {
+                    model.wallpaperPath = imagePath;
+                    loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
+                    completeApplyWallpaper();
+                });
+            });
+        });
+    } else {
+        loggerManager.getLogger().error("WallpaperManager - No connection available");
+        completeApplyWallpaper();
+    }
+};
+
+const setNationalGeographicWallpaper = () => {
+    loggerManager.getLogger().info("WallpaperManager - Set National Geographic Wallpaper");
+    setB64Wallpaper(null);
+    if (connectionManager.isOnLine()) {
+        fetchPage(NATIONAL_GEOGRAPHIC_BASE_URL).then((htmlContent) => {
+            parsePage(htmlContent, nationalGeographicImagePatternValidator).then((imageUrl) => {
+                storageManager.setData(NATIONAL_GEOGRAPHIC_STORAGE_KEY, imageUrl);
+                downloadImage(imageUrl, NATIONAL_GEOGRAPHIC_WALLPAPER_PATH).then((imagePath) => {
                     model.wallpaperPath = imagePath;
                     loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
                     completeApplyWallpaper();
@@ -157,58 +204,107 @@ const setBingWallpaper = () => {
 const setUserWallpaper = (path) => {
     loggerManager.getLogger().info("WallpaperManager - Set User Wallpaper");
     setB64Wallpaper(null);
-    copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
-        model.wallpaperPath = imagePath;
-        loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
-        completeApplyWallpaper();
-    });
+    if (path != null) {
+        copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
+            model.wallpaperPath = imagePath;
+            loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
+            completeApplyWallpaper();
+        });
+    } else {
+        fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
+            if (!err) {
+                model.wallpaperPath = USER_WALLPAPER_PATH;
+                loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
+                completeApplyWallpaper();
+            }
+        });
+    }
 };
 
-const bingWallpaperNeedUpdate = () => {
-    const bingWallpaperUrl = storageManager.getData("bingWallpaperUrl");
-    const bingWallpaperUrlDate = bingWallpaperUrl.date;
+const wallpaperNeedUpdate = (key) => {
+    const wallpaperUrl = storageManager.getData(key);
+    const wallpaperUrlDate = wallpaperUrl.date;
     const today = new Date();
-    const bingWallpaperUrlDateIsToday = (
-        bingWallpaperUrlDate.getFullYear() == today.getFullYear() &&
-        bingWallpaperUrlDate.getMonth() == today.getMonth() &&
-        bingWallpaperUrlDate.getDate() == today.getDate()
+    const wallpaperUrlDateIsToday = (
+        wallpaperUrlDate.getFullYear() == today.getFullYear() &&
+        wallpaperUrlDate.getMonth() == today.getMonth() &&
+        wallpaperUrlDate.getDate() == today.getDate()
     );
-    return !bingWallpaperUrlDateIsToday;
+    return !wallpaperUrlDateIsToday;
 }
 
 const checkWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-    if (!isApplicationWallpaper() ||
-        (isBingWallpaper() && bingWallpaperNeedUpdate())) {
-        setBingWallpaper();
+    if (isApplicationWallpaper()) {
+        if (isBingWallpaper() && wallpaperNeedUpdate(BING_WALLPAPER_STORAGE_KEY)) {
+            setWallpaper(BING_SOURCE);
+        } else if (isNationalGeographicWallpaper() && wallpaperNeedUpdate(NATIONAL_GEOGRAPHIC_STORAGE_KEY)) {
+            setWallpaper(NATIONAL_GEOGRAPHIC_SOURCE);
+        } else {
+            setRendererWallpaper();
+        }
     } else {
-        setRendererWallpaper();
+        fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
+            if (err) {
+                copyFile(model.wallpaperPath, USER_WALLPAPER_PATH);
+                setWallpaper(BING_SOURCE);
+            }
+        });
     }
 };
 
 const init = () => {
+    electron.powerMonitor.on("unlock-screen", () => {
+        loggerManager.getLogger().info("WallpaperManager - PowerMonitor 'unlock-screen'");
+        checkWallpaper();
+    });
+    connectionManager.onConnectionChanged((onLine) => {
+        loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
+        checkWallpaper();
+    });
     wallpaper.get().then((wallpaperPath) => {
         model.wallpaperPath = wallpaperPath;
-        electron.powerMonitor.on("unlock-screen", () => {
-            loggerManager.getLogger().info("WallpaperManager - PowerMonitor 'unlock-screen'");
-            checkWallpaper();
-        });
-        connectionManager.onConnectionChanged((onLine) => {
-            loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
-            checkWallpaper();
-        });
         checkWallpaper();
     });
 };
 
-eventbusManager.onRendererInvoke("getB64Wallpaper", () => {
+const getAvailableWallpaperSources = () => {
+    return [BING_SOURCE, NATIONAL_GEOGRAPHIC_SOURCE, USER_SOURCE];
+};
+
+const getCurrentWallpaperSource = () => {
+    if (isBingWallpaper()) {
+        return BING_SOURCE;
+    } else if (isNationalGeographicWallpaper()) {
+        return NATIONAL_GEOGRAPHIC_SOURCE;
+    } else if (isUserWallpaper()) {
+        return USER_SOURCE;
+    }
+    return null;
+};
+
+const setWallpaper = (source) => {
+    switch (source) {
+        case BING_SOURCE: setBingWallpaper(); break;
+        case NATIONAL_GEOGRAPHIC_SOURCE: setNationalGeographicWallpaper(); break;
+        case USER_SOURCE: setUserWallpaper(); break
+    }
+};
+
+const getB64Wallpaper = () => {
     return model.b64Wallpaper;
-});
-eventbusManager.onRendererMessage("setUserWallpaper", (path) => {
-    setUserWallpaper(path);
-});
+};
+
+const onWallpaperChanged = (callback) => {
+    eventEmitter.on("wallpaperChanged", callback);
+};
 
 module.exports = {
     init: init,
-    setBingWallpaper: setBingWallpaper
+    setWallpaper: setWallpaper,
+    getB64Wallpaper: getB64Wallpaper,
+    getAvailableWallpaperSources: getAvailableWallpaperSources,
+    getCurrentWallpaperSource: getCurrentWallpaperSource,
+    setUserWallpaper: setUserWallpaper,
+    onWallpaperChanged: onWallpaperChanged
 };

@@ -47,19 +47,21 @@ const init = () => {
     });
 };
 
-eventbusManager.onRendererMessage("openExternal", (url) => {
+const openExternal = (url) => {
     shell.openExternal(url);
-});
+};
 
-eventbusManager.onRendererInvoke("getVersions", () => {
+const getVersions = () => {
     const versions = Object.assign({}, process.versions);
     versions.application = pkg.version;
     versions.vue = pkg.dependencies.vue.replace("^", "");
     versions.vueRouter = pkg.dependencies["vue-router"].replace("^", "");
     return versions;
-});
+};
 
 module.exports = {
+    openExternal: openExternal,
+    getVersions: getVersions,
     init: init,
     isLaunchedAtStartup: isLaunchedAtStartup,
     toggleLaunchAtStartup: toggleLaunchAtStartup,
