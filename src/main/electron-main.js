@@ -17,7 +17,7 @@ const createWindow = () => {
             width: 640,
             height: 400,
             resizable: applicationManager.isDebug(),
-            icon: path.join(__dirname, "..", "renderer", "assets", "images", "icon.png"),
+            icon: path.join(__dirname, "..", "renderer", "resources", "images", "icon.png"),
             webPreferences: {
                 preload: path.join(__dirname, "electron-preload.js")
             }

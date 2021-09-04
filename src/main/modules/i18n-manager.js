@@ -16,8 +16,8 @@ const init = () => {
     return new Promise((resolve, reject) => {
         i18next.use(LanguageDetector).use(backend).init({
             backend: {
-                loadPath: path.join(__dirname, "locales", "{{lng}}", "{{ns}}.json"),
-                addPath: path.join(__dirname, "locales", "{{lng}}", "{{ns}}.missing.json")
+                loadPath: path.join(__dirname, "..", "resources", "locales", "{{lng}}", "{{ns}}.json"),
+                addPath: path.join(__dirname, "..", "resources", "locales", "{{lng}}", "{{ns}}.missing.json")
             },
             supportedLngs: availableLanguages,
             fallbackLng: "en",
