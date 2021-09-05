@@ -152,7 +152,7 @@ const refreshMenu = () => {
 
 const refreshTray = () => {
     if (tray == null) {
-        const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "icon.png"))
+        const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "tray.png"))
         tray = new Tray(icon);
         tray.setToolTip(app.getName());
         tray.on("click", () => {
