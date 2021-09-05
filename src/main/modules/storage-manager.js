@@ -26,10 +26,10 @@ const setData = (key, value) => {
     const data = getData(key);
     if (value != data.value) {
         loggerManager.getLogger().info("StorageManager - Set/Update data '" + key + "' with value '" + value + "'");
-        data.date = new Date();
         data.value = value;
-        save();
     }
+    data.date = new Date();
+    save();
 };
 
 const save = () => {

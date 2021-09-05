@@ -38,7 +38,7 @@ const getAvailableWallpaperSources = () => {
                 setActiveMenuItemOfList(wallpaperManager.getAvailableWallpaperSources().map((element) => {
                     return getMenuItemId(element.toUpperCase());
                 }), menuItemId);
-                wallpaperManager.setWallpaper(source);
+                wallpaperManager.setWallpaperSource(source);
             }
         });
     });

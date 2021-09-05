@@ -7,6 +7,7 @@ const wallpaper = require("wallpaper");
 const fs = require("fs");
 const path = require("path");
 const imageToBase64 = require("image-to-base64");
+const dayjs = require("dayjs");
 const EventEmitter = require("events");
 
 const loggerManager = require("./logger-manager");
@@ -24,6 +25,7 @@ const sources = [
     {
         name: BING_SOURCE,
         baseUrl: "https://www.bing.com",
+        needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
             // <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
             if (name === "link" &&
@@ -35,15 +37,11 @@ const sources = [
         }
     },
     {
-        name: "nationalGeographic",
-        baseUrl: "https://www.nationalgeographic.fr/photo-du-jour",
-        imagePatternValidator: (name, attributes) => {
-            // <img src="https://static.nationalgeographic.fr/files/styles/image_3200/public/pod_310821.jpg?w=1190&amp;h=801" width="1190" height="801" alt="À la frontière" title="À la frontière" loading="lazy">
-            if (name === "img") {
-                return attributes.src;
-            }
-            return null;
-        }
+        name: "oceanexplorer",
+        get baseUrl() {
+            return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + "-hires.jpg";
+        },
+        needPageParsing: false
     },
     {
         name: USER_SOURCE
@@ -169,17 +167,24 @@ const completeApplyWallpaper = () => {
 const setExternalWallpaper = (config) => {
     loggerManager.getLogger().info("WallpaperManager - Set " + config.name.toUpperCase() + " Wallpaper");
     setB64Wallpaper(null);
+    const finalizeSetExternalWallpaper = (imageUrl) => {
+        storageManager.setData(config.wallpaperStorageKey, imageUrl);
+        downloadImage(imageUrl, config.wallpaperPath).then((imagePath) => {
+            model.wallpaperPath = imagePath;
+            loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
+            completeApplyWallpaper();
+        });
+    };
     if (connectionManager.isOnLine()) {
-        fetchPage(config.baseUrl).then((htmlContent) => {
-            parsePage(htmlContent, config.imagePatternValidator).then((imageUrl) => {
-                storageManager.setData(config.wallpaperStorageKey, imageUrl);
-                downloadImage(imageUrl, config.wallpaperPath).then((imagePath) => {
-                    model.wallpaperPath = imagePath;
-                    loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
-                    completeApplyWallpaper();
+        if (config.needPageParsing) {
+            fetchPage(config.baseUrl).then((htmlContent) => {
+                parsePage(htmlContent, config.imagePatternValidator).then((imageUrl) => {
+                    finalizeSetExternalWallpaper(imageUrl);
                 });
             });
-        });
+        } else {
+            finalizeSetExternalWallpaper(config.baseUrl);
+        }
     } else {
         loggerManager.getLogger().error("WallpaperManager - No connection available");
         completeApplyWallpaper();
@@ -206,19 +211,12 @@ const setUserWallpaper = (path) => {
 
 const externalWallpaperNeedUpdate = (key) => {
     const wallpaperUrl = storageManager.getData(key);
-    const wallpaperUrlDate = wallpaperUrl.date;
-    const today = new Date();
-    const wallpaperUrlDateIsToday = (
-        wallpaperUrlDate.getFullYear() == today.getFullYear() &&
-        wallpaperUrlDate.getMonth() == today.getMonth() &&
-        wallpaperUrlDate.getDate() == today.getDate()
-    );
-    return !wallpaperUrlDateIsToday;
+    return dayjs(wallpaperUrl.date).format("YYYYMMDD") != dayjs(new Date()).format("YYYYMMDD");
 }
 
 const checkWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-    const config = getSource("wallpaperPath", model.wallpaperPath);
+    let config = getSource("wallpaperPath", model.wallpaperPath);
     if (config != null) {
         if (config.name != USER_SOURCE && externalWallpaperNeedUpdate(config.wallpaperStorageKey)) {
             setExternalWallpaper(config);
@@ -229,7 +227,7 @@ const checkWallpaper = () => {
         fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
             if (err) {
                 copyFile(model.wallpaperPath, USER_WALLPAPER_PATH);
-                const config = getSource("name", BING_SOURCE);
+                config = getSource("name", BING_SOURCE);
                 setExternalWallpaper(config);
             }
         });
@@ -262,7 +260,7 @@ const getCurrentWallpaperSource = () => {
     return config ? config.name : null;
 };
 
-const setWallpaper = (source) => {
+const setWallpaperSource = (source) => {
     const config = getSource("name", source);
     if (config.name == USER_SOURCE) {
         setUserWallpaper();
@@ -281,7 +279,7 @@ const onWallpaperChanged = (callback) => {
 
 module.exports = {
     init: init,
-    setWallpaper: setWallpaper,
+    setWallpaperSource: setWallpaperSource,
     getB64Wallpaper: getB64Wallpaper,
     getAvailableWallpaperSources: getAvailableWallpaperSources,
     getCurrentWallpaperSource: getCurrentWallpaperSource,
