@@ -1,9 +1,12 @@
-const { Menu, BrowserWindow, app } = require("electron");
+const { Menu, BrowserWindow, app, Tray, nativeImage } = require("electron");
+const path = require("path");
 
 const applicationManager = require("./application-manager");
 const wallpaperManager = require("./wallpaper-manager");
 const i18nManager = require("./i18n-manager");
 const viewManager = require("./view-manager");
+
+let tray = null;
 
 const changeMenuItemChecked = (menuItemId, checked) => {
     Menu.getApplicationMenu().getMenuItemById(menuItemId).checked = checked;
@@ -89,14 +92,14 @@ const getAvailableLanguages = () => {
     return availableLanguages;
 };
 
-const refresh = () => {
+const refreshMenu = () => {
     const translations = i18nManager.getTranslations([
         "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
         "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
-        "WALLPAPER_LABEL"]);
+        "WALLPAPER_LABEL", "APPLICATION_LABEL"]);
     const template = [
         {
-            label: applicationManager.isMac() ? app.getName() : "Application",
+            label: applicationManager.isMac() ? app.getName() : translations["APPLICATION_LABEL"],
             submenu: [
                 {
                     label: translations["DEBUG_LABEL"],
@@ -145,6 +148,41 @@ const refresh = () => {
     ]
     const menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
+};
+
+const refreshTray = () => {
+    if (tray == null) {
+        const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "icon.png"))
+        tray = new Tray(icon);
+        tray.setToolTip(app.getName());
+        tray.on("click", () => {
+            applicationManager.createWindow();
+        });
+    }
+    const translations = i18nManager.getTranslations(["DISPLAY_LABEL", "QUIT_LABEL"]);
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: translations["DISPLAY_LABEL"],
+            click: () => {
+                applicationManager.createWindow();
+            }
+        },
+        {
+            type: "separator"
+        },
+        {
+            label: translations["QUIT_LABEL"],
+            click: () => {
+                applicationManager.quit();
+            }
+        }
+    ])
+    tray.setContextMenu(contextMenu);
+};
+
+const refresh = () => {
+    refreshMenu();
+    refreshTray();
 };
 
 const init = () => {

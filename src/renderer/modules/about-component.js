@@ -26,7 +26,7 @@ export default () => {
                 methods: {
                     refreshTranslations: function () {
                         const that = this;
-                        window.eventbus.invoke("getTranslations", ["AUTHOR_LABEL", "BASED_ON_LABEL"]).then((translations) => {
+                        window.eventbus.invoke("getTranslations", ["AUTHOR_LABEL", "BASED_ON_LABEL", "APPLICATION_LABEL"]).then((translations) => {
                             that.translations = translations;
                         });
                     },

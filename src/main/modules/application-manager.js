@@ -1,12 +1,14 @@
-const { app, shell } = require("electron");
+const { app, shell, BrowserWindow } = require("electron");
+const path = require("path");
 const AutoLaunch = require("auto-launch");
 
 const pkg = require("./../../../package.json");
 const storageManager = require("./storage-manager");
-const eventbusManager = require("./eventbus-manager");
+const viewManager = require("./view-manager");
 
 let autoLauncher = null;
 let launchAtStartup = false;
+let win = null;
 
 const isMac = () => {
     return process.platform === "darwin";
@@ -33,6 +35,33 @@ const toggleLaunchAtStartup = () => {
         autoLauncher.disable();
     }
     return launchAtStartup;
+};
+
+const createWindow = () => {
+    return new Promise((resolve, reject) => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            win = new BrowserWindow({
+                width: 640,
+                height: 400,
+                resizable: isDebug(),
+                icon: path.join(__dirname, "..", "..", "resources", "images", "icon.png"),
+                webPreferences: {
+                    preload: path.join(__dirname, "..", "electron-preload.js")
+                }
+            });
+            win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
+                viewManager.showView(viewManager.getCurrentView());
+                resolve();
+            });
+            win.on("closed", () => {
+                win = null;
+            });
+        } else {
+            setTimeout(() => {
+                resolve();
+            });
+        }
+    });
 };
 
 const init = () => {
@@ -67,5 +96,6 @@ module.exports = {
     toggleLaunchAtStartup: toggleLaunchAtStartup,
     isMac: isMac,
     isDebug: isDebug,
-    quit: quit
+    quit: quit,
+    createWindow: createWindow
 };
