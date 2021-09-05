@@ -6,6 +6,7 @@ const menuManager = require("./modules/menu-manager");
 const i18nManager = require("./modules/i18n-manager");
 const storageManager = require("./modules/storage-manager");
 const eventbusManager = require("./modules/eventbus-manager");
+const trayManager = require("./modules/tray-manager");
 
 const initRendererEventBus = () => {
     // wallpaper manager
@@ -32,6 +33,7 @@ app.whenReady().then(() => {
     initRendererEventBus();
     storageManager.init().then(i18nManager.init).then(applicationManager.init).then(() => {
         menuManager.init();
+        trayManager.init();
         applicationManager.createWindow().then(() => {
             wallpaperManager.init();
         });

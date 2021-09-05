@@ -17,39 +17,60 @@ const connectionManager = require("./connection-manager");
 const eventEmitter = new EventEmitter();
 
 const BING_SOURCE = "bing";
-const BING_BASE_URL = "https://www.bing.com";
-const BING_WALLPAPER_PATH = path.join(app.getPath("userData"), "bingWallpaper.jpg");
-const BING_WALLPAPER_STORAGE_KEY = "bingWallpaperUrl";
-
 const USER_SOURCE = "user";
-const USER_WALLPAPER_PATH = path.join(app.getPath("userData"), "userWallpaper.jpg");
+let USER_WALLPAPER_PATH = null;
 
-const NATIONAL_GEOGRAPHIC_SOURCE = "nationalGeographic";
-const NATIONAL_GEOGRAPHIC_BASE_URL = "https://www.nationalgeographic.fr/photo-du-jour";
-const NATIONAL_GEOGRAPHIC_WALLPAPER_PATH = path.join(app.getPath("userData"), "nationalGeographicWallpaper.jpg");
-const NATIONAL_GEOGRAPHIC_STORAGE_KEY = "nationalGeographicWallpaperUrl";
+const sources = [
+    {
+        name: BING_SOURCE,
+        baseUrl: "https://www.bing.com",
+        imagePatternValidator: (name, attributes) => {
+            // <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
+            if (name === "link" &&
+                typeof (attributes.href) == "string" &&
+                attributes.href.indexOf("id=OHR") != -1) {
+                return "https://www.bing.com" + attributes.href;
+            }
+            return null;
+        }
+    },
+    {
+        name: "nationalGeographic",
+        baseUrl: "https://www.nationalgeographic.fr/photo-du-jour",
+        imagePatternValidator: (name, attributes) => {
+            // <img src="https://static.nationalgeographic.fr/files/styles/image_3200/public/pod_310821.jpg?w=1190&amp;h=801" width="1190" height="801" alt="À la frontière" title="À la frontière" loading="lazy">
+            if (name === "img") {
+                return attributes.src;
+            }
+            return null;
+        }
+    },
+    {
+        name: USER_SOURCE
+    }
+];
+sources.forEach(element => {
+    element.wallpaperPath = path.join(app.getPath("userData"), element.name + "Wallpaper.jpg");
+    element.wallpaperStorageKey = element.name + "WallpaperUrl";
+    if (element.name == USER_SOURCE) {
+        USER_WALLPAPER_PATH = element.wallpaperPath;
+    }
+});
 
 const model = {
     wallpaperPath: null,
     b64Wallpaper: null
 };
 
-// <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
-const bingImagePatternValidator = (name, attributes) => {
-    if (name === "link" &&
-        typeof (attributes.href) == "string" &&
-        attributes.href.indexOf("id=OHR") != -1) {
-        return BING_BASE_URL + attributes.href;
-    }
-    return null;
-};
-
-// <img src="https://static.nationalgeographic.fr/files/styles/image_3200/public/pod_310821.jpg?w=1190&amp;h=801" width="1190" height="801" alt="À la frontière" title="À la frontière" loading="lazy">
-const nationalGeographicImagePatternValidator = (name, attributes) => {
-    if (name === "img") {
-        return attributes.src;
-    }
-    return null;
+const getSource = (property, value) => {
+    let config = null;
+    sources.forEach(element => {
+        if (element[property] == value) {
+            config = element;
+            return;
+        }
+    });
+    return config;
 };
 
 const parsePage = (html, patternValidator) => {
@@ -126,22 +147,6 @@ const copyFile = (source, destination) => {
     });
 };
 
-const isApplicationWallpaper = () => {
-    return (isBingWallpaper() || isNationalGeographicWallpaper() || isUserWallpaper());
-};
-
-const isBingWallpaper = () => {
-    return (model.wallpaperPath == BING_WALLPAPER_PATH);
-};
-
-const isUserWallpaper = () => {
-    return (model.wallpaperPath == USER_WALLPAPER_PATH);
-};
-
-const isNationalGeographicWallpaper = () => {
-    return (model.wallpaperPath == NATIONAL_GEOGRAPHIC_WALLPAPER_PATH);
-};
-
 const setB64Wallpaper = (b64Wallpaper) => {
     model.b64Wallpaper = b64Wallpaper;
     eventbusManager.sendRendererMessage("b64Wallpaper", model.b64Wallpaper);
@@ -161,36 +166,16 @@ const completeApplyWallpaper = () => {
     });
 };
 
-const setBingWallpaper = () => {
-    loggerManager.getLogger().info("WallpaperManager - Set Bing Wallpaper");
+const setExternalWallpaper = (config) => {
+    loggerManager.getLogger().info("WallpaperManager - Set " + config.name.toUpperCase() + " Wallpaper");
     setB64Wallpaper(null);
     if (connectionManager.isOnLine()) {
-        fetchPage(BING_BASE_URL).then((htmlContent) => {
-            parsePage(htmlContent, bingImagePatternValidator).then((imageUrl) => {
-                storageManager.setData(BING_WALLPAPER_STORAGE_KEY, imageUrl);
-                downloadImage(imageUrl, BING_WALLPAPER_PATH).then((imagePath) => {
+        fetchPage(config.baseUrl).then((htmlContent) => {
+            parsePage(htmlContent, config.imagePatternValidator).then((imageUrl) => {
+                storageManager.setData(config.wallpaperStorageKey, imageUrl);
+                downloadImage(imageUrl, config.wallpaperPath).then((imagePath) => {
                     model.wallpaperPath = imagePath;
-                    loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
-                    completeApplyWallpaper();
-                });
-            });
-        });
-    } else {
-        loggerManager.getLogger().error("WallpaperManager - No connection available");
-        completeApplyWallpaper();
-    }
-};
-
-const setNationalGeographicWallpaper = () => {
-    loggerManager.getLogger().info("WallpaperManager - Set National Geographic Wallpaper");
-    setB64Wallpaper(null);
-    if (connectionManager.isOnLine()) {
-        fetchPage(NATIONAL_GEOGRAPHIC_BASE_URL).then((htmlContent) => {
-            parsePage(htmlContent, nationalGeographicImagePatternValidator).then((imageUrl) => {
-                storageManager.setData(NATIONAL_GEOGRAPHIC_STORAGE_KEY, imageUrl);
-                downloadImage(imageUrl, NATIONAL_GEOGRAPHIC_WALLPAPER_PATH).then((imagePath) => {
-                    model.wallpaperPath = imagePath;
-                    loggerManager.getLogger().info("WallpaperManager - Apply Bing Wallpaper");
+                    loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
                     completeApplyWallpaper();
                 });
             });
@@ -202,26 +187,24 @@ const setNationalGeographicWallpaper = () => {
 };
 
 const setUserWallpaper = (path) => {
-    loggerManager.getLogger().info("WallpaperManager - Set User Wallpaper");
+    loggerManager.getLogger().info("WallpaperManager - Set " + USER_SOURCE.toUpperCase() + " Wallpaper");
     setB64Wallpaper(null);
+    const finalizeSetUserWallpaper = () => {
+        loggerManager.getLogger().info("WallpaperManager - Apply " + USER_SOURCE.toUpperCase() + " Wallpaper");
+        completeApplyWallpaper();
+    };
     if (path != null) {
         copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
             model.wallpaperPath = imagePath;
-            loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
-            completeApplyWallpaper();
+            finalizeSetUserWallpaper();
         });
     } else {
-        fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
-            if (!err) {
-                model.wallpaperPath = USER_WALLPAPER_PATH;
-                loggerManager.getLogger().info("WallpaperManager - Apply User Wallpaper");
-                completeApplyWallpaper();
-            }
-        });
+        model.wallpaperPath = USER_WALLPAPER_PATH;
+        finalizeSetUserWallpaper();
     }
 };
 
-const wallpaperNeedUpdate = (key) => {
+const externalWallpaperNeedUpdate = (key) => {
     const wallpaperUrl = storageManager.getData(key);
     const wallpaperUrlDate = wallpaperUrl.date;
     const today = new Date();
@@ -235,11 +218,10 @@ const wallpaperNeedUpdate = (key) => {
 
 const checkWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-    if (isApplicationWallpaper()) {
-        if (isBingWallpaper() && wallpaperNeedUpdate(BING_WALLPAPER_STORAGE_KEY)) {
-            setWallpaper(BING_SOURCE);
-        } else if (isNationalGeographicWallpaper() && wallpaperNeedUpdate(NATIONAL_GEOGRAPHIC_STORAGE_KEY)) {
-            setWallpaper(NATIONAL_GEOGRAPHIC_SOURCE);
+    const config = getSource("wallpaperPath", model.wallpaperPath);
+    if (config != null) {
+        if (config.name != USER_SOURCE && externalWallpaperNeedUpdate(config.wallpaperStorageKey)) {
+            setExternalWallpaper(config);
         } else {
             setRendererWallpaper();
         }
@@ -247,7 +229,8 @@ const checkWallpaper = () => {
         fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
             if (err) {
                 copyFile(model.wallpaperPath, USER_WALLPAPER_PATH);
-                setWallpaper(BING_SOURCE);
+                const config = getSource("name", BING_SOURCE);
+                setExternalWallpaper(config);
             }
         });
     }
@@ -269,25 +252,22 @@ const init = () => {
 };
 
 const getAvailableWallpaperSources = () => {
-    return [BING_SOURCE, NATIONAL_GEOGRAPHIC_SOURCE, USER_SOURCE];
+    return sources.map((element) => {
+        return element.name;
+    });
 };
 
 const getCurrentWallpaperSource = () => {
-    if (isBingWallpaper()) {
-        return BING_SOURCE;
-    } else if (isNationalGeographicWallpaper()) {
-        return NATIONAL_GEOGRAPHIC_SOURCE;
-    } else if (isUserWallpaper()) {
-        return USER_SOURCE;
-    }
-    return null;
+    const config = getSource("wallpaperPath", model.wallpaperPath);
+    return config ? config.name : null;
 };
 
 const setWallpaper = (source) => {
-    switch (source) {
-        case BING_SOURCE: setBingWallpaper(); break;
-        case NATIONAL_GEOGRAPHIC_SOURCE: setNationalGeographicWallpaper(); break;
-        case USER_SOURCE: setUserWallpaper(); break
+    const config = getSource("name", source);
+    if (config.name == USER_SOURCE) {
+        setUserWallpaper();
+    } else {
+        setExternalWallpaper(config);
     }
 };
 

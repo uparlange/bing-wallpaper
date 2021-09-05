@@ -14,7 +14,11 @@ const isMac = () => {
     return process.platform === "darwin";
 };
 
-const isDebug = () => {
+const isWindows = () => {
+    return process.platform === "win32";
+};
+
+const isDebug = () => { 
     return process.argv[2] == "--dev";
 };
 
@@ -95,6 +99,7 @@ module.exports = {
     isLaunchedAtStartup: isLaunchedAtStartup,
     toggleLaunchAtStartup: toggleLaunchAtStartup,
     isMac: isMac,
+    isWindows: isWindows,
     isDebug: isDebug,
     quit: quit,
     createWindow: createWindow
