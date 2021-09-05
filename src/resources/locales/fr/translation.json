@@ -1,0 +1,21 @@
+{
+    "APPLICATION_LABEL": "Application",
+    "DISPLAY_LABEL": "Afficher",
+    "QUIT_LABEL": "Quitter",
+    "DEBUG_LABEL": "Déboguer",
+    "VIEW_LABEL": "Vue",
+    "WALLPAPER_VIEW_LABEL": "Fond d'écran",
+    "ABOUT_VIEW_LABEL": "A propos",
+    "LANGUAGE_LABEL": "Langue",
+    "FR_LANGUAGE_LABEL": "Français",
+    "EN_LANGUAGE_LABEL": "English",
+    "ES_LANGUAGE_LABEL": "Español",
+    "AUTHOR_LABEL": "Auteur",
+    "BASED_ON_LABEL": "Basé sur",
+    "PREFERENCES_LABEL": "Préférences",
+    "LAUNCH_AT_STARTUP_LABEL": "Lancer au démarrage",
+    "WALLPAPER_LABEL": "Fond d'écran",
+    "BING_WALLPAPER_SOURCE_LABEL": "Bing",
+    "NATIONALGEOGRAPHIC_WALLPAPER_SOURCE_LABEL": "National Geographic",
+    "USER_WALLPAPER_SOURCE_LABEL": "Utilisateur"
+}
