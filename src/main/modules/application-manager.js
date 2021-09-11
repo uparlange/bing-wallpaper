@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { app, shell, BrowserWindow, Notification } = require("electron");
+const { app, shell, BrowserWindow } = require("electron");
 const path = require("path");
 const AutoLaunch = require("auto-launch");
 const fetch = require("node-fetch");
@@ -126,17 +126,21 @@ const getDownloadUrl = (version) => {
 };
 
 const getApplicationFilename = (version) => {
-    return `${pkg.build.productName}-${version}-${process.arch}.${isMac() ? "dmg" : "exe"}`;
+    // process.arch always ia32 even in 64 bit platform ?
+    // manage only x64 version so force to x64
+    const arch = process.arch == "ia32" ? "x64" : process.arch;
+    return `${pkg.build.productName}-${version}-${arch}.${isMac() ? "dmg" : "exe"}`;
 };
 
 const downloadVersion = (url, destination) => {
     return new Promise((resolve, reject) => {
-        const ws = fs.createWriteStream(destination);
-        ws.on("finish", () => {
-            resolve(destination);
-        });
         loggerManager.getLogger().info("ApplicationManager - Download application '" + url + "' to '" + destination + "'");
-        download(url).pipe(ws);
+        download(url).then((data) => {
+            fs.writeFileSync(destination, data);
+            resolve();
+        }).catch((err) => {
+            loggerManager.getLogger().error("ApplicationManager - downloadVersion : " + err);
+        });
     });
 };
 
