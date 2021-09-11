@@ -1,5 +1,6 @@
 const { Menu, app } = require("electron");
 
+const pkg = require("./../../../package.json");
 const applicationManager = require("./application-manager");
 const wallpaperManager = require("./wallpaper-manager");
 const i18nManager = require("./i18n-manager");
@@ -97,7 +98,7 @@ const refresh = () => {
         "LAUNCH_MINIMIZED_LABEL"]);
     const template = [
         {
-            label: applicationManager.isMac() ? app.getName() : translations["APPLICATION_LABEL"],
+            label: pkg.build.productName,
             submenu: [
                 {
                     label: translations["DEBUG_LABEL"],
