@@ -137,7 +137,7 @@ const downloadVersion = (url, destination) => {
         loggerManager.getLogger().info("ApplicationManager - Download application '" + url + "' to '" + destination + "'");
         download(url).then((data) => {
             fs.writeFileSync(destination, data);
-            resolve();
+            resolve(destination);
         }).catch((err) => {
             loggerManager.getLogger().error("ApplicationManager - downloadVersion : " + err);
         });
@@ -156,7 +156,7 @@ const updateApplication = (version) => {
 const checkForUpdates = () => {
     if (connectionManager.isOnLine()) {
         fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {
-            if (compareVersion(json.version, pkg.version) > 0) {
+        if (compareVersion(json.version, pkg.version) > 0) {
                 eventbusManager.sendRendererMessage("newVersionAvailable", json.version);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
