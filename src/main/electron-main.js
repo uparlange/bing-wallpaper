@@ -20,6 +20,10 @@ const initRendererEventBus = () => {
     eventbusManager.onRendererMessage("openExternal", (url) => {
         applicationManager.openExternal(url);
     });
+    eventbusManager.onRendererMessage("updateMyApplication", (version) => {
+        // 'updateApplication' event seems used internaly by electron
+        applicationManager.updateApplication(version);
+    });
     eventbusManager.onRendererInvoke("getVersions", () => {
         return applicationManager.getVersions();
     });

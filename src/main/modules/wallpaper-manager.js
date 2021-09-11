@@ -94,9 +94,7 @@ const parsePage = (html, patternValidator) => {
 
 const fetchPage = (url) => {
     return new Promise((resolve, reject) => {
-        fetch(url)
-            .then(res => res.text())
-            .then(body => resolve(body));
+        fetch(url).then(res => res.text()).then(text => resolve(text));
     });
 };
 
@@ -186,7 +184,6 @@ const setExternalWallpaper = (config) => {
             finalizeSetExternalWallpaper(config.baseUrl);
         }
     } else {
-        loggerManager.getLogger().error("WallpaperManager - No connection available");
         completeApplyWallpaper();
     }
 };

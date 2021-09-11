@@ -17,5 +17,6 @@
     "WALLPAPER_LABEL": "Fondo de pantalla",
     "BING_WALLPAPER_SOURCE_LABEL": "Bing",
     "OCEANEXPLORER_WALLPAPER_SOURCE_LABEL": "Ocean Exploration",
-    "USER_WALLPAPER_SOURCE_LABEL": "Usuario"
+    "USER_WALLPAPER_SOURCE_LABEL": "Usuario",
+    "NEW_VERSION_AVAILABLE_LABEL": "Nueva versión '{{version}}' disponible. ¿Quiere instalarlo?"
 }

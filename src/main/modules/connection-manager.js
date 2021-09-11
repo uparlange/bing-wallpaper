@@ -8,7 +8,12 @@ const eventEmitter = new EventEmitter();
 let onLine = false;
 
 const isOnLine = () => {
+    logStatus();
     return onLine;
+};
+
+const logStatus = () => {
+    loggerManager.getLogger().info("ConnectionManager - Online '" + onLine + "'");
 };
 
 const onConnectionChanged = (callback) => {
@@ -17,8 +22,8 @@ const onConnectionChanged = (callback) => {
 
 eventbusManager.onRendererMessage("connectionChanged", (status) => {
     if (status != onLine) {
-        loggerManager.getLogger().info("ConnectionManager - Online '" + status + "'");
         onLine = status;
+        logStatus();
         eventEmitter.emit("connectionChanged", status);
     }
 });
