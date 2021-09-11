@@ -1,4 +1,4 @@
-const { Menu, BrowserWindow, app } = require("electron");
+const { Menu, app } = require("electron");
 
 const applicationManager = require("./application-manager");
 const wallpaperManager = require("./wallpaper-manager");
@@ -93,7 +93,8 @@ const refresh = () => {
     const translations = i18nManager.getTranslations([
         "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
         "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
-        "WALLPAPER_LABEL", "APPLICATION_LABEL"]);
+        "WALLPAPER_LABEL", "APPLICATION_LABEL", "LAUNCH_LABEL",
+        "LAUNCH_MINIMIZED_LABEL"]);
     const template = [
         {
             label: applicationManager.isMac() ? app.getName() : translations["APPLICATION_LABEL"],
@@ -102,7 +103,7 @@ const refresh = () => {
                     label: translations["DEBUG_LABEL"],
                     visible: applicationManager.isDebug(),
                     click: () => {
-                        const win = BrowserWindow.getAllWindows()[0];
+                        const win = applicationManager.getMainWindow();
                         if (win != null) {
                             win.webContents.openDevTools();
                         }
@@ -128,13 +129,27 @@ const refresh = () => {
             label: translations["PREFERENCES_LABEL"],
             submenu: [
                 {
-                    id: "MENU_ITEM_LAUNCH_AT_STARTUP_ID",
-                    label: translations["LAUNCH_AT_STARTUP_LABEL"],
-                    checked: applicationManager.isLaunchedAtStartup(),
-                    type: "checkbox",
-                    click: () => {
-                        changeMenuItemChecked("MENU_ITEM_LAUNCH_AT_STARTUP_ID", applicationManager.toggleLaunchAtStartup());
-                    }
+                    label: translations["LAUNCH_LABEL"],
+                    submenu: [
+                        {
+                            id: "MENU_ITEM_LAUNCH_AT_STARTUP_ID",
+                            label: translations["LAUNCH_AT_STARTUP_LABEL"],
+                            checked: applicationManager.isLaunchedAtStartup(),
+                            type: "checkbox",
+                            click: () => {
+                                changeMenuItemChecked("MENU_ITEM_LAUNCH_AT_STARTUP_ID", applicationManager.toggleLaunchAtStartup());
+                            }
+                        },
+                        {
+                            id: "MENU_ITEM_LAUNCH_MINIMIZED_ID",
+                            label: translations["LAUNCH_MINIMIZED_LABEL"],
+                            checked: applicationManager.isLaunchedMinimized(),
+                            type: "checkbox",
+                            click: () => {
+                                changeMenuItemChecked("MENU_ITEM_LAUNCH_MINIMIZED_ID", applicationManager.toggleLaunchMinimized());
+                            }
+                        }
+                    ]
                 },
                 {
                     label: translations["LANGUAGE_LABEL"],

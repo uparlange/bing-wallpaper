@@ -1,7 +1,8 @@
-const { ipcMain, ipcRenderer, BrowserWindow } = require("electron");
+const { ipcMain, ipcRenderer } = require("electron");
 
 const sendRendererMessage = (eventName, ...message) => {
-    const win = BrowserWindow.getAllWindows()[0];
+    const applicationManager = require("./application-manager");
+    const win = applicationManager.getMainWindow();
     if (win != null) {
         win.webContents.send(eventName, ...message);
     }

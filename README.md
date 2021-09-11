@@ -1,4 +1,4 @@
-# Bing Wallpaper
+# BingWallpaper
 
 * This application is a wallpaper manager
 * Originally planned to retrieve the daily [Bing Wallpaper](https://www.bing.com/)

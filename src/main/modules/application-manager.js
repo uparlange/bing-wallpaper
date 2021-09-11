@@ -16,6 +16,11 @@ const connectionManager = require("./connection-manager");
 let autoLauncher = null;
 let launchAtStartup = false;
 let win = null;
+let createWindowFirstTime = true;
+
+const getMainWindow = () => {
+    return win;
+};
 
 const isMac = () => {
     return process.platform === "darwin";
@@ -34,6 +39,16 @@ const quit = () => {
     app.quit();
 };
 
+const isLaunchedMinimized = () => {
+    return storageManager.getData("launchMinimized", false).value;
+};
+
+const toggleLaunchMinimized = () => {
+    const launchMinimized = !isLaunchedMinimized();
+    storageManager.setData("launchMinimized", launchMinimized);
+    return launchMinimized;
+};
+
 const isLaunchedAtStartup = () => {
     return launchAtStartup;
 };
@@ -50,7 +65,7 @@ const toggleLaunchAtStartup = () => {
 
 const createWindow = () => {
     return new Promise((resolve, reject) => {
-        if (BrowserWindow.getAllWindows().length === 0) {
+        if (win == null) {
             win = new BrowserWindow({
                 width: 640,
                 height: 400,
@@ -63,6 +78,12 @@ const createWindow = () => {
             win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
                 viewManager.showView(viewManager.getCurrentView());
                 checkForUpdates();
+                if (createWindowFirstTime) {
+                    createWindowFirstTime = false;
+                    if (isLaunchedMinimized()) {
+                        win.close();
+                    }
+                }
                 resolve();
             });
             win.on("closed", () => {
@@ -156,7 +177,7 @@ const updateApplication = (version) => {
 const checkForUpdates = () => {
     if (connectionManager.isOnLine()) {
         fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {
-        if (compareVersion(json.version, pkg.version) > 0) {
+            if (compareVersion(json.version, pkg.version) > 0) {
                 eventbusManager.sendRendererMessage("newVersionAvailable", json.version);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
@@ -181,6 +202,8 @@ module.exports = {
     openExternal: openExternal,
     getVersions: getVersions,
     init: init,
+    isLaunchedMinimized: isLaunchedMinimized,
+    toggleLaunchMinimized: toggleLaunchMinimized,
     isLaunchedAtStartup: isLaunchedAtStartup,
     toggleLaunchAtStartup: toggleLaunchAtStartup,
     isMac: isMac,
@@ -188,5 +211,6 @@ module.exports = {
     isDebug: isDebug,
     quit: quit,
     createWindow: createWindow,
-    updateApplication: updateApplication
+    updateApplication: updateApplication,
+    getMainWindow: getMainWindow
 };
