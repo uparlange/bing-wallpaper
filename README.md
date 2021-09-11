@@ -7,12 +7,12 @@
 * User preferences support (last displayed view, language, launch at startup)
 * Tray icon support
 * Online / Offline support
+* Auto update support
 
 # Downloads
 
-* [MacOS (Intel) : BingWallpaper-1.0.5.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.5/BingWallpaper-1.0.5.dmg)
-* [MacOS (M1) : BingWallpaper-1.0.5-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.5/BingWallpaper-1.0.5-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.0.5-nsis64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.5/BingWallpaper-1.0.5-nsis64.exe)
+* [MacOS (M1) : BingWallpaper-1.0.6-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.6/BingWallpaper-1.0.6-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.0.6-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.6/BingWallpaper-1.0.6-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
