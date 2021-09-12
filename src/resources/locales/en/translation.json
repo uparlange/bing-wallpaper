@@ -6,6 +6,7 @@
     "VIEW_LABEL": "View",
     "WALLPAPER_VIEW_LABEL": "Wallpaper",
     "ABOUT_VIEW_LABEL": "About",
+    "SOURCES_VIEW_LABEL": "Sources management",
     "LANGUAGE_LABEL": "Language",
     "FR_LANGUAGE_LABEL": "Français",
     "EN_LANGUAGE_LABEL": "English",
@@ -19,6 +20,9 @@
     "WALLPAPER_LABEL": "Wallpaper",
     "BING_WALLPAPER_SOURCE_LABEL": "Bing",
     "OCEANEXPLORER_WALLPAPER_SOURCE_LABEL": "Ocean Exploration",
+    "BONJOURMADAME_WALLPAPER_SOURCE_LABEL": "Hello Madam",
     "USER_WALLPAPER_SOURCE_LABEL": "User",
-    "NEW_VERSION_AVAILABLE_LABEL": "New version '{{version}}' available. Do you want to install it ?"
+    "NEW_VERSION_AVAILABLE_LABEL": "New version '{{version}}' available. Do you want to install it ?",
+    "MANAGE_LABEL": "Manage",
+    "SET_LABEL": "Set"
 }

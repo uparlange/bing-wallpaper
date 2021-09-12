@@ -1,6 +1,10 @@
-<div :class="{ view: true, dropzone: true, dropactive: dropActive }" @dragover="onDragOver($event)"
+<div :class="{ view: true, dropzone: true, dropactive: dropActive }"
+    style="position: absolute;top: 0px;left: 0px;right: 0px;bottom: 0px;" @dragover="onDragOver($event)"
     @dragenter="onDragEnter($event)" @dragleave="onDragLeave($event)" @drop="onDrop($event)">
-    <img class="wallpaper" v-show="b64Wallpaper != null" :src="'data:image/png;base64,' + b64Wallpaper">
-    <img class="dragdrop" v-show="b64Wallpaper != null && !dropActive" src="../resources/images/dragdrop.svg">
-    <img class="spinner" v-show="b64Wallpaper == null" src="../resources/images/spinner.svg">
+    <img class="wallpaper" style="object-fit: fill;width: 100%;height:100%;" v-show="b64Wallpaper != null"
+        :src="'data:image/png;base64,' + b64Wallpaper">
+    <img class="dragdrop" style="position: absolute;right: -5px;bottom: -20px;width: 100px;height: 100px;"
+        v-show="b64Wallpaper != null && !dropActive" src="../resources/images/dragdrop.svg">
+    <img class="spinner" style="position: absolute;left: calc(100% / 2 - 100px);top: calc(100% / 2 - 100px);"
+        v-show="b64Wallpaper == null" src="../resources/images/spinner.svg">
 </div>

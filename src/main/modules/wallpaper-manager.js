@@ -1,4 +1,4 @@
-const { app } = require("electron");
+const { app, screen } = require("electron");
 const electron = require("electron");
 const htmlparser2 = require("htmlparser2");
 const fetch = require("node-fetch");
@@ -14,6 +14,7 @@ const loggerManager = require("./logger-manager");
 const eventbusManager = require("./eventbus-manager");
 const storageManager = require("./storage-manager");
 const connectionManager = require("./connection-manager");
+const i18nManager = require("./i18n-manager");
 
 const eventEmitter = new EventEmitter();
 
@@ -24,7 +25,7 @@ let USER_WALLPAPER_PATH = null;
 const sources = [
     {
         name: BING_SOURCE,
-        baseUrl: "https://www.bing.com",
+        homeUrl: "https://www.bing.com",
         needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
             // <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
@@ -38,8 +39,35 @@ const sources = [
     },
     {
         name: "oceanexplorer",
-        get baseUrl() {
+        get homeUrl() {
+            // https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210912.html
+            return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + ".html"
+        },
+        get imageUrl() {
+            //https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210911-hires.jpg
             return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + "-hires.jpg";
+        },
+        needPageParsing: false
+    },
+    {
+        name: "bonjourmadame",
+        get daySuffix() {
+            let date = dayjs().date();
+            if (dayjs().day() == 6) {
+                date -= 1;
+            } else if (dayjs().day() == 0) {
+                date -= 2;
+            }
+            return ("0" + date).slice(-2);
+        },
+        get homeUrl() {
+            // https://www.bonjourmadame.fr/2021/09/10/
+            return "https://www.bonjourmadame.fr/" + dayjs().format("YYYY/MM/") + this.daySuffix + "/";
+        },
+        get imageUrl() {
+            // https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210910-scaled.jpg?resize=2560
+            const { width } = screen.getPrimaryDisplay().workAreaSize
+            return "https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/" + dayjs().format("YYYY/MM/YYMM") + this.daySuffix + "-scaled.jpg?resize=" + width;
         },
         needPageParsing: false
     },
@@ -60,7 +88,19 @@ const model = {
     b64Wallpaper: null
 };
 
-const getSource = (property, value) => {
+const getSourceDescriptions = () => {
+    return sources.map((element) => {
+        const key = element.name.toUpperCase() + "_WALLPAPER_SOURCE_LABEL";
+        return {
+            name: element.name,
+            label: i18nManager.getTranslations([key])[key],
+            home: element.homeUrl,
+            current: getCurrentSource() == element.name
+        };
+    })
+};
+
+const getSourceByPropertyAndValue = (property, value) => {
     let config = null;
     sources.forEach(element => {
         if (element[property] == value) {
@@ -150,7 +190,8 @@ const setB64Wallpaper = (b64Wallpaper) => {
 
 const setRendererWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
-    eventEmitter.emit("wallpaperChanged", getCurrentWallpaperSource());
+    eventbusManager.sendRendererMessage("wallpaperChanged", getCurrentSource());
+    eventEmitter.emit("wallpaperChanged", getCurrentSource());
     generateB64Wallpaper(model.wallpaperPath).then((data) => {
         setB64Wallpaper(data);
     });
@@ -175,13 +216,13 @@ const setExternalWallpaper = (config) => {
     };
     if (connectionManager.isOnLine()) {
         if (config.needPageParsing) {
-            fetchPage(config.baseUrl).then((htmlContent) => {
+            fetchPage(config.homeUrl).then((htmlContent) => {
                 parsePage(htmlContent, config.imagePatternValidator).then((imageUrl) => {
                     finalizeSetExternalWallpaper(imageUrl);
                 });
             });
         } else {
-            finalizeSetExternalWallpaper(config.baseUrl);
+            finalizeSetExternalWallpaper(config.imageUrl);
         }
     } else {
         completeApplyWallpaper();
@@ -213,7 +254,7 @@ const externalWallpaperNeedUpdate = (key) => {
 
 const checkWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-    let config = getSource("wallpaperPath", model.wallpaperPath);
+    let config = getSourceByPropertyAndValue("wallpaperPath", model.wallpaperPath);
     if (config != null) {
         if (config.name != USER_SOURCE && externalWallpaperNeedUpdate(config.wallpaperStorageKey)) {
             setExternalWallpaper(config);
@@ -224,7 +265,7 @@ const checkWallpaper = () => {
         fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
             if (err) {
                 copyFile(model.wallpaperPath, USER_WALLPAPER_PATH);
-                config = getSource("name", BING_SOURCE);
+                config = getSourceByPropertyAndValue("name", BING_SOURCE);
                 setExternalWallpaper(config);
             }
         });
@@ -246,19 +287,19 @@ const init = () => {
     });
 };
 
-const getAvailableWallpaperSources = () => {
+const getAvailableSources = () => {
     return sources.map((element) => {
         return element.name;
     });
 };
 
-const getCurrentWallpaperSource = () => {
-    const config = getSource("wallpaperPath", model.wallpaperPath);
+const getCurrentSource = () => {
+    const config = getSourceByPropertyAndValue("wallpaperPath", model.wallpaperPath);
     return config ? config.name : null;
 };
 
-const setWallpaperSource = (source) => {
-    const config = getSource("name", source);
+const setSource = (source) => {
+    const config = getSourceByPropertyAndValue("name", source);
     if (config.name == USER_SOURCE) {
         setUserWallpaper();
     } else {
@@ -276,10 +317,11 @@ const onWallpaperChanged = (callback) => {
 
 module.exports = {
     init: init,
-    setWallpaperSource: setWallpaperSource,
+    setSource: setSource,
+    getCurrentSource: getCurrentSource,
     getB64Wallpaper: getB64Wallpaper,
-    getAvailableWallpaperSources: getAvailableWallpaperSources,
-    getCurrentWallpaperSource: getCurrentWallpaperSource,
+    getAvailableSources: getAvailableSources,
+    getSourceDescriptions: getSourceDescriptions,
     setUserWallpaper: setUserWallpaper,
     onWallpaperChanged: onWallpaperChanged
 };

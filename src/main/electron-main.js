@@ -7,14 +7,21 @@ const i18nManager = require("./modules/i18n-manager");
 const storageManager = require("./modules/storage-manager");
 const eventbusManager = require("./modules/eventbus-manager");
 const trayManager = require("./modules/tray-manager");
+const viewManager = require("./modules/view-manager");
 
 const initRendererEventBus = () => {
     // wallpaper manager
     eventbusManager.onRendererInvoke("getB64Wallpaper", () => {
         return wallpaperManager.getB64Wallpaper();
     });
+    eventbusManager.onRendererInvoke("getSourceDescriptions", () => {
+        return wallpaperManager.getSourceDescriptions();
+    });
     eventbusManager.onRendererMessage("setUserWallpaper", (path) => {
         wallpaperManager.setUserWallpaper(path);
+    });
+    eventbusManager.onRendererMessage("setWallpaperSource", (source) => {
+        wallpaperManager.setSource(source);
     });
     // application manager
     eventbusManager.onRendererMessage("openExternal", (url) => {
@@ -30,6 +37,10 @@ const initRendererEventBus = () => {
     // i18n manager
     eventbusManager.onRendererInvoke("getTranslations", (keyList, options) => {
         return i18nManager.getTranslations(keyList, options);
+    });
+    // view manager
+    eventbusManager.onRendererMessage("showView", (view) => {
+        viewManager.showView(view);
     });
 };
 

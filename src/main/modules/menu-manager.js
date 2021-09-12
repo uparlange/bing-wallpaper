@@ -26,22 +26,29 @@ const getMenuItemLabelKey = (name, type) => {
 
 const getAvailableWallpaperSources = () => {
     const availableWallpaperSources = [];
-    wallpaperManager.getAvailableWallpaperSources().forEach(source => {
+    wallpaperManager.getAvailableSources().forEach(source => {
         const menuItemName = source.toUpperCase();
         const menuItemId = getMenuItemId(menuItemName);
         const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "WALLPAPER_SOURCE");
         availableWallpaperSources.push({
             id: menuItemId,
             label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
-            checked: wallpaperManager.getCurrentWallpaperSource() == source,
+            checked: wallpaperManager.getCurrentSource() == source,
             type: "checkbox",
             click: () => {
-                setActiveMenuItemOfList(wallpaperManager.getAvailableWallpaperSources().map((element) => {
+                setActiveMenuItemOfList(wallpaperManager.getAvailableSources().map((element) => {
                     return getMenuItemId(element.toUpperCase());
                 }), menuItemId);
-                wallpaperManager.setWallpaperSource(source);
+                wallpaperManager.setSource(source);
             }
         });
+    });
+    availableWallpaperSources.push({ type: "separator" });
+    availableWallpaperSources.push({
+        label: i18nManager.getTranslations(["MANAGE_LABEL"])["MANAGE_LABEL"],
+        click: () => {
+            viewManager.showView(viewManager.SOURCES_VIEW);
+        }
     });
     return availableWallpaperSources;
 };
@@ -165,9 +172,14 @@ const refresh = () => {
 
 const init = () => {
     wallpaperManager.onWallpaperChanged((source) => {
-        setActiveMenuItemOfList(wallpaperManager.getAvailableWallpaperSources().map((element) => {
+        setActiveMenuItemOfList(wallpaperManager.getAvailableSources().map((element) => {
             return getMenuItemId(element.toUpperCase());
         }), getMenuItemId(source.toUpperCase()));
+    });
+    viewManager.onViewChanged((view) => {
+        setActiveMenuItemOfList(viewManager.getAvailableViews().map((element) => {
+            return getMenuItemId(element.toUpperCase().substr(1));
+        }), getMenuItemId(view.toUpperCase().substr(1)));
     });
     i18nManager.onLanguageChanged(() => {
         refresh();

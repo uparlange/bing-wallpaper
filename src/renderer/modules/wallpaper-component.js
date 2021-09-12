@@ -13,7 +13,6 @@ export default () => {
                 },
                 created() {
                     const that = this;
-                    // wallpaper data
                     window.eventbus.invoke("getB64Wallpaper").then((b64Wallpaper) => {
                         that.b64Wallpaper = b64Wallpaper;
                     });
