@@ -904,10 +904,10 @@
   "resolved" "https://registry.npmjs.org/domelementtype/-/domelementtype-2.2.0.tgz"
   "version" "2.2.0"
 
-"domhandler@^4.0.0", "domhandler@^4.2.0":
-  "integrity" "sha512-zk7sgt970kzPks2Bf+dwT/PLzghLnsivb9CcxkvR8Mzr66Olr0Ofd8neSbglHJHaHa2MadfoSdNlKYAaafmWfA=="
-  "resolved" "https://registry.npmjs.org/domhandler/-/domhandler-4.2.0.tgz"
-  "version" "4.2.0"
+"domhandler@^4.2.0", "domhandler@^4.2.2":
+  "integrity" "sha512-PzE9aBMsdZO8TK4BnuJwH0QT41wgMbRzuZrHUcpYncEjmQazq8QEaBWgLG7ZyC/DAZKEgglpIA6j4Qn/HmxS3w=="
+  "resolved" "https://registry.npmjs.org/domhandler/-/domhandler-4.2.2.tgz"
+  "version" "4.2.2"
   dependencies:
     "domelementtype" "^2.2.0"
 
@@ -1423,13 +1423,13 @@
   dependencies:
     "lru-cache" "^6.0.0"
 
-"htmlparser2@^7.1.1":
-  "integrity" "sha512-hZb0lfG0hbhR/hB879zbBr8Opv0Be9Zp+JYHgqTw5epF++aotu/zmMTPLy/60iJyR1MaD/3pYRp7xYteXsZMEA=="
-  "resolved" "https://registry.npmjs.org/htmlparser2/-/htmlparser2-7.1.1.tgz"
-  "version" "7.1.1"
+"htmlparser2@^7.1.2":
+  "integrity" "sha512-d6cqsbJba2nRdg8WW2okyD4ceonFHn9jLFxhwlNcLhQWcFPdxXeJulgOLjLKtAK9T6ahd+GQNZwG9fjmGW7lyg=="
+  "resolved" "https://registry.npmjs.org/htmlparser2/-/htmlparser2-7.1.2.tgz"
+  "version" "7.1.2"
   dependencies:
     "domelementtype" "^2.0.1"
-    "domhandler" "^4.0.0"
+    "domhandler" "^4.2.2"
     "domutils" "^2.8.0"
     "entities" "^3.0.1"
 
