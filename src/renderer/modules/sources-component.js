@@ -13,17 +13,23 @@ export default () => {
                     }
                 },
                 beforeMount() {
-                    rendererEventbus.onLanguageChanged(this.refreshTranslations);
-                    rendererEventbus.onWallpaperChanged(this.refreshSources);
+                    rendererEventbus.onLanguageChanged(this.onLanguageChanged);
+                    rendererEventbus.onWallpaperChanged(this.onWallpaperChanged);
                 },
                 created() {
                     this.refreshSources();
                 },
                 beforeUnmount() {
-                    rendererEventbus.offLanguageChanged(this.refreshTranslations);
-                    rendererEventbus.offWallpaperChanged(this.refreshSources);
+                    rendererEventbus.offLanguageChanged(this.onLanguageChanged);
+                    rendererEventbus.offWallpaperChanged(this.onWallpaperChanged);
                 },
                 methods: {
+                    onLanguageChanged: function (lng) {
+                        this.refreshTranslations();
+                    },
+                    onWallpaperChanged: function (source) {
+                        this.refreshSources();
+                    },
                     setWallpaperSource: function (source) {
                         rendererEventbus.sendMainMessage("showView", "/wallpaper");
                         rendererEventbus.sendMainMessage("setWallpaperSource", source);

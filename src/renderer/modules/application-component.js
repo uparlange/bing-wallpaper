@@ -1,13 +1,17 @@
 import rendererEventbus from "./renderer-eventbus.js";
 
+let currentView = null;
+
 export default {
     beforeMount() {
         rendererEventbus.onViewChanged(this.onViewChanged);
         rendererEventbus.onNewVersionAvailable(this.onNewVersionAvailable);
+        rendererEventbus.onLanguageChanged(this.onLanguageChanged);
     },
     beforeUnmount() {
-        rendererEventbus.onViewChanged(this.offViewChanged);
-        rendererEventbus.onNewVersionAvailable(this.offNewVersionAvailable);
+        rendererEventbus.offViewChanged(this.onViewChanged);
+        rendererEventbus.offNewVersionAvailable(this.onNewVersionAvailable);
+        rendererEventbus.offLanguageChanged(this.onLanguageChanged);
     },
     methods: {
         onNewVersionAvailable: function (version) {
@@ -19,7 +23,14 @@ export default {
         },
         onViewChanged: function (view) {
             this.$router.push(view);
-            const viewKey = view.toUpperCase().substr(1) + "_VIEW_LABEL";
+            currentView = view;
+            this.refreshDocumentTitle();
+        },
+        onLanguageChanged: function (lng) {
+            this.refreshDocumentTitle();
+        },
+        refreshDocumentTitle: function () {
+            const viewKey = currentView.toUpperCase().substr(1) + "_VIEW_LABEL";
             rendererEventbus.getTranslations([viewKey]).then((translations) => {
                 document.title = translations[viewKey];
             });

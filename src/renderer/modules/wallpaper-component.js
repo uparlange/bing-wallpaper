@@ -13,16 +13,19 @@ export default () => {
                     }
                 },
                 beforeMount() {
-                    rendererEventbus.onB64WallpaperChanged(this.refresh64Wallpaper);
+                    rendererEventbus.onB64WallpaperChanged(this.onB64WallpaperChanged);
                 },
                 created() {
-                    this.refresh64Wallpaper();
+                    this.refreshB64Wallpaper();
                 },
                 beforeUnmount() {
-                    rendererEventbus.offB64WallpaperChanged(this.refresh64Wallpaper);
+                    rendererEventbus.offB64WallpaperChanged(this.onB64WallpaperChanged);
                 },
                 methods: {
-                    refresh64Wallpaper: function () {
+                    onB64WallpaperChanged: function (b64Wallpaper) {
+                        this.refreshB64Wallpaper();
+                    },
+                    refreshB64Wallpaper: function () {
                         rendererEventbus.getB64Wallpaper().then((b64Wallpaper) => {
                             this.b64Wallpaper = b64Wallpaper;
                         });

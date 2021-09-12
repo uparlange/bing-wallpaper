@@ -13,7 +13,7 @@ export default () => {
                     }
                 },
                 beforeMount() {
-                    rendererEventbus.onLanguageChanged(this.refreshTranslations);
+                    rendererEventbus.onLanguageChanged(this.onLanguageChanged);
                 },
                 created() {
                     this.refreshTranslations();
@@ -22,9 +22,12 @@ export default () => {
                     });
                 },
                 beforeUnmount() {
-                    rendererEventbus.offLanguageChanged(this.refreshTranslations);
+                    rendererEventbus.offLanguageChanged(this.onLanguageChanged);
                 },
                 methods: {
+                    onLanguageChanged: function (lng) {
+                        this.refreshTranslations();
+                    },
                     refreshTranslations: function () {
                         rendererEventbus.getTranslations(["AUTHOR_LABEL", "BASED_ON_LABEL", "APPLICATION_LABEL"]).then((translations) => {
                             this.translations = translations;
