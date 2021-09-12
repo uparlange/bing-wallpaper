@@ -58,6 +58,7 @@ const init = () => {
                 loggerManager.getLogger().error("StorageManager - Init : " + err);
             } else {
                 model = Object.assign(model, JSON.parse(data, dateParser));
+                loggerManager.getLogger().info("StorageManager - Init : OK");
             }
             resolve();
         });

@@ -1,10 +1,10 @@
-const { Menu, app } = require("electron");
+const { Menu } = require("electron");
 
-const pkg = require("./../../../package.json");
 const applicationManager = require("./application-manager");
 const wallpaperManager = require("./wallpaper-manager");
 const i18nManager = require("./i18n-manager");
 const viewManager = require("./view-manager");
+const loggerManager = require("./logger-manager");
 
 const changeMenuItemChecked = (menuItemId, checked) => {
     Menu.getApplicationMenu().getMenuItemById(menuItemId).checked = checked;
@@ -98,76 +98,79 @@ const getAvailableLanguages = () => {
 };
 
 const refresh = () => {
-    const translations = i18nManager.getTranslations([
-        "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
-        "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
-        "WALLPAPER_LABEL", "APPLICATION_LABEL", "LAUNCH_LABEL",
-        "LAUNCH_MINIMIZED_LABEL"]);
-    const template = [
-        {
-            label: pkg.build.productName,
-            submenu: [
-                {
-                    label: translations["DEBUG_LABEL"],
-                    visible: applicationManager.isDebug(),
-                    click: () => {
-                        const win = applicationManager.getMainWindow();
-                        if (win != null) {
-                            win.webContents.openDevTools();
-                        }
-                    }
-                },
-                {
-                    label: translations["QUIT_LABEL"],
-                    click: () => {
-                        applicationManager.quit();
-                    }
-                }
-            ]
-        },
-        {
-            label: translations["VIEW_LABEL"],
-            submenu: getAvailableViews()
-        },
-        {
-            label: translations["WALLPAPER_LABEL"],
-            submenu: getAvailableWallpaperSources()
-        },
-        {
-            label: translations["PREFERENCES_LABEL"],
-            submenu: [
-                {
-                    label: translations["LAUNCH_LABEL"],
-                    submenu: [
-                        {
-                            id: "MENU_ITEM_LAUNCH_AT_STARTUP_ID",
-                            label: translations["LAUNCH_AT_STARTUP_LABEL"],
-                            checked: applicationManager.isLaunchedAtStartup(),
-                            type: "checkbox",
-                            click: () => {
-                                changeMenuItemChecked("MENU_ITEM_LAUNCH_AT_STARTUP_ID", applicationManager.toggleLaunchAtStartup());
-                            }
-                        },
-                        {
-                            id: "MENU_ITEM_LAUNCH_MINIMIZED_ID",
-                            label: translations["LAUNCH_MINIMIZED_LABEL"],
-                            checked: applicationManager.isLaunchedMinimized(),
-                            type: "checkbox",
-                            click: () => {
-                                changeMenuItemChecked("MENU_ITEM_LAUNCH_MINIMIZED_ID", applicationManager.toggleLaunchMinimized());
+    try {
+        const translations = i18nManager.getTranslations([
+            "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
+            "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
+            "WALLPAPER_LABEL", "LAUNCH_LABEL", "LAUNCH_MINIMIZED_LABEL"]);
+        const template = [
+            {
+                label: applicationManager.getProductName(),
+                submenu: [
+                    {
+                        label: translations["DEBUG_LABEL"],
+                        visible: applicationManager.isDebug(),
+                        click: () => {
+                            const win = applicationManager.getMainWindow();
+                            if (win != null) {
+                                win.webContents.openDevTools();
                             }
                         }
-                    ]
-                },
-                {
-                    label: translations["LANGUAGE_LABEL"],
-                    submenu: getAvailableLanguages()
-                }
-            ]
-        }
-    ]
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+                    },
+                    {
+                        label: translations["QUIT_LABEL"],
+                        click: () => {
+                            applicationManager.quit();
+                        }
+                    }
+                ]
+            },
+            {
+                label: translations["VIEW_LABEL"],
+                submenu: getAvailableViews()
+            },
+            {
+                label: translations["WALLPAPER_LABEL"],
+                submenu: getAvailableWallpaperSources()
+            },
+            {
+                label: translations["PREFERENCES_LABEL"],
+                submenu: [
+                    {
+                        label: translations["LAUNCH_LABEL"],
+                        submenu: [
+                            {
+                                id: "MENU_ITEM_LAUNCH_AT_STARTUP_ID",
+                                label: translations["LAUNCH_AT_STARTUP_LABEL"],
+                                checked: applicationManager.isLaunchedAtStartup(),
+                                type: "checkbox",
+                                click: () => {
+                                    changeMenuItemChecked("MENU_ITEM_LAUNCH_AT_STARTUP_ID", applicationManager.toggleLaunchAtStartup());
+                                }
+                            },
+                            {
+                                id: "MENU_ITEM_LAUNCH_MINIMIZED_ID",
+                                label: translations["LAUNCH_MINIMIZED_LABEL"],
+                                checked: applicationManager.isLaunchedMinimized(),
+                                type: "checkbox",
+                                click: () => {
+                                    changeMenuItemChecked("MENU_ITEM_LAUNCH_MINIMIZED_ID", applicationManager.toggleLaunchMinimized());
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        label: translations["LANGUAGE_LABEL"],
+                        submenu: getAvailableLanguages()
+                    }
+                ]
+            }
+        ];
+        const menu = Menu.buildFromTemplate(template);
+        Menu.setApplicationMenu(menu);
+    } catch (err) {
+        loggerManager.getLogger().error("MenuManager - Refresh : " + err);
+    }
 };
 
 const init = () => {
@@ -181,10 +184,11 @@ const init = () => {
             return getMenuItemId(element.toUpperCase().substr(1));
         }), getMenuItemId(view.toUpperCase().substr(1)));
     });
-    i18nManager.onLanguageChanged(() => {
+    i18nManager.onLanguageChanged((lng) => {
         refresh();
     });
     refresh();
+    loggerManager.getLogger().info("MenuManager - Init : OK");
 };
 
 module.exports = {

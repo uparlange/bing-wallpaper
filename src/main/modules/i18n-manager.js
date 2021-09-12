@@ -7,6 +7,7 @@ const EventEmitter = require("events");
 const applicationManager = require("./application-manager");
 const storageManager = require("./storage-manager");
 const eventbusManager = require("./eventbus-manager");
+const loggerManager = require("./logger-manager");
 
 const eventEmitter = new EventEmitter();
 
@@ -25,6 +26,7 @@ const init = () => {
         });
         i18next.on("initialized", (options) => {
             setLanguage(getCurrentLanguage()).then(() => {
+                loggerManager.getLogger().info("I18nManager - Init : OK");
                 resolve();
             });
         });

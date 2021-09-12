@@ -7,11 +7,13 @@ const menuManager = require("./modules/menu-manager");
 const i18nManager = require("./modules/i18n-manager");
 const storageManager = require("./modules/storage-manager");
 const trayManager = require("./modules/tray-manager");
+const viewManager = require("./modules/view-manager");
 
 app.whenReady().then(() => {
     mainEventbus.init().then(storageManager.init).then(i18nManager.init).then(applicationManager.init).then(() => {
         menuManager.init();
         trayManager.init();
+        viewManager.init();
         applicationManager.createWindow().then(() => {
             wallpaperManager.init();
         });

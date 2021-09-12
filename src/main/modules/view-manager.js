@@ -29,10 +29,15 @@ const onViewChanged = (callback) => {
     eventEmitter.on("viewChanged", callback);
 };
 
+const init = () => {
+    loggerManager.getLogger().info("ViewManager - Init : OK");
+};
+
 module.exports = {
     WALLPAPER_VIEW: WALLPAPER_VIEW,
     ABOUT_VIEW: ABOUT_VIEW,
     SOURCES_VIEW: SOURCES_VIEW,
+    init: init,
     getAvailableViews: getAvailableViews,
     showView: showView,
     getCurrentView: getCurrentView,

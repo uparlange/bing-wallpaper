@@ -22,6 +22,10 @@ const getMainWindow = () => {
     return win;
 };
 
+const getProductName = () => {
+    return pkg.description;
+};
+
 const isMac = () => {
     return process.platform === "darwin";
 };
@@ -122,6 +126,7 @@ const initAutoUpdater = () => {
 const init = () => {
     return new Promise((resolve, reject) => {
         initAutoLauncher().then(initAutoUpdater).then(() => {
+            loggerManager.getLogger().info("ApplicationManager - Init : OK");
             resolve();
         });
     });
@@ -150,7 +155,7 @@ const getApplicationFilename = (version) => {
     // process.arch always ia32 even in 64 bit platform ?
     // manage only x64 version so force to x64
     const arch = process.arch == "ia32" ? "x64" : process.arch;
-    return `${pkg.build.productName}-${version}-${arch}.${isMac() ? "dmg" : "exe"}`;
+    return `${getProductName()}-${version}-${arch}.${isMac() ? "dmg" : "exe"}`;
 };
 
 const downloadVersion = (url, destination) => {
@@ -176,8 +181,8 @@ const updateApplication = (version) => {
 
 const checkForUpdates = () => {
     if (connectionManager.isOnLine()) {
-        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {  
-        if (compareVersion(json.version, pkg.version) > 0) {
+        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {
+            if (compareVersion(json.version, pkg.version) > 0) {
                 eventbusManager.sendRendererMessage("newVersionAvailable", json.version);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
@@ -212,5 +217,6 @@ module.exports = {
     quit: quit,
     createWindow: createWindow,
     updateApplication: updateApplication,
-    getMainWindow: getMainWindow
+    getMainWindow: getMainWindow,
+    getProductName: getProductName
 };

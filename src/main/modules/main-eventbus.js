@@ -3,6 +3,7 @@ const viewManager = require("./view-manager");
 const wallpaperManager = require("./wallpaper-manager");
 const applicationManager = require("./application-manager");
 const i18nManager = require("./i18n-manager");
+const loggerManager = require("./logger-manager");
 
 const init = () => {
     return new Promise((resolve, reject) => {
@@ -38,7 +39,10 @@ const init = () => {
         eventbusManager.onRendererMessage("showView", (view) => {
             viewManager.showView(view);
         });
-        resolve();
+        setTimeout(() => {
+            loggerManager.getLogger().info("MainEventbus - Init : OK");
+            resolve();
+        });
     });
 };
 

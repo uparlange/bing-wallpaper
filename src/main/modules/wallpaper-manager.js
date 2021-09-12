@@ -282,6 +282,7 @@ const init = () => {
     });
     wallpaper.get().then((wallpaperPath) => {
         model.wallpaperPath = wallpaperPath;
+        loggerManager.getLogger().info("WallpaperManager - Init : OK");
         checkWallpaper();
     });
 };
