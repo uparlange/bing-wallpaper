@@ -1,7 +1,7 @@
 export default {
     created() {
         const that = this;
-        window.eventbus.receive("showView", (view) => {
+        window.eventbus.receive("viewChanged", (view) => {
             that.$router.push(view);
             const viewKey = view.toUpperCase().substr(1) + "_VIEW_LABEL";
             window.eventbus.invoke("getTranslations", [viewKey]).then((translations) => {

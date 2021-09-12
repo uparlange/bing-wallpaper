@@ -13,7 +13,7 @@ const SOURCES_VIEW = "/sources";
 const showView = (view) => {
     loggerManager.getLogger().info("ViewManager - Show View '" + view + "'");
     storageManager.setData("view", view);
-    eventbusManager.sendRendererMessage("showView", view);
+    eventbusManager.sendRendererMessage("viewChanged", view);
     eventEmitter.emit("viewChanged", getCurrentView());
 };
 
