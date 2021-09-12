@@ -54,6 +54,7 @@
     "i18next-fs-backend": "^1.1.1",
     "image-to-base64": "^2.2.0",
     "log4js": "^6.3.0",
+    "mitt": "^3.0.0",
     "node-fetch": "^2.6.2",
     "vue": "^3.2.11",
     "vue-router": "^4.0.11",

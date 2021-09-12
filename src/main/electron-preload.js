@@ -4,13 +4,13 @@ const eventbusManager = require("./modules/eventbus-manager");
 
 // Eventbus Manager
 contextBridge.exposeInMainWorld("eventbus", {
-    invoke: (eventName, ...message) => {
+    sendMainInvoke: (eventName, ...message) => {
         return eventbusManager.sendMainInvoke(eventName, ...message);
     },
-    send: (eventName, ...message) => {
+    sendMainMessage: (eventName, ...message) => {
         eventbusManager.sendMainMessage(eventName, ...message);
     },
-    receive: (eventName, callback) => {
+    onMainMessage: (eventName, callback) => {
         eventbusManager.onMainMessage(eventName, callback);
     }
 });

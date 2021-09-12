@@ -1,4 +1,5 @@
 import applicationUtils from "./application-utils.js";
+import rendererEventbus from "./renderer-eventbus.js";
 
 export default () => {
     return new Promise((resolve, reject) => {
@@ -8,38 +9,42 @@ export default () => {
                 data() {
                     return {
                         translations: {},
-                        sources: []
+                        sourceDescriptions: []
                     }
                 },
+                beforeMount() {
+                    rendererEventbus.onLanguageChanged(this.refreshTranslations);
+                    rendererEventbus.onWallpaperChanged(this.refreshSources);
+                },
                 created() {
-                    const that = this;
-                    that.refreshSources();
-                    window.eventbus.receive("languageChanged", () => {
-                        that.refreshSources();
-                    });
-                    window.eventbus.receive("wallpaperChanged", () => {
-                        that.refreshSources();
-                    });
+                    this.refreshSources();
+                },
+                beforeUnmount() {
+                    rendererEventbus.offLanguageChanged(this.refreshTranslations);
+                    rendererEventbus.offWallpaperChanged(this.refreshSources);
                 },
                 methods: {
                     setWallpaperSource: function (source) {
-                        window.eventbus.send("showView", "/wallpaper");
-                        window.eventbus.send("setWallpaperSource", source);
+                        rendererEventbus.sendMainMessage("showView", "/wallpaper");
+                        rendererEventbus.sendMainMessage("setWallpaperSource", source);
                     },
                     refreshTranslations: function () {
-                        const that = this;
-                        window.eventbus.invoke("getTranslations", ["SET_LABEL"]).then((translations) => {
-                            that.translations = translations;
+                        const translationKeys = [];
+                        this.sourceDescriptions.forEach(sourceDescription => {
+                            translationKeys.push(sourceDescription.key);
+                        });
+                        translationKeys.push("SET_LABEL");
+                        rendererEventbus.getTranslations(translationKeys).then((translations) => {
+                            this.translations = translations;
                         });
                     },
                     openExternal: function (url) {
-                        window.eventbus.send("openExternal", url);
+                        rendererEventbus.sendMainMessage("openExternal", url);
                     },
                     refreshSources: function () {
-                        const that = this;
-                        window.eventbus.invoke("getSourceDescriptions").then((sources) => {
-                            that.sources = sources;
-                            that.refreshTranslations();
+                        rendererEventbus.getSourceDescriptions().then((sourceDescriptions) => {
+                            this.sourceDescriptions = sourceDescriptions;
+                            this.refreshTranslations();
                         });
                     }
                 }

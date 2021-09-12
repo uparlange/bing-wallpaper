@@ -176,8 +176,8 @@ const updateApplication = (version) => {
 
 const checkForUpdates = () => {
     if (connectionManager.isOnLine()) {
-        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {
-            if (compareVersion(json.version, pkg.version) > 0) {
+        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {  
+        if (compareVersion(json.version, pkg.version) > 0) {
                 eventbusManager.sendRendererMessage("newVersionAvailable", json.version);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");

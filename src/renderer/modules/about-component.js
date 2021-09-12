@@ -1,4 +1,5 @@
 import applicationUtils from "./application-utils.js";
+import rendererEventbus from "./renderer-eventbus.js";
 
 export default () => {
     return new Promise((resolve, reject) => {
@@ -11,27 +12,26 @@ export default () => {
                         translations: {}
                     }
                 },
+                beforeMount() {
+                    rendererEventbus.onLanguageChanged(this.refreshTranslations);
+                },
                 created() {
-                    const that = this;
-                    // translations
-                    that.refreshTranslations();
-                    window.eventbus.receive("languageChanged", () => {
-                        that.refreshTranslations();
+                    this.refreshTranslations();
+                    rendererEventbus.getVersions().then((versions) => {
+                        this.versions = versions;
                     });
-                    // version infos
-                    window.eventbus.invoke("getVersions").then((versions) => {
-                        that.versions = versions;
-                    });
+                },
+                beforeUnmount() {
+                    rendererEventbus.offLanguageChanged(this.refreshTranslations);
                 },
                 methods: {
                     refreshTranslations: function () {
-                        const that = this;
-                        window.eventbus.invoke("getTranslations", ["AUTHOR_LABEL", "BASED_ON_LABEL", "APPLICATION_LABEL"]).then((translations) => {
-                            that.translations = translations;
+                        rendererEventbus.getTranslations(["AUTHOR_LABEL", "BASED_ON_LABEL", "APPLICATION_LABEL"]).then((translations) => {
+                            this.translations = translations;
                         });
                     },
                     openExternal: function (url) {
-                        window.eventbus.send("openExternal", url);
+                        rendererEventbus.sendMainMessage("openExternal", url);
                     }
                 }
             });

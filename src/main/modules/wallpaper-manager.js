@@ -90,10 +90,9 @@ const model = {
 
 const getSourceDescriptions = () => {
     return sources.map((element) => {
-        const key = element.name.toUpperCase() + "_WALLPAPER_SOURCE_LABEL";
         return {
             name: element.name,
-            label: i18nManager.getTranslations([key])[key],
+            key: element.name.toUpperCase() + "_WALLPAPER_SOURCE_LABEL",
             home: element.homeUrl,
             current: getCurrentSource() == element.name
         };
@@ -185,7 +184,7 @@ const copyFile = (source, destination) => {
 
 const setB64Wallpaper = (b64Wallpaper) => {
     model.b64Wallpaper = b64Wallpaper;
-    eventbusManager.sendRendererMessage("b64Wallpaper", model.b64Wallpaper);
+    eventbusManager.sendRendererMessage("b64WallpaperChanged", model.b64Wallpaper);
 };
 
 const setRendererWallpaper = () => {
