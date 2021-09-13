@@ -12,6 +12,9 @@ const viewManager = require("./view-manager");
 const loggerManager = require("./logger-manager");
 const eventbusManager = require("./eventbus-manager");
 const connectionManager = require("./connection-manager");
+const touchbarManager = require("./touchbar-manager");
+const i18nManager = require("./i18n-manager");
+const applicationUtils = require("./application-utils");
 
 let autoLauncher = null;
 let launchAtStartup = false;
@@ -24,18 +27,6 @@ const getMainWindow = () => {
 
 const getProductName = () => {
     return pkg.description;
-};
-
-const isMac = () => {
-    return process.platform === "darwin";
-};
-
-const isWindows = () => {
-    return process.platform === "win32";
-};
-
-const isDebug = () => {
-    return process.argv[2] == "--dev";
 };
 
 const quit = () => {
@@ -73,13 +64,14 @@ const createWindow = () => {
             win = new BrowserWindow({
                 width: 640,
                 height: 400,
-                resizable: isDebug(),
+                resizable: applicationUtils.isDebug(),
                 icon: path.join(__dirname, "..", "..", "resources", "images", "icon.png"),
                 webPreferences: {
                     preload: path.join(__dirname, "..", "electron-preload.js")
                 }
             });
             win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
+                setMainWindowTouchbar();
                 viewManager.showView(viewManager.getCurrentView());
                 checkForUpdates();
                 if (createWindowFirstTime) {
@@ -123,9 +115,19 @@ const initAutoUpdater = () => {
     });
 };
 
+const setMainWindowTouchbar = (forceRefresh) => {
+    const win = getMainWindow();
+    if (win != null) {
+        win.setTouchBar(touchbarManager.getTouchbar(forceRefresh));
+    }
+};
+
 const init = () => {
     return new Promise((resolve, reject) => {
         initAutoLauncher().then(initAutoUpdater).then(() => {
+            i18nManager.onLanguageChanged((lng) => {
+                setMainWindowTouchbar(true);
+            });
             loggerManager.getLogger().info("ApplicationManager - Init : OK");
             resolve();
         });
@@ -155,7 +157,7 @@ const getApplicationFilename = (version) => {
     // process.arch always ia32 even in 64 bit platform ?
     // manage only x64 version so force to x64
     const arch = process.arch == "ia32" ? "x64" : process.arch;
-    return `${getProductName()}-${version}-${arch}.${isMac() ? "dmg" : "exe"}`;
+    return `${getProductName()}-${version}-${arch}.${applicationUtils.isMac() ? "dmg" : "exe"}`;
 };
 
 const downloadVersion = (url, destination) => {
@@ -211,9 +213,6 @@ module.exports = {
     toggleLaunchMinimized: toggleLaunchMinimized,
     isLaunchedAtStartup: isLaunchedAtStartup,
     toggleLaunchAtStartup: toggleLaunchAtStartup,
-    isMac: isMac,
-    isWindows: isWindows,
-    isDebug: isDebug,
     quit: quit,
     createWindow: createWindow,
     updateApplication: updateApplication,

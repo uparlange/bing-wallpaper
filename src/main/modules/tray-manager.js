@@ -4,6 +4,7 @@ const path = require("path");
 const applicationManager = require("./application-manager");
 const i18nManager = require("./i18n-manager");
 const loggerManager = require("./logger-manager");
+const applicationUtils = require("./application-utils");
 
 let tray = null;
 
@@ -13,7 +14,7 @@ const refresh = () => {
             const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "tray.png"))
             tray = new Tray(icon);
             tray.setToolTip(app.getName());
-            if (applicationManager.isWindows()) {
+            if (applicationUtils.isWindows()) {
                 tray.on("click", () => {
                     applicationManager.createWindow();
                 });

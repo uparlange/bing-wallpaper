@@ -4,7 +4,7 @@ const backend = require("i18next-fs-backend");
 const path = require("path");
 const EventEmitter = require("events");
 
-const applicationManager = require("./application-manager");
+const applicationUtils = require("./application-utils");
 const storageManager = require("./storage-manager");
 const eventbusManager = require("./eventbus-manager");
 const loggerManager = require("./logger-manager");
@@ -22,7 +22,7 @@ const init = () => {
             },
             supportedLngs: availableLanguages,
             fallbackLng: "en",
-            debug: applicationManager.isDebug()
+            debug: applicationUtils.isDebug()
         });
         i18next.on("initialized", (options) => {
             setLanguage(getCurrentLanguage()).then(() => {

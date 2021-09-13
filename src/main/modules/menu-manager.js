@@ -5,6 +5,7 @@ const wallpaperManager = require("./wallpaper-manager");
 const i18nManager = require("./i18n-manager");
 const viewManager = require("./view-manager");
 const loggerManager = require("./logger-manager");
+const applicationUtils = require("./application-utils");
 
 const changeMenuItemChecked = (menuItemId, checked) => {
     Menu.getApplicationMenu().getMenuItemById(menuItemId).checked = checked;
@@ -36,9 +37,6 @@ const getAvailableWallpaperSources = () => {
             checked: wallpaperManager.getCurrentSource() == source,
             type: "checkbox",
             click: () => {
-                setActiveMenuItemOfList(wallpaperManager.getAvailableSources().map((element) => {
-                    return getMenuItemId(element.toUpperCase());
-                }), menuItemId);
                 wallpaperManager.setSource(source);
             }
         });
@@ -65,9 +63,6 @@ const getAvailableViews = () => {
             checked: viewManager.getCurrentView() == view,
             type: "checkbox",
             click: () => {
-                setActiveMenuItemOfList(viewManager.getAvailableViews().map((element) => {
-                    return getMenuItemId(element.toUpperCase().substr(1));
-                }), menuItemId);
                 viewManager.showView(view);
             }
         });
@@ -87,9 +82,6 @@ const getAvailableLanguages = () => {
             checked: i18nManager.getCurrentLanguage() == language,
             type: "checkbox",
             click: () => {
-                setActiveMenuItemOfList(i18nManager.getAvailableLanguages().map((element) => {
-                    return getMenuItemId(element.toUpperCase());
-                }), menuItemId);
                 i18nManager.setLanguage(language);
             }
         });
@@ -109,7 +101,7 @@ const refresh = () => {
                 submenu: [
                     {
                         label: translations["DEBUG_LABEL"],
-                        visible: applicationManager.isDebug(),
+                        visible: applicationUtils.isDebug(),
                         click: () => {
                             const win = applicationManager.getMainWindow();
                             if (win != null) {

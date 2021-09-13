@@ -8,11 +8,13 @@ const i18nManager = require("./modules/i18n-manager");
 const storageManager = require("./modules/storage-manager");
 const trayManager = require("./modules/tray-manager");
 const viewManager = require("./modules/view-manager");
+const touchbarManager = require("./modules/touchbar-manager");
 
 app.whenReady().then(() => {
     mainEventbus.init().then(storageManager.init).then(i18nManager.init).then(applicationManager.init).then(() => {
         menuManager.init();
         trayManager.init();
+        touchbarManager.init();
         viewManager.init();
         applicationManager.createWindow().then(() => {
             wallpaperManager.init();
