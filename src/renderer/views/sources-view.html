@@ -4,11 +4,11 @@
             <td style="padding-top:30px;min-width:20px">
                 <span v-if="source.current">></span>
             </td>
-            <td style="padding-top:30px;width:100%;border-bottom: 1px solid black;">
+            <td class="td-border-bottom-line" style="padding-top:30px;width:100%;">
                 <span v-if="!source.home">{{ translations[source.key] }}</span>
                 <a v-if="source.home" href="#" @click="openExternal(source.home)">{{ translations[source.key] }}</a>
             </td>
-            <td style="padding-top:30px;border-bottom: 1px solid black;">
+            <td class="td-border-bottom-line" style="padding-top:30px;">
                 <a v-if="!source.current" href="#" @click="setWallpaperSource(source.name)">{{ translations["SET_LABEL"]
                     }}</a>
             </td>
