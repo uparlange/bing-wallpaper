@@ -67,7 +67,7 @@ const sources = [
         get imageUrl() {
             // https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210910-scaled.jpg?resize=2560
             const { width } = screen.getPrimaryDisplay().workAreaSize
-            return "https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/" + dayjs().format("YYYY/MM/YYMM") + this.daySuffix + "-scaled.jpg?resize=" + width;
+            return "https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/" + dayjs().format("YYYY/MM/YYMM") + this.daySuffix + ".jpg?resize=" + width;
         },
         needPageParsing: false
     },
