@@ -12,11 +12,13 @@
 * Tray icon support
 * Online / Offline support
 * Auto update support
+* Dark mode support
+* Touchbar support
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.0.7-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.7/BingWallpaper-1.0.7-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.0.7-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.7/BingWallpaper-1.0.7-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.0.8-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.8/BingWallpaper-1.0.8-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.0.8-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.8/BingWallpaper-1.0.8-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
