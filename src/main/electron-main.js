@@ -11,7 +11,8 @@ const viewManager = require("./modules/view-manager");
 const touchbarManager = require("./modules/touchbar-manager");
 
 app.whenReady().then(() => {
-    mainEventbus.init().then(storageManager.init).then(i18nManager.init).then(applicationManager.init).then(() => {
+    mainEventbus.init();
+    storageManager.init().then(i18nManager.init).then(applicationManager.init).then(() => {
         menuManager.init();
         trayManager.init();
         touchbarManager.init();
