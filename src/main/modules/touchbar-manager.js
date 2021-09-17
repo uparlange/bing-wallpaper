@@ -4,12 +4,9 @@ const { TouchBarButton } = TouchBar
 const viewManager = require("./view-manager");
 const loggerManager = require("./logger-manager");
 const i18nManager = require("./i18n-manager");
+const applicationUtils = require("./application-utils");
 
 let touchBar = null;
-
-const getMenuItemLabelKey = (name, type) => {
-    return name + "_" + type + "_LABEL";
-};
 
 const getTouchbar = (forceRefresh) => {
     if (forceRefresh) {
@@ -19,9 +16,11 @@ const getTouchbar = (forceRefresh) => {
         const items = [];
         viewManager.getAvailableViews().forEach(view => {
             const menuItemName = view.toUpperCase().substr(1);
-            const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "VIEW");
+            const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "VIEW");
             items.push(new TouchBarButton({
                 label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
+                backgroundColor: viewManager.getCurrentView() == view ? "#FFFFFF" : "#333",
+                color: viewManager.getCurrentView() == view ? "#333" : "#FFFFFF",
                 click: () => {
                     viewManager.showView(view);
                 }

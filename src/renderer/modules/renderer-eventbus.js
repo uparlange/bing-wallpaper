@@ -32,10 +32,19 @@ window.eventbus.onMainMessage("viewChanged", (view) => {
 window.eventbus.onMainMessage("newVersionAvailable", (version) => {
     eventEmitter.emit("newVersionAvailable", version);
 });
+window.eventbus.onMainMessage("downloadProgress", (progress) => {
+    eventEmitter.emit("downloadProgress", progress);
+});
 
 export default {
     sendMainMessage: (eventName, ...message) => {
         window.eventbus.sendMainMessage(eventName, ...message);
+    },
+    onDownloadProgress: (callback) => {
+        addEventListener("downloadProgress", callback);
+    },
+    offDownloadProgress: (callback) => {
+        removeEventListener("downloadProgress", callback);
     },
     onLanguageChanged: (callback) => {
         addEventListener("languageChanged", callback);

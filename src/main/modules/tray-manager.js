@@ -13,7 +13,7 @@ const refresh = () => {
         if (tray == null) {
             const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "tray.png"))
             tray = new Tray(icon);
-            tray.setToolTip(app.getName());
+            tray.setToolTip(applicationManager.getProductName());
             if (applicationUtils.isWindows()) {
                 tray.on("click", () => {
                     applicationManager.createWindow();
@@ -34,7 +34,7 @@ const refresh = () => {
             {
                 label: translations["QUIT_LABEL"],
                 click: () => {
-                    applicationManager.quit();
+                    applicationManager.quitApplication();
                 }
             }
         ])

@@ -35,10 +35,10 @@
     "ajv" "^6.12.0"
     "ajv-keywords" "^3.4.1"
 
-"@electron/get@^1.0.1":
-  "integrity" "sha512-6nr9DbJPUR9Xujw6zD3y+rS95TyItEVM0NVjt1EehY2vUWfIgPiIPVHxCvaTS0xr2B+DRxovYVKbuOWqC35kjg=="
-  "resolved" "https://registry.npmjs.org/@electron/get/-/get-1.12.4.tgz"
-  "version" "1.12.4"
+"@electron/get@^1.13.0":
+  "integrity" "sha512-+SjZhRuRo+STTO1Fdhzqnv9D2ZhjxXP6egsJ9kiO8dtP68cDx7dFCwWi64dlMQV7sWcfW1OYCW4wviEBzmRsfQ=="
+  "resolved" "https://registry.npmjs.org/@electron/get/-/get-1.13.0.tgz"
+  "version" "1.13.0"
   dependencies:
     "debug" "^4.1.1"
     "env-paths" "^2.2.0"
@@ -399,9 +399,9 @@
   "version" "3.7.2"
 
 "boolean@^3.0.1":
-  "integrity" "sha512-YN6UmV0FfLlBVvRvNPx3pz5W/mUoYB24J4WSXOKP/OOJpi+Oq6WYqPaNTHzjI0QzwWtnvEd5CGYyQPgp1jFxnw=="
-  "resolved" "https://registry.npmjs.org/boolean/-/boolean-3.1.2.tgz"
-  "version" "3.1.2"
+  "integrity" "sha512-3hx0kwU3uzG6ReQ3pnaFQPSktpBw6RHN3/ivDKEuU8g1XSfafowyvDnadjv1xp8IZqhtSukxlwv9bF6FhX8m0w=="
+  "resolved" "https://registry.npmjs.org/boolean/-/boolean-3.1.4.tgz"
+  "version" "3.1.4"
 
 "boxen@^5.0.0":
   "integrity" "sha512-49VBlw+PrWEF51aCmy7QIteYPIFZxSpvqBdP/2itCPPlJ49kj9zg/XPRFrdkne2W+CfwXUls8exMvu1RysZpKA=="
@@ -688,9 +688,9 @@
     "safe-buffer" "5.1.2"
 
 "core-js@^3.6.5":
-  "integrity" "sha512-5+5VxRFmSf97nM8Jr2wzOwLqRo6zphH2aX+7KsAUONObyzakDNq2G/bgbhinxB4PoV9L3aXQYhiDKyIKWd2c8g=="
-  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.16.0.tgz"
-  "version" "3.16.0"
+  "integrity" "sha512-lyvajs+wd8N1hXfzob1LdOCCHFU4bGMbqqmLn1Q4QlCpDqWPpGf+p0nj+LNrvDDG33j0hZXw2nsvvVpHysxyNw=="
+  "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.17.3.tgz"
+  "version" "3.17.3"
 
 "core-util-is@~1.0.0", "core-util-is@1.0.2":
   "integrity" "sha1-tf1UIgqivFq1eqtxQMlAdUUDwac="
@@ -1009,12 +1009,12 @@
     "lazy-val" "^1.0.5"
     "mime" "^2.5.2"
 
-"electron@^15.0.0-beta.4":
-  "integrity" "sha512-X0Sp5GhfL1RkF2gR+oMa88tnbhmf6xYuEPfeWoR0cNwUlLU0734xTn9jN2uSIQvCYTjy+2CgFFI5wuqu/OUJZw=="
-  "resolved" "https://registry.npmjs.org/electron/-/electron-15.0.0-beta.4.tgz"
-  "version" "15.0.0-beta.4"
+"electron@^15.0.0-beta.7":
+  "integrity" "sha512-Tgb4v31Cxx+yjKz6Fqz21or7IlOZoCPuCWvyC31KBNrYf88VqbvF/FfBDEeBMLkMOY7jjao61YJ0AW+KP71D0Q=="
+  "resolved" "https://registry.npmjs.org/electron/-/electron-15.0.0-beta.7.tgz"
+  "version" "15.0.0-beta.7"
   dependencies:
-    "@electron/get" "^1.0.1"
+    "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
     "extract-zip" "^1.0.3"
 
@@ -1842,7 +1842,7 @@
   "resolved" "https://registry.npmjs.org/node-addon-api/-/node-addon-api-1.7.2.tgz"
   "version" "1.7.2"
 
-"node-fetch@^2.6.0", "node-fetch@^2.6.2":
+"node-fetch@^2.6.0":
   "integrity" "sha512-aLoxToI6RfZ+0NOjmWAgn9+LEd30YCkJKFSyWacNZdEKTit/ZMcKjGkTRo8uWEsnIb/hfKecNPEbln02PdWbcA=="
   "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.2.tgz"
   "version" "2.6.2"
@@ -1994,6 +1994,13 @@
   "integrity" "sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA=="
   "resolved" "https://registry.npmjs.org/progress/-/progress-2.0.3.tgz"
   "version" "2.0.3"
+
+"progressbar.js@^1.1.0":
+  "integrity" "sha512-K68/xcyXKo2I6T3PfIkXrRaycxROmWeU4bugb49iulWR25cU94PM0cfZ47S0jDhG5K3vPhZwCOy1fgb5Pgh6UQ=="
+  "resolved" "https://registry.npmjs.org/progressbar.js/-/progressbar.js-1.1.0.tgz"
+  "version" "1.1.0"
+  dependencies:
+    "shifty" "^2.1.2"
 
 "proto-list@~1.2.1":
   "integrity" "sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk="
@@ -2208,6 +2215,11 @@
   "integrity" "sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A=="
   "resolved" "https://registry.npmjs.org/shebang-regex/-/shebang-regex-3.0.0.tgz"
   "version" "3.0.0"
+
+"shifty@^2.1.2":
+  "integrity" "sha512-uaDIdYXrOGncvPula4Pi2jl7kv46IwvZ10AYBSGsl/vrvclOXqzMWOAQCgDjNR7LVPgQki0CTtOMJOH9gnJgsg=="
+  "resolved" "https://registry.npmjs.org/shifty/-/shifty-2.15.2.tgz"
+  "version" "2.15.2"
 
 "signal-exit@^3.0.2":
   "integrity" "sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA=="

@@ -41,7 +41,7 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^15.0.0-beta.4",
+    "electron": "^15.0.0-beta.7",
     "electron-builder": "^22.14.2"
   },
   "dependencies": {
@@ -55,7 +55,7 @@
     "image-to-base64": "^2.2.0",
     "log4js": "^6.3.0",
     "mitt": "^3.0.0",
-    "node-fetch": "^2.6.2",
+    "progressbar.js": "^1.1.0",
     "vue": "^3.2.11",
     "vue-router": "^4.0.11",
     "wallpaper": "^5.0.1"

@@ -21,16 +21,12 @@ const getMenuItemId = (name) => {
     return "MENU_ITEM_" + name + "_ID";
 };
 
-const getMenuItemLabelKey = (name, type) => {
-    return name + "_" + type + "_LABEL";
-};
-
 const getAvailableWallpaperSources = () => {
     const availableWallpaperSources = [];
     wallpaperManager.getAvailableSources().forEach(source => {
         const menuItemName = source.toUpperCase();
         const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "WALLPAPER_SOURCE");
+        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "WALLPAPER_SOURCE");
         availableWallpaperSources.push({
             id: menuItemId,
             label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
@@ -56,7 +52,7 @@ const getAvailableViews = () => {
     viewManager.getAvailableViews().forEach(view => {
         const menuItemName = view.toUpperCase().substr(1);
         const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "VIEW");
+        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "VIEW");
         availableViews.push({
             id: menuItemId,
             label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
@@ -75,7 +71,7 @@ const getAvailableLanguages = () => {
     i18nManager.getAvailableLanguages().forEach(language => {
         const menuItemName = language.toUpperCase();
         const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = getMenuItemLabelKey(menuItemName, "LANGUAGE");
+        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "LANGUAGE");
         availableLanguages.push({
             id: menuItemId,
             label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
@@ -103,16 +99,13 @@ const refresh = () => {
                         label: translations["DEBUG_LABEL"],
                         visible: applicationUtils.isDebug(),
                         click: () => {
-                            const win = applicationManager.getMainWindow();
-                            if (win != null) {
-                                win.webContents.openDevTools();
-                            }
+                            applicationManager.openDevTools();
                         }
                     },
                     {
                         label: translations["QUIT_LABEL"],
                         click: () => {
-                            applicationManager.quit();
+                            applicationManager.quitApplication();
                         }
                     }
                 ]

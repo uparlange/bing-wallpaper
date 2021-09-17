@@ -1,8 +1,6 @@
 const { app, screen } = require("electron");
 const electron = require("electron");
 const htmlparser2 = require("htmlparser2");
-const fetch = require("node-fetch");
-const download = require("download");
 const wallpaper = require("wallpaper");
 const fs = require("fs");
 const path = require("path");
@@ -14,7 +12,7 @@ const loggerManager = require("./logger-manager");
 const eventbusManager = require("./eventbus-manager");
 const storageManager = require("./storage-manager");
 const connectionManager = require("./connection-manager");
-const i18nManager = require("./i18n-manager");
+const applicationManager = require("./application-manager");
 
 const eventEmitter = new EventEmitter();
 
@@ -43,33 +41,25 @@ const sources = [
             // https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210912.html
             return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + ".html"
         },
+        needPageParsing: false,
         get imageUrl() {
             //https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210911-hires.jpg
             return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + "-hires.jpg";
-        },
-        needPageParsing: false
+        }
     },
     {
         name: "bonjourmadame",
-        get daySuffix() {
-            let date = dayjs().date();
-            if (dayjs().day() == 6) {
-                date -= 1;
-            } else if (dayjs().day() == 0) {
-                date -= 2;
+        homeUrl: "https://www.bonjourmadame.fr/",
+        needPageParsing: true,
+        imagePatternValidator: (name, attributes) => {
+            // <img loading="eager" class="alignnone wp-image-3325 size-full jetpack-lazy-image jetpack-lazy-image--handled" src="https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=960%2C1428" alt="" width="960" height="1428" data-recalc-dims="1" srcset="https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?w=1070&amp;ssl=1 1070w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=202%2C300&amp;ssl=1 202w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=688%2C1024&amp;ssl=1 688w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=768%2C1143&amp;ssl=1 768w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=1032%2C1536&amp;ssl=1 1032w" data-lazy-loaded="1" sizes="(max-width: 960px) 100vw, 960px">
+            if (name === "img" && attributes.class && attributes.class.includes("size-full")) {
+                const { width } = screen.getPrimaryDisplay().workAreaSize
+                const url = attributes.src.split("?")[0] + "?resize=" + width;
+                return url;
             }
-            return ("0" + date).slice(-2);
-        },
-        get homeUrl() {
-            // https://www.bonjourmadame.fr/2021/09/10/
-            return "https://www.bonjourmadame.fr/" + dayjs().format("YYYY/MM/") + this.daySuffix + "/";
-        },
-        get imageUrl() {
-            // https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210910-scaled.jpg?resize=2560
-            const { width } = screen.getPrimaryDisplay().workAreaSize
-            return "https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/" + dayjs().format("YYYY/MM/YYMM") + this.daySuffix + ".jpg?resize=" + width;
-        },
-        needPageParsing: false
+            return null;
+        }
     },
     {
         name: USER_SOURCE
@@ -133,18 +123,9 @@ const parsePage = (html, patternValidator) => {
 
 const fetchPage = (url) => {
     return new Promise((resolve, reject) => {
-        fetch(url).then(res => res.text()).then(text => resolve(text));
-    });
-};
-
-const downloadImage = (url, destination) => {
-    return new Promise((resolve, reject) => {
-        const ws = fs.createWriteStream(destination);
-        ws.on("finish", () => {
-            resolve(destination);
+        applicationManager.fetch(url).then((res) => {
+            resolve(res);
         });
-        loggerManager.getLogger().info("WallpaperManager - Download image '" + url + "'");
-        download(url).pipe(ws);
     });
 };
 
@@ -207,7 +188,7 @@ const setExternalWallpaper = (config) => {
     setB64Wallpaper(null);
     const finalizeSetExternalWallpaper = (imageUrl) => {
         storageManager.setData(config.wallpaperStorageKey, imageUrl);
-        downloadImage(imageUrl, config.wallpaperPath).then((imagePath) => {
+        applicationManager.download(imageUrl, config.wallpaperPath).then((imagePath) => {
             model.wallpaperPath = imagePath;
             loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
             completeApplyWallpaper();

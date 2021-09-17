@@ -2,6 +2,7 @@ import applicationComponent from "./modules/application-component.js";
 import wallpaperComponent from "./modules/wallpaper-component.js";
 import aboutComponent from "./modules/about-component.js";
 import sourcesComponent from "./modules/sources-component.js";
+import progressBarComponent from "./modules/progress-bar-component.js";
 
 const routes = [
     { path: "/", redirect: "/wallpaper" },
@@ -18,5 +19,7 @@ const router = VueRouter.createRouter({
 const app = Vue.createApp(applicationComponent);
 
 app.use(router);
+
+app.component("progress-bar", progressBarComponent);
 
 app.mount("#app");

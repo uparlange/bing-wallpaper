@@ -2,9 +2,8 @@ const electron = require("electron");
 const { app, shell, BrowserWindow } = require("electron");
 const path = require("path");
 const AutoLaunch = require("auto-launch");
-const fetch = require("node-fetch");
 const fs = require("fs");
-const download = require("download");
+const _download = require("download");
 
 const pkg = require("./../../../package.json");
 const storageManager = require("./storage-manager");
@@ -29,7 +28,7 @@ const getProductName = () => {
     return pkg.description;
 };
 
-const quit = () => {
+const quitApplication = () => {
     storageManager.save();
     app.quit();
 };
@@ -58,7 +57,7 @@ const toggleLaunchAtStartup = () => {
     return launchAtStartup;
 };
 
-const createWindow = () => {
+const createWindow = (devToolsAtLaunch) => {
     return new Promise((resolve, reject) => {
         if (win == null) {
             win = new BrowserWindow({
@@ -70,6 +69,9 @@ const createWindow = () => {
                     preload: path.join(__dirname, "..", "electron-preload.js")
                 }
             });
+            if(devToolsAtLaunch) {
+                openDevTools();
+            }
             win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
                 setMainWindowTouchbar();
                 viewManager.showView(viewManager.getCurrentView());
@@ -116,7 +118,6 @@ const initAutoUpdater = () => {
 };
 
 const setMainWindowTouchbar = (forceRefresh) => {
-    const win = getMainWindow();
     if (win != null) {
         win.setTouchBar(touchbarManager.getTouchbar(forceRefresh));
     }
@@ -126,6 +127,9 @@ const init = () => {
     return new Promise((resolve, reject) => {
         initAutoLauncher().then(initAutoUpdater).then(() => {
             i18nManager.onLanguageChanged((lng) => {
+                setMainWindowTouchbar(true);
+            });
+            viewManager.onViewChanged((view) => {
                 setMainWindowTouchbar(true);
             });
             loggerManager.getLogger().info("ApplicationManager - Init : OK");
@@ -160,37 +164,59 @@ const getApplicationFilename = (version) => {
     return `${getProductName()}-${version}-${arch}.${applicationUtils.isMac() ? "dmg" : "exe"}`;
 };
 
-const downloadVersion = (url, destination) => {
+const showStreamProgress = (stream) => {
+    stream.on("downloadProgress", (progress) => {
+        eventbusManager.sendRendererMessage("downloadProgress", progress);
+        if (win != null) {
+            win.setProgressBar((progress.percent == 1) ? -1 : progress.percent);
+        }
+    });
+};
+
+const download = (url, destination) => {
     return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("ApplicationManager - Download application '" + url + "' to '" + destination + "'");
-        download(url).then((data) => {
-            fs.writeFileSync(destination, data);
+        loggerManager.getLogger().info("ApplicationManager - download '" + url + "' to '" + destination + "'");
+        const ws = fs.createWriteStream(destination);
+        ws.on("finish", () => {
             resolve(destination);
-        }).catch((err) => {
-            loggerManager.getLogger().error("ApplicationManager - downloadVersion : " + err);
         });
+        const stream = _download(url);
+        stream.pipe(ws);
+        showStreamProgress(stream);
+    });
+};
+
+const fetch = (url) => {
+    return new Promise((resolve, reject) => {
+        loggerManager.getLogger().info("ApplicationManager - fetch '" + url + "'");
+        const stream = _download(url);
+        stream.then((data) => {
+            resolve(new TextDecoder("utf-8").decode(data));
+        });
+        showStreamProgress(stream);
     });
 };
 
 const updateApplication = (version) => {
     const destination = path.join(app.getPath("temp"), getApplicationFilename(version));
-    downloadVersion(getDownloadUrl(version), destination).then((destination) => {
+    download(getDownloadUrl(version), destination).then((destination) => {
         shell.openPath(destination).then(() => {
-            quit();
+            quitApplication();
         })
     });
 };
 
 const checkForUpdates = () => {
     if (connectionManager.isOnLine()) {
-        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then(res => res.json()).then(json => {
+        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then((res) => {
+            const json = JSON.parse(res);
             if (compareVersion(json.version, pkg.version) > 0) {
                 eventbusManager.sendRendererMessage("newVersionAvailable", json.version);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
             }
         });
-    };
+    }
 };
 
 const openExternal = (url) => {
@@ -205,17 +231,26 @@ const getVersions = () => {
     return versions;
 };
 
+const openDevTools = () => {
+    if (win != null) {
+        win.webContents.openDevTools();
+    }
+};
+
 module.exports = {
-    openExternal: openExternal,
-    getVersions: getVersions,
     init: init,
-    isLaunchedMinimized: isLaunchedMinimized,
-    toggleLaunchMinimized: toggleLaunchMinimized,
-    isLaunchedAtStartup: isLaunchedAtStartup,
-    toggleLaunchAtStartup: toggleLaunchAtStartup,
-    quit: quit,
-    createWindow: createWindow,
-    updateApplication: updateApplication,
+    getVersions: getVersions,
     getMainWindow: getMainWindow,
-    getProductName: getProductName
+    getProductName: getProductName,
+    isLaunchedMinimized: isLaunchedMinimized,
+    isLaunchedAtStartup: isLaunchedAtStartup,
+    toggleLaunchMinimized: toggleLaunchMinimized,
+    toggleLaunchAtStartup: toggleLaunchAtStartup,
+    openExternal: openExternal,
+    createWindow: createWindow,
+    quitApplication: quitApplication,
+    updateApplication: updateApplication,
+    download: download,
+    fetch: fetch,
+    openDevTools: openDevTools
 };
