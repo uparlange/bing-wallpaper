@@ -171,8 +171,7 @@ const refresh = () => {
                     },
                     {
                         label: translations["THEME_LABEL"],
-                        submenu: getAvailableThemes(),
-                        visible: applicationUtils.isDebug()
+                        submenu: getAvailableThemes()
                     }
                 ]
             }
