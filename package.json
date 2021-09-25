@@ -1,6 +1,6 @@
 {
   "name": "bing-wallpaper",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "BingWallpaper",
   "main": "src/main/electron-main.js",
   "author": "Ugo Parlange",
