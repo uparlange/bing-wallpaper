@@ -7,6 +7,7 @@
     "WALLPAPER_VIEW_LABEL": "Fondo de pantalla",
     "ABOUT_VIEW_LABEL": "A proposito",
     "SOURCES_VIEW_LABEL": "Gestión de fuentes",
+    "HISTORY_VIEW_LABEL": "Histórico",
     "LANGUAGE_LABEL": "Idioma",
     "FR_LANGUAGE_LABEL": "Français",
     "EN_LANGUAGE_LABEL": "English",
@@ -24,5 +25,13 @@
     "USER_WALLPAPER_SOURCE_LABEL": "Usuario",
     "NEW_VERSION_AVAILABLE_LABEL": "Nueva versión '{{version}}' disponible. ¿Quiere instalarlo?",
     "MANAGE_LABEL": "Administrar",
-    "SET_LABEL": "Establecer"
+    "SET_LABEL": "Establecer",
+    "THEME_LABEL": "Tema",
+    "SYSTEM_THEME_LABEL": "Sistema",
+    "LIGHT_THEME_LABEL": "Light",
+    "DARK_THEME_LABEL": "Dark",
+    "REMOVE_LABEL": "Borrar",
+    "REMOVE_ALL_LABEL": "Eliminar todos",
+    "CREATION_DATE_LABEL": "Fecha de creación",
+    "UPDATE_DATE_LABEL": "Fecha de actualización"
 }

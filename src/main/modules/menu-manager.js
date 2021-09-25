@@ -5,6 +5,7 @@ const wallpaperManager = require("./wallpaper-manager");
 const i18nManager = require("./i18n-manager");
 const viewManager = require("./view-manager");
 const loggerManager = require("./logger-manager");
+const themeManager = require("./theme-manager");
 const applicationUtils = require("./application-utils");
 
 const changeMenuItemChecked = (menuItemId, checked) => {
@@ -85,12 +86,32 @@ const getAvailableLanguages = () => {
     return availableLanguages;
 };
 
+const getAvailableThemes = () => {
+    const availableThemes = [];
+    themeManager.getAvailableThemes().forEach(theme => {
+        const menuItemName = theme.toUpperCase();
+        const menuItemId = getMenuItemId(menuItemName);
+        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "THEME");
+        availableThemes.push({
+            id: menuItemId,
+            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
+            checked: themeManager.getCurrentTheme() == theme,
+            type: "checkbox",
+            click: () => {
+                themeManager.setTheme(theme);
+            }
+        });
+    });
+    return availableThemes;
+};
+
 const refresh = () => {
     try {
         const translations = i18nManager.getTranslations([
             "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
             "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
-            "WALLPAPER_LABEL", "LAUNCH_LABEL", "LAUNCH_MINIMIZED_LABEL"]);
+            "WALLPAPER_LABEL", "LAUNCH_LABEL", "LAUNCH_MINIMIZED_LABEL",
+            "THEME_LABEL"]);
         const template = [
             {
                 label: applicationManager.getProductName(),
@@ -147,6 +168,11 @@ const refresh = () => {
                     {
                         label: translations["LANGUAGE_LABEL"],
                         submenu: getAvailableLanguages()
+                    },
+                    {
+                        label: translations["THEME_LABEL"],
+                        submenu: getAvailableThemes(),
+                        visible: applicationUtils.isDebug()
                     }
                 ]
             }
@@ -159,17 +185,22 @@ const refresh = () => {
 };
 
 const init = () => {
-    wallpaperManager.onWallpaperChanged((source) => {
+    themeManager.onThemeChanged((message) => {
+        setActiveMenuItemOfList(themeManager.getAvailableThemes().map((element) => {
+            return getMenuItemId(element.toUpperCase());
+        }), getMenuItemId(message.theme.toUpperCase()));
+    });
+    wallpaperManager.onWallpaperChanged((message) => {
         setActiveMenuItemOfList(wallpaperManager.getAvailableSources().map((element) => {
             return getMenuItemId(element.toUpperCase());
-        }), getMenuItemId(source.toUpperCase()));
+        }), getMenuItemId(message.source.toUpperCase()));
     });
-    viewManager.onViewChanged((view) => {
+    viewManager.onViewChanged((message) => {
         setActiveMenuItemOfList(viewManager.getAvailableViews().map((element) => {
             return getMenuItemId(element.toUpperCase().substr(1));
-        }), getMenuItemId(view.toUpperCase().substr(1)));
+        }), getMenuItemId(message.view.toUpperCase().substr(1)));
     });
-    i18nManager.onLanguageChanged((lng) => {
+    i18nManager.onLanguageChanged((message) => {
         refresh();
     });
     refresh();

@@ -26,22 +26,25 @@ export default {
         rendererEventbus.offDownloadProgress(this.onDownloadProgress);
     },
     methods: {
-        onDownloadProgress: function (progress) {
-            this.progress.value = progress.percent == 1 ? 0 : progress.percent;
+        onDownloadProgress: function (message) {
+            this.progress.value = message.progress == 1 ? 0 : message.progress;
         },
-        onNewVersionAvailable: function (version) {
-            rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL"], { version: version }).then((translations) => {
+        onNewVersionAvailable: function (message) {
+            rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL"], { version: message.version }).then((translations) => {
                 if (window.confirm(translations["NEW_VERSION_AVAILABLE_LABEL"])) {
-                    rendererEventbus.sendMainMessage("updateMyApplication", version);
+                    const message = {
+                        version: message.version
+                    };
+                    rendererEventbus.updateMyApplication(message);
                 }
             });
         },
-        onViewChanged: function (view) {
-            this.$router.push(view);
-            currentView = view;
+        onViewChanged: function (message) {
+            this.$router.push(message.view);
+            currentView = message.view;
             this.refreshDocumentTitle();
         },
-        onLanguageChanged: function (lng) {
+        onLanguageChanged: function (message) {
             this.refreshDocumentTitle();
         },
         refreshDocumentTitle: function () {

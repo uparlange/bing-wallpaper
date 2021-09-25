@@ -9,12 +9,16 @@ const eventEmitter = new EventEmitter();
 const WALLPAPER_VIEW = "/wallpaper";
 const ABOUT_VIEW = "/about";
 const SOURCES_VIEW = "/sources";
+const HISTORY_VIEW = "/history";
 
 const showView = (view) => {
     loggerManager.getLogger().info("ViewManager - Show View '" + view + "'");
     storageManager.setData("view", view);
-    eventbusManager.sendRendererMessage("viewChanged", view);
-    eventEmitter.emit("viewChanged", getCurrentView());
+    const message = {
+        view: view
+    };
+    eventbusManager.sendRendererMessage("viewChanged", message);
+    eventEmitter.emit("viewChanged", message);
 };
 
 const getCurrentView = () => {
@@ -22,7 +26,7 @@ const getCurrentView = () => {
 };
 
 const getAvailableViews = () => {
-    return [WALLPAPER_VIEW, ABOUT_VIEW, SOURCES_VIEW];
+    return [WALLPAPER_VIEW, SOURCES_VIEW, HISTORY_VIEW, ABOUT_VIEW];
 };
 
 const onViewChanged = (callback) => {
@@ -37,6 +41,7 @@ module.exports = {
     WALLPAPER_VIEW: WALLPAPER_VIEW,
     ABOUT_VIEW: ABOUT_VIEW,
     SOURCES_VIEW: SOURCES_VIEW,
+    HISTORY_VIEW: HISTORY_VIEW,
     init: init,
     getAvailableViews: getAvailableViews,
     showView: showView,

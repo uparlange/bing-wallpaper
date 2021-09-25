@@ -9,6 +9,8 @@ const storageManager = require("./modules/storage-manager");
 const trayManager = require("./modules/tray-manager");
 const viewManager = require("./modules/view-manager");
 const touchbarManager = require("./modules/touchbar-manager");
+const historyManager = require("./modules/history-manager");
+const themeManager = require("./modules/theme-manager");
 
 app.whenReady().then(() => {
     mainEventbus.init();
@@ -16,6 +18,8 @@ app.whenReady().then(() => {
         menuManager.init();
         trayManager.init();
         touchbarManager.init();
+        historyManager.init();
+        themeManager.init();
         viewManager.init();
         applicationManager.createWindow().then(() => {
             wallpaperManager.init();

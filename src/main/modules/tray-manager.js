@@ -45,7 +45,7 @@ const refresh = () => {
 };
 
 const init = () => {
-    i18nManager.onLanguageChanged(() => {
+    i18nManager.onLanguageChanged((message) => {
         refresh();
     });
     refresh();

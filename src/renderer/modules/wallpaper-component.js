@@ -9,25 +9,31 @@ export default () => {
                 data() {
                     return {
                         dropActive: false,
-                        b64Wallpaper: null
+                        wallpaperPath: null,
+                        wallpaperVisible: false
+                    }
+                },
+                watch: {
+                    wallpaperPath(newValue, oldValue) {
+                        this.wallpaperVisible = newValue != null;
                     }
                 },
                 beforeMount() {
-                    rendererEventbus.onB64WallpaperChanged(this.onB64WallpaperChanged);
+                    rendererEventbus.onWallpaperChanged(this.onWallpaperChanged);
                 },
                 created() {
-                    this.refreshB64Wallpaper();
+                    this.refreshWallpaper();
                 },
                 beforeUnmount() {
-                    rendererEventbus.offB64WallpaperChanged(this.onB64WallpaperChanged);
+                    rendererEventbus.offWallpaperChanged(this.onWallpaperChanged);
                 },
                 methods: {
-                    onB64WallpaperChanged: function (b64Wallpaper) {
-                        this.refreshB64Wallpaper();
+                    onWallpaperChanged: function (message) {
+                        this.refreshWallpaper();
                     },
-                    refreshB64Wallpaper: function () {
-                        rendererEventbus.getB64Wallpaper().then((b64Wallpaper) => {
-                            this.b64Wallpaper = b64Wallpaper;
+                    refreshWallpaper: function () {
+                        rendererEventbus.getCurrentWallpaperPath().then((path) => {
+                            this.wallpaperPath = path + "?version=" + new Date().getTime();
                         });
                     },
                     onDragOver: function (event) {
@@ -45,7 +51,10 @@ export default () => {
                         this.dropActive = false;
                         if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
                             const path = event.dataTransfer.files[0].path;
-                            rendererEventbus.sendMainMessage("setUserWallpaper", path);
+                            const message = {
+                                path: path
+                            };
+                            rendererEventbus.setUserWallpaper(message);
                         }
                         event.preventDefault();
                     }

@@ -24,15 +24,17 @@ export default () => {
                     rendererEventbus.offWallpaperChanged(this.onWallpaperChanged);
                 },
                 methods: {
-                    onLanguageChanged: function (lng) {
+                    onLanguageChanged: function (message) {
                         this.refreshTranslations();
                     },
-                    onWallpaperChanged: function (source) {
+                    onWallpaperChanged: function (message) {
                         this.refreshSources();
                     },
                     setWallpaperSource: function (source) {
-                        rendererEventbus.sendMainMessage("showView", "/wallpaper");
-                        rendererEventbus.sendMainMessage("setWallpaperSource", source);
+                        const message = {
+                            source: source
+                        };
+                        rendererEventbus.setWallpaperSource(message);
                     },
                     refreshTranslations: function () {
                         const translationKeys = [];
@@ -45,7 +47,10 @@ export default () => {
                         });
                     },
                     openExternal: function (url) {
-                        rendererEventbus.sendMainMessage("openExternal", url);
+                        const message = {
+                            url: url
+                        };
+                        rendererEventbus.openExternal(message);
                     },
                     refreshSources: function () {
                         rendererEventbus.getSourceDescriptions().then((sourceDescriptions) => {

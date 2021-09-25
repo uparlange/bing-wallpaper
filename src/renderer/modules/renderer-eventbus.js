@@ -10,35 +10,65 @@ const removeEventListener = (eventName, callback) => {
     //console.debug(eventEmitter.all);
 };
 
+const sendMainMessage = (eventName, message) => {
+    window.eventbus.sendMainMessage(eventName, message);
+};
+
 // i18n manager
-window.eventbus.onMainMessage("languageChanged", (lng) => {
-    eventEmitter.emit("languageChanged", lng);
+window.eventbus.onMainMessage("languageChanged", (message) => {
+    eventEmitter.emit("languageChanged", message);
 });
 
 // wallpaper manager
-window.eventbus.onMainMessage("wallpaperChanged", (source) => {
-    eventEmitter.emit("wallpaperChanged", source);
-});
-window.eventbus.onMainMessage("b64WallpaperChanged", (b64Wallpaper) => {
-    eventEmitter.emit("b64WallpaperChanged", b64Wallpaper);
+window.eventbus.onMainMessage("wallpaperChanged", (message) => {
+    eventEmitter.emit("wallpaperChanged", message);
 });
 
 // view manager
-window.eventbus.onMainMessage("viewChanged", (view) => {
-    eventEmitter.emit("viewChanged", view);
+window.eventbus.onMainMessage("viewChanged", (message) => {
+    eventEmitter.emit("viewChanged", message);
 });
 
 // application manager
-window.eventbus.onMainMessage("newVersionAvailable", (version) => {
-    eventEmitter.emit("newVersionAvailable", version);
+window.eventbus.onMainMessage("newVersionAvailable", (message) => {
+    eventEmitter.emit("newVersionAvailable", message);
 });
-window.eventbus.onMainMessage("downloadProgress", (progress) => {
-    eventEmitter.emit("downloadProgress", progress);
+window.eventbus.onMainMessage("downloadProgress", (message) => {
+    eventEmitter.emit("downloadProgress", message);
+});
+
+// history manager
+window.eventbus.onMainMessage("historyChanged", () => {
+    eventEmitter.emit("historyChanged");
 });
 
 export default {
-    sendMainMessage: (eventName, ...message) => {
-        window.eventbus.sendMainMessage(eventName, ...message);
+    removeHistoryItem: (message) => {
+        sendMainMessage("removeHistoryItem", message);
+    },
+    removeAllHistoryItems: (message) => {
+        sendMainMessage("removeAllHistoryItems", message);
+    },
+    setWallpaperSource: (message) => {
+        sendMainMessage("setWallpaperSource", message);
+    },
+    setWallpaperSource: (message) => {
+        sendMainMessage("setWallpaperSource", message);
+    },
+    setUserWallpaper: (message) => {
+        sendMainMessage("setUserWallpaper", message);
+    },
+    updateMyApplication: (message) => {
+        sendMainMessage("updateMyApplication", message);
+    },
+    openExternal: (message) => {
+        sendMainMessage("openExternal", message);
+    },
+    onHistoryChanged: (callback) => {
+        addEventListener("historyChanged", callback);
+    },
+    offHistoryChanged: (callback) => {
+        removeEventListener("historyChanged", callback);
     },
     onDownloadProgress: (callback) => {
         addEventListener("downloadProgress", callback);
@@ -57,12 +87,6 @@ export default {
     },
     offWallpaperChanged: (callback) => {
         removeEventListener("wallpaperChanged", callback);
-    },
-    onB64WallpaperChanged: (callback) => {
-        addEventListener("b64WallpaperChanged", callback);
-    },
-    offB64WallpaperChanged: (callback) => {
-        removeEventListener("b64WallpaperChanged", callback);
     },
     onViewChanged: (callback) => {
         addEventListener("viewChanged", callback);
@@ -83,6 +107,13 @@ export default {
             });
         });
     },
+    getCurrentWallpaperPath: () => {
+        return new Promise((resolve, reject) => {
+            window.eventbus.sendMainInvoke("getCurrentWallpaperPath").then((path) => {
+                resolve(path);
+            });
+        });
+    },
     getSourceDescriptions: () => {
         return new Promise((resolve, reject) => {
             window.eventbus.sendMainInvoke("getSourceDescriptions").then((sourceDescriptions) => {
@@ -92,16 +123,20 @@ export default {
     },
     getTranslations: (keyList, options) => {
         return new Promise((resolve, reject) => {
-            window.eventbus.sendMainInvoke("getTranslations", keyList, options).then((translations) => {
+            const message = {
+                keyList: keyList,
+                options: options
+            };
+            window.eventbus.sendMainInvoke("getTranslations", message).then((translations) => {
                 resolve(translations);
             });
         });
     },
-    getB64Wallpaper: () => {
+    getHistoryItems: () => {
         return new Promise((resolve, reject) => {
-            window.eventbus.sendMainInvoke("getB64Wallpaper").then((b64Wallpaper) => {
-                resolve(b64Wallpaper);
+            window.eventbus.sendMainInvoke("getHistoryItems").then((items) => {
+                resolve(items);
             });
         });
-    },
+    }
 };

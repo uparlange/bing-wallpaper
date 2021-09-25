@@ -69,7 +69,7 @@ const createWindow = (devToolsAtLaunch) => {
                     preload: path.join(__dirname, "..", "electron-preload.js")
                 }
             });
-            if(devToolsAtLaunch) {
+            if (devToolsAtLaunch) {
                 openDevTools();
             }
             win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
@@ -126,10 +126,10 @@ const setMainWindowTouchbar = (forceRefresh) => {
 const init = () => {
     return new Promise((resolve, reject) => {
         initAutoLauncher().then(initAutoUpdater).then(() => {
-            i18nManager.onLanguageChanged((lng) => {
+            i18nManager.onLanguageChanged((message) => {
                 setMainWindowTouchbar(true);
             });
-            viewManager.onViewChanged((view) => {
+            viewManager.onViewChanged((message) => {
                 setMainWindowTouchbar(true);
             });
             loggerManager.getLogger().info("ApplicationManager - Init : OK");
@@ -166,7 +166,10 @@ const getApplicationFilename = (version) => {
 
 const showStreamProgress = (stream) => {
     stream.on("downloadProgress", (progress) => {
-        eventbusManager.sendRendererMessage("downloadProgress", progress);
+        const message = {
+            progress: progress.percent
+        };
+        eventbusManager.sendRendererMessage("downloadProgress", message);
         if (win != null) {
             win.setProgressBar((progress.percent == 1) ? -1 : progress.percent);
         }
@@ -211,7 +214,10 @@ const checkForUpdates = () => {
         fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then((res) => {
             const json = JSON.parse(res);
             if (compareVersion(json.version, pkg.version) > 0) {
-                eventbusManager.sendRendererMessage("newVersionAvailable", json.version);
+                const message = {
+                    version: json.version
+                };
+                eventbusManager.sendRendererMessage("newVersionAvailable", message);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
             }

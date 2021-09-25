@@ -25,7 +25,7 @@ export default () => {
                     rendererEventbus.offLanguageChanged(this.onLanguageChanged);
                 },
                 methods: {
-                    onLanguageChanged: function (lng) {
+                    onLanguageChanged: function (message) {
                         this.refreshTranslations();
                     },
                     refreshTranslations: function () {
@@ -34,7 +34,10 @@ export default () => {
                         });
                     },
                     openExternal: function (url) {
-                        rendererEventbus.sendMainMessage("openExternal", url);
+                        const message = {
+                            url: url
+                        };
+                        rendererEventbus.openExternal(message);
                     }
                 }
             });

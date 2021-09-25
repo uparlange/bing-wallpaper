@@ -7,6 +7,7 @@
     "WALLPAPER_VIEW_LABEL": "Wallpaper",
     "ABOUT_VIEW_LABEL": "About",
     "SOURCES_VIEW_LABEL": "Sources management",
+    "HISTORY_VIEW_LABEL": "History",
     "LANGUAGE_LABEL": "Language",
     "FR_LANGUAGE_LABEL": "Français",
     "EN_LANGUAGE_LABEL": "English",
@@ -24,5 +25,13 @@
     "USER_WALLPAPER_SOURCE_LABEL": "User",
     "NEW_VERSION_AVAILABLE_LABEL": "New version '{{version}}' available. Do you want to install it ?",
     "MANAGE_LABEL": "Manage",
-    "SET_LABEL": "Set"
+    "SET_LABEL": "Set",
+    "THEME_LABEL": "Theme",
+    "SYSTEM_THEME_LABEL": "System",
+    "LIGHT_THEME_LABEL": "Light",
+    "DARK_THEME_LABEL": "Dark",
+    "REMOVE_LABEL": "Remove",
+    "REMOVE_ALL_LABEL": "Remove all",
+    "CREATION_DATE_LABEL": "Creation date",
+    "UPDATE_DATE_LABEL": "Update date"
 }

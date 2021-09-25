@@ -4,7 +4,6 @@ const htmlparser2 = require("htmlparser2");
 const wallpaper = require("wallpaper");
 const fs = require("fs");
 const path = require("path");
-const imageToBase64 = require("image-to-base64");
 const dayjs = require("dayjs");
 const EventEmitter = require("events");
 
@@ -13,12 +12,12 @@ const eventbusManager = require("./eventbus-manager");
 const storageManager = require("./storage-manager");
 const connectionManager = require("./connection-manager");
 const applicationManager = require("./application-manager");
+const historyManager = require("./history-manager");
 
 const eventEmitter = new EventEmitter();
 
 const BING_SOURCE = "bing";
 const USER_SOURCE = "user";
-let USER_WALLPAPER_PATH = null;
 
 const sources = [
     {
@@ -65,6 +64,9 @@ const sources = [
         name: USER_SOURCE
     }
 ];
+
+let USER_WALLPAPER_PATH = null;
+
 sources.forEach(element => {
     element.wallpaperPath = path.join(app.getPath("userData"), element.name + "Wallpaper.jpg");
     element.wallpaperStorageKey = element.name + "WallpaperUrl";
@@ -73,10 +75,7 @@ sources.forEach(element => {
     }
 });
 
-const model = {
-    wallpaperPath: null,
-    b64Wallpaper: null
-};
+let wallpaperPath = null;
 
 const getSourceDescriptions = () => {
     return sources.map((element) => {
@@ -138,17 +137,6 @@ const applyWallpaper = (path) => {
     });
 };
 
-const generateB64Wallpaper = (path) => {
-    return new Promise((resolve, reject) => {
-        imageToBase64(path).then((response) => {
-            resolve(response);
-        }).catch((err) => {
-            loggerManager.getLogger().error("WallpaperManager - Generate b64 Wallpaper '" + err + "'");
-            resolve(null);
-        });
-    });
-};
-
 const copyFile = (source, destination) => {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("Copy file " + source + " to " + destination);
@@ -163,33 +151,29 @@ const copyFile = (source, destination) => {
     });
 };
 
-const setB64Wallpaper = (b64Wallpaper) => {
-    model.b64Wallpaper = b64Wallpaper;
-    eventbusManager.sendRendererMessage("b64WallpaperChanged", model.b64Wallpaper);
-};
-
 const setRendererWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
-    eventbusManager.sendRendererMessage("wallpaperChanged", getCurrentSource());
-    eventEmitter.emit("wallpaperChanged", getCurrentSource());
-    generateB64Wallpaper(model.wallpaperPath).then((data) => {
-        setB64Wallpaper(data);
-    });
+    const message = {
+        source: getCurrentSource(),
+        path: wallpaperPath
+    };
+    eventbusManager.sendRendererMessage("wallpaperChanged", message);
+    eventEmitter.emit("wallpaperChanged", message);
+    historyManager.addItem(message);
 };
 
 const completeApplyWallpaper = () => {
-    applyWallpaper(model.wallpaperPath).then(() => {
+    applyWallpaper(wallpaperPath).then(() => {
         setRendererWallpaper();
     });
 };
 
 const setExternalWallpaper = (config) => {
     loggerManager.getLogger().info("WallpaperManager - Set " + config.name.toUpperCase() + " Wallpaper");
-    setB64Wallpaper(null);
     const finalizeSetExternalWallpaper = (imageUrl) => {
         storageManager.setData(config.wallpaperStorageKey, imageUrl);
         applicationManager.download(imageUrl, config.wallpaperPath).then((imagePath) => {
-            model.wallpaperPath = imagePath;
+            wallpaperPath = imagePath;
             loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
             completeApplyWallpaper();
         });
@@ -211,18 +195,17 @@ const setExternalWallpaper = (config) => {
 
 const setUserWallpaper = (path) => {
     loggerManager.getLogger().info("WallpaperManager - Set " + USER_SOURCE.toUpperCase() + " Wallpaper");
-    setB64Wallpaper(null);
     const finalizeSetUserWallpaper = () => {
         loggerManager.getLogger().info("WallpaperManager - Apply " + USER_SOURCE.toUpperCase() + " Wallpaper");
         completeApplyWallpaper();
     };
     if (path != null) {
         copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
-            model.wallpaperPath = imagePath;
+            wallpaperPath = imagePath;
             finalizeSetUserWallpaper();
         });
     } else {
-        model.wallpaperPath = USER_WALLPAPER_PATH;
+        wallpaperPath = USER_WALLPAPER_PATH;
         finalizeSetUserWallpaper();
     }
 };
@@ -234,7 +217,7 @@ const externalWallpaperNeedUpdate = (key) => {
 
 const checkWallpaper = () => {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-    let config = getSourceByPropertyAndValue("wallpaperPath", model.wallpaperPath);
+    let config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
     if (config != null) {
         if (config.name != USER_SOURCE && externalWallpaperNeedUpdate(config.wallpaperStorageKey)) {
             setExternalWallpaper(config);
@@ -244,7 +227,7 @@ const checkWallpaper = () => {
     } else {
         fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
             if (err) {
-                copyFile(model.wallpaperPath, USER_WALLPAPER_PATH);
+                copyFile(wallpaperPath, USER_WALLPAPER_PATH);
                 config = getSourceByPropertyAndValue("name", BING_SOURCE);
                 setExternalWallpaper(config);
             }
@@ -261,10 +244,10 @@ const init = () => {
         loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
         checkWallpaper();
     });
-    wallpaper.get().then((wallpaperPath) => {
-        model.wallpaperPath = wallpaperPath;
-        loggerManager.getLogger().info("WallpaperManager - Init : OK");
+    wallpaper.get().then((path) => {
+        wallpaperPath = path;
         checkWallpaper();
+        loggerManager.getLogger().info("WallpaperManager - Init : OK");
     });
 };
 
@@ -275,7 +258,7 @@ const getAvailableSources = () => {
 };
 
 const getCurrentSource = () => {
-    const config = getSourceByPropertyAndValue("wallpaperPath", model.wallpaperPath);
+    const config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
     return config ? config.name : null;
 };
 
@@ -288,19 +271,19 @@ const setSource = (source) => {
     }
 };
 
-const getB64Wallpaper = () => {
-    return model.b64Wallpaper;
-};
-
 const onWallpaperChanged = (callback) => {
     eventEmitter.on("wallpaperChanged", callback);
+};
+
+const getCurrentWallpaperPath = () => {
+    return wallpaperPath;
 };
 
 module.exports = {
     init: init,
     setSource: setSource,
+    getCurrentWallpaperPath: getCurrentWallpaperPath,
     getCurrentSource: getCurrentSource,
-    getB64Wallpaper: getB64Wallpaper,
     getAvailableSources: getAvailableSources,
     getSourceDescriptions: getSourceDescriptions,
     setUserWallpaper: setUserWallpaper,

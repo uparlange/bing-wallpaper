@@ -35,7 +35,6 @@ html, body
   margin:0;
   padding:0;
   font: caption;
-  overflow: hidden;
 }
 
 a 
@@ -60,6 +59,11 @@ a
   bottom: 0px;
 }
 
+.view.no-scroll
+{
+  overflow: hidden;
+}
+
 .fade-enter-active,
 .fade-leave-active 
 {
@@ -72,7 +76,24 @@ a
   opacity: 0;
 }
 
-.dropzone.dropactive 
+.list-move {
+  transition: transform 0.5s;
+}
+
+.drop-zone.drop-active 
 {
   border: 5px dashed black;
+}
+
+.img-selectable
+{
+  filter: grayscale(1);
+}
+.img-selectable:hover
+{
+  filter: grayscale(0) !important;
+}
+.img-selected
+{
+  filter: grayscale(0) !important;
 }

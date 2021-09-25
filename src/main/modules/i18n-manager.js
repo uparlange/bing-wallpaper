@@ -31,8 +31,11 @@ const init = () => {
             });
         });
         i18next.on("languageChanged", (lng) => {
-            eventEmitter.emit("languageChanged", lng);
-            eventbusManager.sendRendererMessage("languageChanged", lng);
+            const message = {
+                lng: lng
+            };
+            eventEmitter.emit("languageChanged", message);
+            eventbusManager.sendRendererMessage("languageChanged", message);
         });
     });
 };
