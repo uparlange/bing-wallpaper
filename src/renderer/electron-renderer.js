@@ -6,7 +6,6 @@ import historyComponent from "./modules/history-component.js";
 import progressBarComponent from "./modules/progress-bar-component.js";
 
 const routes = [
-    { path: "/", redirect: "/wallpaper" },
     { path: "/wallpaper", component: wallpaperComponent, meta: { transition: null } },
     { path: "/about", component: aboutComponent, meta: { transition: null } },
     { path: "/sources", component: sourcesComponent, meta: { transition: null } },

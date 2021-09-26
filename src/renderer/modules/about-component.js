@@ -1,7 +1,7 @@
 import applicationUtils from "./application-utils.js";
 import rendererEventbus from "./renderer-eventbus.js";
 
-export default () => {
+export default function () {
     return new Promise((resolve, reject) => {
         applicationUtils.loadTemplate(import.meta.url).then((template) => {
             resolve({
@@ -25,15 +25,15 @@ export default () => {
                     rendererEventbus.offLanguageChanged(this.onLanguageChanged);
                 },
                 methods: {
-                    onLanguageChanged: function (message) {
+                    onLanguageChanged(message) {
                         this.refreshTranslations();
                     },
-                    refreshTranslations: function () {
+                    refreshTranslations() {
                         rendererEventbus.getTranslations(["AUTHOR_LABEL", "BASED_ON_LABEL", "APPLICATION_LABEL"]).then((translations) => {
                             this.translations = translations;
                         });
                     },
-                    openExternal: function (url) {
+                    openExternal(url) {
                         const message = {
                             url: url
                         };

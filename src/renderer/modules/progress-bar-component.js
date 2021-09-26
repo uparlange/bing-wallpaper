@@ -22,12 +22,12 @@ export default {
         this.render();
     },
     methods: {
-        setvalue: function (value) {
+        setvalue(value) {
             if (progressBar != null) {
                 progressBar.set(value);
             }
         },
-        render: function () {
+        render() {
             if (progressBar != null) {
                 progressBar.destroy();
                 progressBar = null;

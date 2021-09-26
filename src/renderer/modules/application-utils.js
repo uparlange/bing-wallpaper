@@ -1,5 +1,5 @@
 export default {
-    loadTemplate: (componentUrl) => {
+    loadTemplate(componentUrl) {
         return new Promise((resolve, reject) => {
             const componentName = new URL(componentUrl).pathname.split("/").pop();
             const viewName = componentName.split("-")[0];

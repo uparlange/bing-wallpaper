@@ -26,10 +26,10 @@ export default {
         rendererEventbus.offDownloadProgress(this.onDownloadProgress);
     },
     methods: {
-        onDownloadProgress: function (message) {
+        onDownloadProgress(message) {
             this.progress.value = message.progress == 1 ? 0 : message.progress;
         },
-        onNewVersionAvailable: function (message) {
+        onNewVersionAvailable(message) {
             rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL"], { version: message.version }).then((translations) => {
                 if (window.confirm(translations["NEW_VERSION_AVAILABLE_LABEL"])) {
                     const message = {
@@ -39,15 +39,15 @@ export default {
                 }
             });
         },
-        onViewChanged: function (message) {
+        onViewChanged(message) {
             this.$router.push(message.view);
             currentView = message.view;
             this.refreshDocumentTitle();
         },
-        onLanguageChanged: function (message) {
+        onLanguageChanged(message) {
             this.refreshDocumentTitle();
         },
-        refreshDocumentTitle: function () {
+        refreshDocumentTitle() {
             const viewKey = currentView.toUpperCase().substr(1) + "_VIEW_LABEL";
             rendererEventbus.getTranslations([viewKey]).then((translations) => {
                 document.title = translations[viewKey];

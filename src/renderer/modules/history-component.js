@@ -1,7 +1,7 @@
 import applicationUtils from "./application-utils.js";
 import rendererEventbus from "./renderer-eventbus.js";
 
-export default () => {
+export default function () {
     return new Promise((resolve, reject) => {
         applicationUtils.loadTemplate(import.meta.url).then((template) => {
             resolve({
@@ -26,13 +26,13 @@ export default () => {
                     rendererEventbus.offLanguageChanged(this.onLanguageChanged);
                 },
                 methods: {
-                    onHistoryChanged: function (lng) {
+                    onHistoryChanged(lng) {
                         this.refreshItems();
                     },
-                    onLanguageChanged: function (message) {
+                    onLanguageChanged(message) {
                         this.refreshTranslations();
                     },
-                    refreshTranslations: function () {
+                    refreshTranslations() {
                         rendererEventbus.getTranslations([
                             "SET_LABEL", "REMOVE_LABEL", "REMOVE_ALL_LABEL",
                             "CREATION_DATE_LABEL", "UPDATE_DATE_LABEL", "WALLPAPER_LABEL"
@@ -40,34 +40,34 @@ export default () => {
                             this.translations = translations;
                         });
                     },
-                    setUserWallpaper: function () {
+                    setUserWallpaper() {
                         const message = {
                             path: this.selectedItem.path
                         };
                         rendererEventbus.setUserWallpaper(message);
                         this.selectedItem = null;
                     },
-                    setSelectemItem: function (item) {
+                    setSelectemItem(item) {
                         this.selectedItem = this.selectedItem != item ? item : null;
                     },
-                    removeItem: function () {
+                    removeItem() {
                         const message = {
                             id: this.selectedItem.id
                         };
                         rendererEventbus.removeHistoryItem(message);
                     },
-                    removeAllItems: function () {
+                    removeAllItems() {
                         const message = {};
                         rendererEventbus.removeAllHistoryItems(message);
                     },
-                    getTitle: function (item) {
+                    getTitle(item) {
                         let title = "";
                         title += this.translations["CREATION_DATE_LABEL"] + " : " + dayjs(item.created).format("DD/MM/YYYY HH:mm:ss");
                         title += "\n";
                         title += this.translations["UPDATE_DATE_LABEL"] + " : " + dayjs(item.updated).format("DD/MM/YYYY HH:mm:ss");
                         return title;
                     },
-                    refreshItems: function () {
+                    refreshItems() {
                         rendererEventbus.getHistoryItems().then((items) => {
                             this.items = items;
                         });

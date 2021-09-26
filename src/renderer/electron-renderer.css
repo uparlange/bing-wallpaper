@@ -15,6 +15,11 @@
   {
     border-bottom: 1px solid white;
   }
+
+  .drop-zone.drop-active 
+  {
+    border: 5px dashed white;
+  }
 }
 
 @media (prefers-color-scheme: light) {
@@ -27,6 +32,11 @@
   .td-border-bottom-line 
   {
     border-bottom: 1px solid black;
+  }
+
+  .drop-zone.drop-active 
+  {
+    border: 5px dashed black;
   }
 }
 
@@ -69,7 +79,6 @@ a
 {
   transition: opacity 0.5s ease;
 }
-
 .fade-enter-from,
 .fade-leave-to 
 {
@@ -78,11 +87,6 @@ a
 
 .list-move {
   transition: transform 0.5s;
-}
-
-.drop-zone.drop-active 
-{
-  border: 5px dashed black;
 }
 
 .img-selectable

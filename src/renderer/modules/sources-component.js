@@ -1,7 +1,7 @@
 import applicationUtils from "./application-utils.js";
 import rendererEventbus from "./renderer-eventbus.js";
 
-export default () => {
+export default function () {
     return new Promise((resolve, reject) => {
         applicationUtils.loadTemplate(import.meta.url).then((template) => {
             resolve({
@@ -24,19 +24,19 @@ export default () => {
                     rendererEventbus.offWallpaperChanged(this.onWallpaperChanged);
                 },
                 methods: {
-                    onLanguageChanged: function (message) {
+                    onLanguageChanged(message) {
                         this.refreshTranslations();
                     },
-                    onWallpaperChanged: function (message) {
+                    onWallpaperChanged(message) {
                         this.refreshSources();
                     },
-                    setWallpaperSource: function (source) {
+                    setWallpaperSource(source) {
                         const message = {
                             source: source
                         };
                         rendererEventbus.setWallpaperSource(message);
                     },
-                    refreshTranslations: function () {
+                    refreshTranslations() {
                         const translationKeys = [];
                         this.sourceDescriptions.forEach(sourceDescription => {
                             translationKeys.push(sourceDescription.key);
@@ -46,13 +46,13 @@ export default () => {
                             this.translations = translations;
                         });
                     },
-                    openExternal: function (url) {
+                    openExternal(url) {
                         const message = {
                             url: url
                         };
                         rendererEventbus.openExternal(message);
                     },
-                    refreshSources: function () {
+                    refreshSources() {
                         rendererEventbus.getSourceDescriptions().then((sourceDescriptions) => {
                             this.sourceDescriptions = sourceDescriptions;
                             this.refreshTranslations();
