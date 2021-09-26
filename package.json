@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "electron": "^15.0.0",
-    "electron-builder": "^22.14.2"
+    "electron-builder": "^22.14.3"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
@@ -56,7 +56,7 @@
     "md5-file": "^5.0.0",
     "mitt": "^3.0.0",
     "progressbar.js": "^1.1.0",
-    "vue": "^3.2.18",
+    "vue": "^3.2.19",
     "vue-router": "^4.0.11",
     "wallpaper": "^5.0.1"
   }
