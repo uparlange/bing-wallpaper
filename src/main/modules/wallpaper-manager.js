@@ -77,7 +77,7 @@ sources.forEach(element => {
 
 let wallpaperPath = null;
 
-const getSourceDescriptions = () => {
+function getSourceDescriptions() {
     return sources.map((element) => {
         return {
             name: element.name,
@@ -88,7 +88,7 @@ const getSourceDescriptions = () => {
     })
 };
 
-const getSourceByPropertyAndValue = (property, value) => {
+function getSourceByPropertyAndValue(property, value) {
     let config = null;
     sources.forEach(element => {
         if (element[property] == value) {
@@ -99,7 +99,7 @@ const getSourceByPropertyAndValue = (property, value) => {
     return config;
 };
 
-const parsePage = (html, patternValidator) => {
+function parsePage(html, patternValidator) {
     return new Promise((resolve, reject) => {
         let wallpaperUrl = null;
         const parser = new htmlparser2.Parser({
@@ -120,7 +120,7 @@ const parsePage = (html, patternValidator) => {
     });
 };
 
-const fetchPage = (url) => {
+function fetchPage(url) {
     return new Promise((resolve, reject) => {
         applicationManager.fetch(url).then((res) => {
             resolve(res);
@@ -128,7 +128,7 @@ const fetchPage = (url) => {
     });
 };
 
-const applyWallpaper = (path) => {
+function applyWallpaper(path) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + path + "'");
         wallpaper.set(path).then(() => {
@@ -137,7 +137,7 @@ const applyWallpaper = (path) => {
     });
 };
 
-const copyFile = (source, destination) => {
+function copyFile(source, destination) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("Copy file " + source + " to " + destination);
         fs.copyFile(source, destination, (err) => {
@@ -151,7 +151,7 @@ const copyFile = (source, destination) => {
     });
 };
 
-const setRendererWallpaper = () => {
+function setRendererWallpaper() {
     loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
     const message = {
         source: getCurrentSource(),
@@ -162,13 +162,13 @@ const setRendererWallpaper = () => {
     historyManager.addItem(message);
 };
 
-const completeApplyWallpaper = () => {
+function completeApplyWallpaper() {
     applyWallpaper(wallpaperPath).then(() => {
         setRendererWallpaper();
     });
 };
 
-const setExternalWallpaper = (config) => {
+function setExternalWallpaper(config) {
     loggerManager.getLogger().info("WallpaperManager - Set " + config.name.toUpperCase() + " Wallpaper");
     const finalizeSetExternalWallpaper = (imageUrl) => {
         storageManager.setData(config.wallpaperStorageKey, imageUrl);
@@ -193,7 +193,7 @@ const setExternalWallpaper = (config) => {
     }
 };
 
-const setUserWallpaper = (path) => {
+function setUserWallpaper(path) {
     loggerManager.getLogger().info("WallpaperManager - Set " + USER_SOURCE.toUpperCase() + " Wallpaper");
     const finalizeSetUserWallpaper = () => {
         loggerManager.getLogger().info("WallpaperManager - Apply " + USER_SOURCE.toUpperCase() + " Wallpaper");
@@ -210,12 +210,12 @@ const setUserWallpaper = (path) => {
     }
 };
 
-const externalWallpaperNeedUpdate = (key) => {
+function externalWallpaperNeedUpdate(key) {
     const wallpaperUrl = storageManager.getData(key);
     return dayjs(wallpaperUrl.date).format("YYYYMMDD") != dayjs(new Date()).format("YYYYMMDD");
 }
 
-const checkWallpaper = () => {
+function checkWallpaper() {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
     let config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
     if (config != null) {
@@ -235,7 +235,7 @@ const checkWallpaper = () => {
     }
 };
 
-const init = () => {
+function init() {
     electron.powerMonitor.on("unlock-screen", () => {
         loggerManager.getLogger().info("WallpaperManager - PowerMonitor 'unlock-screen'");
         checkWallpaper();
@@ -251,18 +251,18 @@ const init = () => {
     });
 };
 
-const getAvailableSources = () => {
+function getAvailableSources() {
     return sources.map((element) => {
         return element.name;
     });
 };
 
-const getCurrentSource = () => {
+function getCurrentSource() {
     const config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
     return config ? config.name : null;
 };
 
-const setSource = (source) => {
+function setSource(source) {
     const config = getSourceByPropertyAndValue("name", source);
     if (config.name == USER_SOURCE) {
         setUserWallpaper();
@@ -271,11 +271,11 @@ const setSource = (source) => {
     }
 };
 
-const onWallpaperChanged = (callback) => {
+function onWallpaperChanged(callback) {
     eventEmitter.on("wallpaperChanged", callback);
 };
 
-const getCurrentWallpaperPath = () => {
+function getCurrentWallpaperPath() {
     return wallpaperPath;
 };
 

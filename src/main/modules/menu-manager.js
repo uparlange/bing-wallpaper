@@ -8,21 +8,21 @@ const loggerManager = require("./logger-manager");
 const themeManager = require("./theme-manager");
 const applicationUtils = require("./application-utils");
 
-const changeMenuItemChecked = (menuItemId, checked) => {
+function changeMenuItemChecked(menuItemId, checked) {
     Menu.getApplicationMenu().getMenuItemById(menuItemId).checked = checked;
 };
 
-const setActiveMenuItemOfList = (menuItemIds, activeMenuItemId) => {
+function setActiveMenuItemOfList(menuItemIds, activeMenuItemId) {
     menuItemIds.forEach((menuItemId) => {
         changeMenuItemChecked(menuItemId, menuItemId == activeMenuItemId);
     });
 };
 
-const getMenuItemId = (name) => {
+function getMenuItemId(name) {
     return "MENU_ITEM_" + name + "_ID";
 };
 
-const getAvailableWallpaperSources = () => {
+function getAvailableWallpaperSources() {
     const availableWallpaperSources = [];
     wallpaperManager.getAvailableSources().forEach(source => {
         const menuItemName = source.toUpperCase();
@@ -48,7 +48,7 @@ const getAvailableWallpaperSources = () => {
     return availableWallpaperSources;
 };
 
-const getAvailableViews = () => {
+function getAvailableViews() {
     const availableViews = [];
     viewManager.getAvailableViews().forEach(view => {
         const menuItemName = view.toUpperCase().substr(1);
@@ -67,7 +67,7 @@ const getAvailableViews = () => {
     return availableViews;
 };
 
-const getAvailableLanguages = () => {
+function getAvailableLanguages() {
     const availableLanguages = [];
     i18nManager.getAvailableLanguages().forEach(language => {
         const menuItemName = language.toUpperCase();
@@ -86,7 +86,7 @@ const getAvailableLanguages = () => {
     return availableLanguages;
 };
 
-const getAvailableThemes = () => {
+function getAvailableThemes() {
     const availableThemes = [];
     themeManager.getAvailableThemes().forEach(theme => {
         const menuItemName = theme.toUpperCase();
@@ -105,7 +105,7 @@ const getAvailableThemes = () => {
     return availableThemes;
 };
 
-const refresh = () => {
+function refresh() {
     try {
         const translations = i18nManager.getTranslations([
             "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
@@ -183,7 +183,7 @@ const refresh = () => {
     }
 };
 
-const init = () => {
+function init() {
     themeManager.onThemeChanged((message) => {
         setActiveMenuItemOfList(themeManager.getAvailableThemes().map((element) => {
             return getMenuItemId(element.toUpperCase());

@@ -12,7 +12,7 @@ const touchbarManager = require("./modules/touchbar-manager");
 const historyManager = require("./modules/history-manager");
 const themeManager = require("./modules/theme-manager");
 
-app.whenReady().then(() => {
+app.whenReady().then(function () {
     mainEventbus.init();
     storageManager.init().then(i18nManager.init).then(applicationManager.init).then(() => {
         menuManager.init();
@@ -27,10 +27,10 @@ app.whenReady().then(() => {
     });
 });
 
-app.on("activate", () => {
+app.on("activate", function () {
     applicationManager.createWindow();
 });
 
-app.on("window-all-closed", () => {
+app.on("window-all-closed", function () {
     // Ovveride default behaviour
 });

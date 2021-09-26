@@ -4,22 +4,22 @@ const eventbusManager = require("./modules/eventbus-manager");
 
 // Eventbus Manager
 contextBridge.exposeInMainWorld("eventbus", {
-    sendMainInvoke: (eventName, ...message) => {
-        return eventbusManager.sendMainInvoke(eventName, ...message);
+    sendMainInvoke(eventName, message) {
+        return eventbusManager.sendMainInvoke(eventName, message);
     },
-    sendMainMessage: (eventName, ...message) => {
-        eventbusManager.sendMainMessage(eventName, ...message);
+    sendMainMessage(eventName, message) {
+        eventbusManager.sendMainMessage(eventName, message);
     },
-    onMainMessage: (eventName, callback) => {
+    onMainMessage(eventName, callback) {
         eventbusManager.onMainMessage(eventName, callback);
     }
 });
 
 // Connection Manager
 eventbusManager.sendMainMessage("connectionChanged", navigator.onLine);
-window.addEventListener("online", () => {
+window.addEventListener("online", function () {
     eventbusManager.sendMainMessage("connectionChanged", true);
 });
-window.addEventListener("offline", () => {
+window.addEventListener("offline", function () {
     eventbusManager.sendMainMessage("connectionChanged", false);
 });

@@ -10,7 +10,7 @@ const reMsAjax = /^\/Date\((d|-|.*)\)[\/|\\]$/;
 
 let model = {};
 
-const getData = (key, defaultValue) => {
+function getData(key, defaultValue) {
     let data = model[key];
     if (data == null) {
         data = {
@@ -22,7 +22,7 @@ const getData = (key, defaultValue) => {
     return data;
 };
 
-const setData = (key, value) => {
+function setData(key, value) {
     const data = getData(key);
     if (value != data.value) {
         loggerManager.getLogger().info("StorageManager - Set/Update data '" + key + "' with value '" + value + "'");
@@ -32,12 +32,12 @@ const setData = (key, value) => {
     save();
 };
 
-const save = () => {
+function save() {
     fs.writeFileSync(STORAGE_PATH, JSON.stringify(model));
     loggerManager.getLogger().info("StorageManager - Save storage to '" + STORAGE_PATH + "'");
 };
 
-const dateParser = (key, value) => {
+function dateParser(key, value) {
     if (typeof value === 'string') {
         var a = reISO.exec(value);
         if (a)
@@ -51,7 +51,7 @@ const dateParser = (key, value) => {
     return value;
 };
 
-const init = () => {
+function init() {
     return new Promise((resolve, reject) => {
         fs.readFile(STORAGE_PATH, "utf8", (err, data) => {
             if (err) {

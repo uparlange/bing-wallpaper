@@ -6,7 +6,7 @@ const i18nManager = require("./i18n-manager");
 const historyManager = require("./history-manager");
 const loggerManager = require("./logger-manager");
 
-const init = () => {
+function init() {
     // history manager
     eventbusManager.onRendererInvoke("getHistoryItems", () => {
         return historyManager.getItems();

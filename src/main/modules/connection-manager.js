@@ -7,16 +7,16 @@ const eventEmitter = new EventEmitter();
 
 let onLine = false;
 
-const isOnLine = () => {
+function isOnLine() {
     logStatus();
     return onLine;
 };
 
-const logStatus = () => {
+function logStatus() {
     loggerManager.getLogger().info("ConnectionManager - Online '" + onLine + "'");
 };
 
-const onConnectionChanged = (callback) => {
+function onConnectionChanged(callback) {
     eventEmitter.on("connectionChanged", callback);
 };
 

@@ -1,6 +1,6 @@
 const { ipcMain, ipcRenderer } = require("electron");
 
-const sendRendererMessage = (eventName, message) => {
+function sendRendererMessage(eventName, message) {
     const applicationManager = require("./application-manager");
     const win = applicationManager.getMainWindow();
     if (win != null) {
@@ -8,23 +8,23 @@ const sendRendererMessage = (eventName, message) => {
     }
 };
 
-const sendMainMessage = (eventName, message) => {
+function sendMainMessage(eventName, message) {
     ipcRenderer.send(eventName, message);
 };
 
-const onRendererMessage = (eventName, callback) => {
+function onRendererMessage(eventName, callback) {
     ipcMain.on(eventName, (event, message) => {
         callback(message);
     });
 };
 
-const onMainMessage = (eventName, callback) => {
+function onMainMessage(eventName, callback) {
     ipcRenderer.on(eventName, (event, message) => {
         callback(message);
     });
 };
 
-const sendMainInvoke = (eventName, message) => {
+function sendMainInvoke(eventName, message) {
     return new Promise((resolve, reject) => {
         ipcRenderer.invoke(eventName, message).then((result) => {
             resolve(result);
@@ -32,7 +32,7 @@ const sendMainInvoke = (eventName, message) => {
     });
 };
 
-const onRendererInvoke = (eventName, callback) => {
+function onRendererInvoke(eventName, callback) {
     ipcMain.handle(eventName, (event, message) => {
         return callback(message);
     });

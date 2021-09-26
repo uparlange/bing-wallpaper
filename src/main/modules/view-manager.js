@@ -11,7 +11,7 @@ const ABOUT_VIEW = "/about";
 const SOURCES_VIEW = "/sources";
 const HISTORY_VIEW = "/history";
 
-const showView = (view) => {
+function showView(view) {
     loggerManager.getLogger().info("ViewManager - Show View '" + view + "'");
     storageManager.setData("view", view);
     const message = {
@@ -21,19 +21,19 @@ const showView = (view) => {
     eventEmitter.emit("viewChanged", message);
 };
 
-const getCurrentView = () => {
+function getCurrentView() {
     return storageManager.getData("view", WALLPAPER_VIEW).value;
 };
 
-const getAvailableViews = () => {
+function getAvailableViews() {
     return [WALLPAPER_VIEW, SOURCES_VIEW, HISTORY_VIEW, ABOUT_VIEW];
 };
 
-const onViewChanged = (callback) => {
+function onViewChanged(callback) {
     eventEmitter.on("viewChanged", callback);
 };
 
-const init = () => {
+function init() {
     loggerManager.getLogger().info("ViewManager - Init : OK");
 };
 

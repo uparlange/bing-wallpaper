@@ -8,7 +8,7 @@ const applicationUtils = require("./application-utils");
 
 let touchBar = null;
 
-const getTouchbar = (forceRefresh) => {
+function getTouchbar(forceRefresh) {
     if (forceRefresh) {
         touchBar = null;
     }
@@ -31,7 +31,7 @@ const getTouchbar = (forceRefresh) => {
     return touchBar;
 };
 
-const init = () => {
+function init() {
     loggerManager.getLogger().info("TouchbarManager - Init : OK");
 };
 

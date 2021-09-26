@@ -8,7 +8,7 @@ const applicationUtils = require("./application-utils");
 
 let tray = null;
 
-const refresh = () => {
+function refresh() {
     try {
         if (tray == null) {
             const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "tray.png"))
@@ -44,7 +44,7 @@ const refresh = () => {
     }
 };
 
-const init = () => {
+function init() {
     i18nManager.onLanguageChanged((message) => {
         refresh();
     });

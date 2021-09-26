@@ -9,18 +9,18 @@ const eventbusManager = require("./eventbus-manager");
 
 let items = [];
 
-const init = () => {
+function init() {
     items = storageManager.getData("history", []).value;
     loggerManager.getLogger().info("HistoryManager - Init : OK");
 };
 
-const completeAddItem = (historyItem) => {
+function completeAddItem(historyItem) {
     historyItem.updated = new Date();
     items.unshift(historyItem);
     eventbusManager.sendRendererMessage("historyChanged");
 };
 
-const addItem = (item) => {
+function addItem(item) {
     md5File(item.path).then((hash) => {
         const historyItem = {
             id: hash,
@@ -44,11 +44,11 @@ const addItem = (item) => {
     });
 };
 
-const getItems = () => {
+function getItems() {
     return items;
 };
 
-const removeItem = (itemId) => {
+function removeItem(itemId) {
     const historyItemIndex = items.findIndex(element => element.id == itemId);
     if (historyItemIndex != -1) {
         items.splice(historyItemIndex, 1);
@@ -56,7 +56,7 @@ const removeItem = (itemId) => {
     }
 };
 
-const removeAllItems = () => {
+function removeAllItems() {
     items.length = 0;
     eventbusManager.sendRendererMessage("historyChanged");
 };

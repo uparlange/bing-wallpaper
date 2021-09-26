@@ -6,20 +6,20 @@ const storageManager = require("./storage-manager");
 
 const eventEmitter = new EventEmitter();
 
-const init = () => {
+function init() {
     setTheme(getCurrentTheme());
     loggerManager.getLogger().info("ThemeManager - Init : OK");
 };
 
-const getAvailableThemes = () => {
+function getAvailableThemes() {
     return ["system", "light", "dark"];
 };
 
-const getCurrentTheme = () => {
+function getCurrentTheme() {
     return storageManager.getData("theme", nativeTheme.themeSource).value;
 };
 
-const setTheme = (theme) => {
+function setTheme(theme) {
     storageManager.setData("theme", theme);
     nativeTheme.themeSource = theme;
     const message = {
@@ -28,7 +28,7 @@ const setTheme = (theme) => {
     eventEmitter.emit("themeChanged", message);
 };
 
-const onThemeChanged = (callback) => {
+function onThemeChanged(callback) {
     eventEmitter.on("themeChanged", callback);
 };
 

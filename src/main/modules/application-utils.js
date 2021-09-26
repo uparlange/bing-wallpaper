@@ -1,16 +1,16 @@
-const isMac = () => {
+function isMac() {
     return process.platform === "darwin";
 };
 
-const isWindows = () => {
+function isWindows() {
     return process.platform === "win32";
 };
 
-const isDebug = () => {
+function isDebug() {
     return process.argv[2] == "--dev";
 };
 
-const getLabelKey = (name, type) => {
+function getLabelKey(name, type) {
     return name + "_" + type + "_LABEL";
 };
 

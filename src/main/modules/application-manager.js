@@ -20,34 +20,34 @@ let launchAtStartup = false;
 let win = null;
 let createWindowFirstTime = true;
 
-const getMainWindow = () => {
+function getMainWindow() {
     return win;
 };
 
-const getProductName = () => {
+function getProductName() {
     return pkg.description;
 };
 
-const quitApplication = () => {
+function quitApplication() {
     storageManager.save();
     app.quit();
 };
 
-const isLaunchedMinimized = () => {
+function isLaunchedMinimized() {
     return storageManager.getData("launchMinimized", false).value;
 };
 
-const toggleLaunchMinimized = () => {
+function toggleLaunchMinimized() {
     const launchMinimized = !isLaunchedMinimized();
     storageManager.setData("launchMinimized", launchMinimized);
     return launchMinimized;
 };
 
-const isLaunchedAtStartup = () => {
+function isLaunchedAtStartup() {
     return launchAtStartup;
 };
 
-const toggleLaunchAtStartup = () => {
+function toggleLaunchAtStartup() {
     launchAtStartup = !launchAtStartup;
     if (launchAtStartup) {
         autoLauncher.enable();
@@ -57,7 +57,7 @@ const toggleLaunchAtStartup = () => {
     return launchAtStartup;
 };
 
-const createWindow = (devToolsAtLaunch) => {
+function createWindow(devToolsAtLaunch) {
     return new Promise((resolve, reject) => {
         if (win == null) {
             win = new BrowserWindow({
@@ -95,7 +95,7 @@ const createWindow = (devToolsAtLaunch) => {
     });
 };
 
-const initAutoLauncher = () => {
+function initAutoLauncher() {
     return new Promise((resolve, reject) => {
         autoLauncher = new AutoLaunch({ name: app.getName() });
         autoLauncher.isEnabled().then((isEnabled) => {
@@ -108,7 +108,7 @@ const initAutoLauncher = () => {
     });
 };
 
-const initAutoUpdater = () => {
+function initAutoUpdater() {
     return new Promise((resolve, reject) => {
         electron.powerMonitor.on("unlock-screen", () => {
             checkForUpdates();
@@ -117,13 +117,13 @@ const initAutoUpdater = () => {
     });
 };
 
-const setMainWindowTouchbar = (forceRefresh) => {
+function setMainWindowTouchbar(forceRefresh) {
     if (win != null) {
         win.setTouchBar(touchbarManager.getTouchbar(forceRefresh));
     }
 };
 
-const init = () => {
+function init() {
     return new Promise((resolve, reject) => {
         initAutoLauncher().then(initAutoUpdater).then(() => {
             i18nManager.onLanguageChanged((message) => {
@@ -138,7 +138,7 @@ const init = () => {
     });
 };
 
-const compareVersion = (v1, v2) => {
+function compareVersion(v1, v2) {
     if (typeof v1 !== 'string') return false;
     if (typeof v2 !== 'string') return false;
     v1 = v1.split('.');
@@ -153,18 +153,18 @@ const compareVersion = (v1, v2) => {
     return v1.length == v2.length ? 0 : (v1.length < v2.length ? -1 : 1);
 };
 
-const getDownloadUrl = (version) => {
+function getDownloadUrl(version) {
     return `https://github.com/uparlange/bing-wallpaper/releases/download/v${version}/${getApplicationFilename(version)}`;
 };
 
-const getApplicationFilename = (version) => {
+function getApplicationFilename(version) {
     // process.arch always ia32 even in 64 bit platform ?
     // manage only x64 version so force to x64
     const arch = process.arch == "ia32" ? "x64" : process.arch;
     return `${getProductName()}-${version}-${arch}.${applicationUtils.isMac() ? "dmg" : "exe"}`;
 };
 
-const showStreamProgress = (stream) => {
+function showStreamProgress(stream) {
     stream.on("downloadProgress", (progress) => {
         const message = {
             progress: progress.percent
@@ -176,7 +176,7 @@ const showStreamProgress = (stream) => {
     });
 };
 
-const download = (url, destination) => {
+function download(url, destination) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("ApplicationManager - download '" + url + "' to '" + destination + "'");
         const ws = fs.createWriteStream(destination);
@@ -189,7 +189,7 @@ const download = (url, destination) => {
     });
 };
 
-const fetch = (url) => {
+function fetch(url) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("ApplicationManager - fetch '" + url + "'");
         const stream = _download(url);
@@ -200,7 +200,7 @@ const fetch = (url) => {
     });
 };
 
-const updateApplication = (version) => {
+function updateApplication(version) {
     const destination = path.join(app.getPath("temp"), getApplicationFilename(version));
     download(getDownloadUrl(version), destination).then((destination) => {
         shell.openPath(destination).then(() => {
@@ -209,7 +209,7 @@ const updateApplication = (version) => {
     });
 };
 
-const checkForUpdates = () => {
+function checkForUpdates() {
     if (connectionManager.isOnLine()) {
         fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then((res) => {
             const json = JSON.parse(res);
@@ -225,11 +225,11 @@ const checkForUpdates = () => {
     }
 };
 
-const openExternal = (url) => {
+function openExternal(url) {
     shell.openExternal(url);
 };
 
-const getVersions = () => {
+function getVersions() {
     const versions = Object.assign({}, process.versions);
     versions.application = pkg.version;
     versions.vue = pkg.dependencies.vue.replace("^", "");
@@ -237,7 +237,7 @@ const getVersions = () => {
     return versions;
 };
 
-const openDevTools = () => {
+function openDevTools() {
     if (win != null) {
         win.webContents.openDevTools();
     }

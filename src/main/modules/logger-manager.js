@@ -6,7 +6,7 @@ const APPLICATION_LOG_PATH = path.join(app.getPath("userData"), "application.log
 
 let logger = null;
 
-const getLogger = () => {
+function getLogger() {
     if (logger == null) {
         log4js.configure({
             appenders: {

@@ -13,7 +13,7 @@ const eventEmitter = new EventEmitter();
 
 const availableLanguages = ["fr", "en", "es"];
 
-const init = () => {
+function init() {
     return new Promise((resolve, reject) => {
         i18next.use(LanguageDetector).use(backend).init({
             backend: {
@@ -40,15 +40,15 @@ const init = () => {
     });
 };
 
-const onLanguageChanged = (callback) => {
+function onLanguageChanged(callback) {
     eventEmitter.on("languageChanged", callback);
 };
 
-const getCurrentLanguage = () => {
+function getCurrentLanguage() {
     return storageManager.getData("language", i18next.language.split("-")[0]).value;
 };
 
-const setLanguage = (lng) => {
+function setLanguage(lng) {
     return new Promise((resolve, reject) => {
         storageManager.setData("language", lng);
         i18next.changeLanguage(lng).then((t) => {
@@ -57,7 +57,7 @@ const setLanguage = (lng) => {
     });
 };
 
-const getTranslations = (keyList, options) => {
+function getTranslations(keyList, options) {
     const translations = {};
     keyList.forEach((key) => {
         translations[key] = i18next.t(key, options);
@@ -65,7 +65,7 @@ const getTranslations = (keyList, options) => {
     return translations;
 };
 
-const getAvailableLanguages = () => {
+function getAvailableLanguages() {
     return availableLanguages;
 };
 
