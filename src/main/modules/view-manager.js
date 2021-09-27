@@ -7,7 +7,7 @@ const loggerManager = require("./logger-manager");
 const SOURCES_VIEW = "sources";
 
 const eventEmitter = new EventEmitter();
-const views = ["wallpaper", SOURCES_VIEW, "history", "about"];
+const views = ["wallpaper", "separator", SOURCES_VIEW, "history", "separator", "about"];
 
 function getLabelKey(view) {
     return view.toUpperCase() + "_VIEW_LABEL";
@@ -15,6 +15,7 @@ function getLabelKey(view) {
 
 function getMessage(view) {
     return {
+        type: "item",
         view: view,
         labelKey: getLabelKey(view),
         current: getCurrentView() == view
@@ -35,7 +36,13 @@ function getCurrentView() {
 
 function getAvailableViews() {
     return views.map((view) => {
-        return getMessage(view);
+        if (view == "separator") {
+            return {
+                type: view
+            }
+        } else {
+            return getMessage(view);
+        }
     });
 };
 

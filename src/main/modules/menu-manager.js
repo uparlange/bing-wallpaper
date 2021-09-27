@@ -50,15 +50,21 @@ function getAvailableWallpaperSources() {
 function getAvailableViews() {
     const availableViews = [];
     viewManager.getAvailableViews().forEach(element => {
-        availableViews.push({
-            id: element.view,
-            label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
-            checked: element.current,
-            type: "checkbox",
-            click: () => {
-                viewManager.showView(element.view);
-            }
-        });
+        if (element.type == "item") {
+            availableViews.push({
+                id: element.view,
+                label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+                checked: element.current,
+                type: "checkbox",
+                click: () => {
+                    viewManager.showView(element.view);
+                }
+            });
+        } else {
+            availableViews.push({
+                type: element.type
+            });
+        }
     });
     return availableViews;
 };
