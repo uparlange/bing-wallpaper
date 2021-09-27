@@ -18,25 +18,24 @@ function setActiveMenuItemOfList(menuItemIds, activeMenuItemId) {
     });
 };
 
-function getMenuItemId(name) {
-    return "MENU_ITEM_" + name + "_ID";
-};
-
 function getAvailableWallpaperSources() {
     const availableWallpaperSources = [];
-    wallpaperManager.getAvailableSources().forEach(source => {
-        const menuItemName = source.toUpperCase();
-        const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "WALLPAPER_SOURCE");
-        availableWallpaperSources.push({
-            id: menuItemId,
-            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
-            checked: wallpaperManager.getCurrentSource() == source,
-            type: "checkbox",
-            click: () => {
-                wallpaperManager.setSource(source);
-            }
-        });
+    wallpaperManager.getAvailableSources().forEach(element => {
+        if (element.type == "item") {
+            availableWallpaperSources.push({
+                id: element.source,
+                label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+                checked: element.current,
+                type: "checkbox",
+                click: () => {
+                    wallpaperManager.setSource(element.source);
+                }
+            });
+        } else {
+            availableWallpaperSources.push({
+                type: element.type
+            });
+        }
     });
     availableWallpaperSources.push({ type: "separator" });
     availableWallpaperSources.push({
@@ -50,17 +49,14 @@ function getAvailableWallpaperSources() {
 
 function getAvailableViews() {
     const availableViews = [];
-    viewManager.getAvailableViews().forEach(view => {
-        const menuItemName = view.toUpperCase().substr(1);
-        const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "VIEW");
+    viewManager.getAvailableViews().forEach(element => {
         availableViews.push({
-            id: menuItemId,
-            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
-            checked: viewManager.getCurrentView() == view,
+            id: element.view,
+            label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+            checked: element.current,
             type: "checkbox",
             click: () => {
-                viewManager.showView(view);
+                viewManager.showView(element.view);
             }
         });
     });
@@ -69,17 +65,14 @@ function getAvailableViews() {
 
 function getAvailableLanguages() {
     const availableLanguages = [];
-    i18nManager.getAvailableLanguages().forEach(language => {
-        const menuItemName = language.toUpperCase();
-        const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "LANGUAGE");
+    i18nManager.getAvailableLanguages().forEach(element => {
         availableLanguages.push({
-            id: menuItemId,
-            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
-            checked: i18nManager.getCurrentLanguage() == language,
+            id: element.lng,
+            label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+            checked: element.current,
             type: "checkbox",
             click: () => {
-                i18nManager.setLanguage(language);
+                i18nManager.setLanguage(element.lng);
             }
         });
     });
@@ -88,17 +81,14 @@ function getAvailableLanguages() {
 
 function getAvailableThemes() {
     const availableThemes = [];
-    themeManager.getAvailableThemes().forEach(theme => {
-        const menuItemName = theme.toUpperCase();
-        const menuItemId = getMenuItemId(menuItemName);
-        const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "THEME");
+    themeManager.getAvailableThemes().forEach(element => {
         availableThemes.push({
-            id: menuItemId,
-            label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
-            checked: themeManager.getCurrentTheme() == theme,
+            id: element.theme,
+            label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+            checked: element.current,
             type: "checkbox",
             click: () => {
-                themeManager.setTheme(theme);
+                themeManager.setTheme(element.theme);
             }
         });
     });
@@ -186,18 +176,18 @@ function refresh() {
 function init() {
     themeManager.onThemeChanged((message) => {
         setActiveMenuItemOfList(themeManager.getAvailableThemes().map((element) => {
-            return getMenuItemId(element.toUpperCase());
-        }), getMenuItemId(message.theme.toUpperCase()));
+            return element.theme;
+        }), message.theme);
     });
     wallpaperManager.onWallpaperChanged((message) => {
         setActiveMenuItemOfList(wallpaperManager.getAvailableSources().map((element) => {
-            return getMenuItemId(element.toUpperCase());
-        }), getMenuItemId(message.source.toUpperCase()));
+            return element.source;
+        }), message.source);
     });
     viewManager.onViewChanged((message) => {
         setActiveMenuItemOfList(viewManager.getAvailableViews().map((element) => {
-            return getMenuItemId(element.toUpperCase().substr(1));
-        }), getMenuItemId(message.view.toUpperCase().substr(1)));
+            return element.view;
+        }), message.view);
     });
     i18nManager.onLanguageChanged((message) => {
         refresh();

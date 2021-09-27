@@ -10,8 +10,19 @@ const eventbusManager = require("./eventbus-manager");
 const loggerManager = require("./logger-manager");
 
 const eventEmitter = new EventEmitter();
-
 const availableLanguages = ["fr", "en", "es"];
+
+function getLabelKey(lng) {
+    return lng.toUpperCase() + "_LANGUAGE_LABEL";
+};
+
+function getMessage(lng) {
+    return {
+        lng: lng,
+        labelKey: getLabelKey(lng),
+        current: getCurrentLanguage() == lng
+    };
+};
 
 function init() {
     return new Promise((resolve, reject) => {
@@ -31,9 +42,7 @@ function init() {
             });
         });
         i18next.on("languageChanged", (lng) => {
-            const message = {
-                lng: lng
-            };
+            const message = getMessage(lng);
             eventEmitter.emit("languageChanged", message);
             eventbusManager.sendRendererMessage("languageChanged", message);
         });
@@ -66,7 +75,9 @@ function getTranslations(keyList, options) {
 };
 
 function getAvailableLanguages() {
-    return availableLanguages;
+    return availableLanguages.map((lng) => {
+        return getMessage(lng);
+    });
 };
 
 module.exports = {

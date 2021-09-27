@@ -5,6 +5,19 @@ const loggerManager = require("./logger-manager");
 const storageManager = require("./storage-manager");
 
 const eventEmitter = new EventEmitter();
+const themes = ["system", "light", "dark"];
+
+function getLabelKey(theme) {
+    return theme.toUpperCase() + "_THEME_LABEL";
+};
+
+function getMessage(theme) {
+    return {
+        theme: theme,
+        labelKey: getLabelKey(theme),
+        current: getCurrentTheme() == theme
+    };
+};
 
 function init() {
     setTheme(getCurrentTheme());
@@ -12,7 +25,9 @@ function init() {
 };
 
 function getAvailableThemes() {
-    return ["system", "light", "dark"];
+    return themes.map((theme) => {
+        return getMessage(theme);
+    });
 };
 
 function getCurrentTheme() {
@@ -22,10 +37,7 @@ function getCurrentTheme() {
 function setTheme(theme) {
     storageManager.setData("theme", theme);
     nativeTheme.themeSource = theme;
-    const message = {
-        theme: theme
-    };
-    eventEmitter.emit("themeChanged", message);
+    eventEmitter.emit("themeChanged", getMessage(theme));
 };
 
 function onThemeChanged(callback) {

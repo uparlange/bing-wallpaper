@@ -111,10 +111,10 @@ export default {
             });
         });
     },
-    getSourceDescriptions() {
+    getWallpaperAvailableSources() {
         return new Promise((resolve, reject) => {
-            window.eventbus.sendMainInvoke("getSourceDescriptions").then((sourceDescriptions) => {
-                resolve(sourceDescriptions);
+            window.eventbus.sendMainInvoke("getWallpaperAvailableSources").then((sources) => {
+                resolve(sources);
             });
         });
     },

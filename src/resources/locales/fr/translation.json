@@ -33,5 +33,6 @@
     "REMOVE_LABEL": "Supprimer",
     "REMOVE_ALL_LABEL": "Tout supprimer",
     "CREATION_DATE_LABEL": "Date de création",
-    "UPDATE_DATE_LABEL": "Date de mise à jour"
+    "UPDATE_DATE_LABEL": "Date de mise à jour",
+    "APOD_WALLPAPER_SOURCE_LABEL": "Image astronomique du jour"
 }

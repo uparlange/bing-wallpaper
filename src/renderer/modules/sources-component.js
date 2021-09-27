@@ -9,7 +9,7 @@ export default function () {
                 data() {
                     return {
                         translations: {},
-                        sourceDescriptions: []
+                        sources: []
                     }
                 },
                 beforeMount() {
@@ -38,8 +38,8 @@ export default function () {
                     },
                     refreshTranslations() {
                         const translationKeys = [];
-                        this.sourceDescriptions.forEach(sourceDescription => {
-                            translationKeys.push(sourceDescription.key);
+                        this.sources.forEach(source => {
+                            translationKeys.push(source.labelKey);
                         });
                         translationKeys.push("SET_LABEL");
                         rendererEventbus.getTranslations(translationKeys).then((translations) => {
@@ -53,8 +53,8 @@ export default function () {
                         rendererEventbus.openExternal(message);
                     },
                     refreshSources() {
-                        rendererEventbus.getSourceDescriptions().then((sourceDescriptions) => {
-                            this.sourceDescriptions = sourceDescriptions;
+                        rendererEventbus.getWallpaperAvailableSources().then((sources) => {
+                            this.sources = sources;
                             this.refreshTranslations();
                         });
                     }

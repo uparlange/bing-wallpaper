@@ -21,8 +21,8 @@ function init() {
     eventbusManager.onRendererInvoke("getCurrentWallpaperPath", () => {
         return wallpaperManager.getCurrentWallpaperPath();
     });
-    eventbusManager.onRendererInvoke("getSourceDescriptions", () => {
-        return wallpaperManager.getSourceDescriptions();
+    eventbusManager.onRendererInvoke("getWallpaperAvailableSources", () => {
+        return wallpaperManager.getAvailableSources();
     });
     eventbusManager.onRendererMessage("setUserWallpaper", (message) => {
         wallpaperManager.setUserWallpaper(message.path);

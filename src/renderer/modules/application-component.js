@@ -41,16 +41,15 @@ export default {
         },
         onViewChanged(message) {
             this.$router.push(message.view);
-            currentView = message.view;
+            currentView = message;
             this.refreshDocumentTitle();
         },
         onLanguageChanged(message) {
             this.refreshDocumentTitle();
         },
         refreshDocumentTitle() {
-            const viewKey = currentView.toUpperCase().substr(1) + "_VIEW_LABEL";
-            rendererEventbus.getTranslations([viewKey]).then((translations) => {
-                document.title = translations[viewKey];
+            rendererEventbus.getTranslations([currentView.labelKey]).then((translations) => {
+                document.title = translations[currentView.labelKey];
             });
         }
     }

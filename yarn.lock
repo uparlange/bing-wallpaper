@@ -1482,10 +1482,10 @@
   "resolved" "https://registry.npmjs.org/i18next-fs-backend/-/i18next-fs-backend-1.1.1.tgz"
   "version" "1.1.1"
 
-"i18next@^21.1.0":
-  "integrity" "sha512-1JJSAh7jI4bcBzwk8OQVrifyLdYYMJoanF8+9rcqbROAiKr3eEV9Cc3rd4065teylbo+d/h8OaTnheRZAKG4WA=="
-  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.1.0.tgz"
-  "version" "21.1.0"
+"i18next@^21.1.1":
+  "integrity" "sha512-oBEi+3MI/jEv0DifAmA+e47WAS55Sv6yG2CmZ0Kpz/VGu8rTQARJGRkwhMcLhcIi+JYmxmfBD/DQ/7Ho3FYryw=="
+  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.1.1.tgz"
+  "version" "21.1.1"
   dependencies:
     "@babel/runtime" "^7.12.0"
 

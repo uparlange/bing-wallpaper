@@ -14,15 +14,13 @@ function getTouchbar(forceRefresh) {
     }
     if (touchBar == null) {
         const items = [];
-        viewManager.getAvailableViews().forEach(view => {
-            const menuItemName = view.toUpperCase().substr(1);
-            const menuItemLabelKey = applicationUtils.getLabelKey(menuItemName, "VIEW");
+        viewManager.getAvailableViews().forEach(element => {
             items.push(new TouchBarButton({
-                label: i18nManager.getTranslations([menuItemLabelKey])[menuItemLabelKey],
-                backgroundColor: viewManager.getCurrentView() == view ? "#FFFFFF" : "#333",
-                color: viewManager.getCurrentView() == view ? "#333" : "#FFFFFF",
+                label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+                backgroundColor: element.current ? "#FFFFFF" : "#333",
+                color: element.current ? "#333" : "#FFFFFF",
                 click: () => {
-                    viewManager.showView(view);
+                    viewManager.showView(element.view);
                 }
             }));
         });

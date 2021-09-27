@@ -35,6 +35,12 @@ const sources = [
         }
     },
     {
+        name: USER_SOURCE,
+    },
+    {
+        type: "separator"
+    },
+    {
         name: "oceanexplorer",
         get homeUrl() {
             // https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210912.html
@@ -44,6 +50,18 @@ const sources = [
         get imageUrl() {
             //https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210911-hires.jpg
             return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + "-hires.jpg";
+        }
+    },
+    {
+        name: "apod",
+        homeUrl: "https://apod.nasa.gov/apod/",
+        needPageParsing: true,
+        imagePatternValidator: (name, attributes) => {
+            // <a href="image/2109/AldrinVisor_Apollo11_4096.jpg"></a>
+            if (name === "a" && attributes.href.includes("image/")) {
+                return "https://apod.nasa.gov/apod/" + attributes.href;
+            }
+            return null;
         }
     },
     {
@@ -59,9 +77,6 @@ const sources = [
             }
             return null;
         }
-    },
-    {
-        name: USER_SOURCE
     }
 ];
 
@@ -77,15 +92,32 @@ sources.forEach(element => {
 
 let wallpaperPath = null;
 
-function getSourceDescriptions() {
-    return sources.map((element) => {
-        return {
-            name: element.name,
-            key: element.name.toUpperCase() + "_WALLPAPER_SOURCE_LABEL",
-            home: element.homeUrl,
-            current: getCurrentSource() == element.name
-        };
-    })
+function getLabelKey(source) {
+    return source.toUpperCase() + "_WALLPAPER_SOURCE_LABEL"
+};
+
+function getMessage(source) {
+    return {
+        type: "item",
+        source: source,
+        path: wallpaperPath,
+        labelKey: getLabelKey(source),
+        current: getCurrentSource() == source
+    };
+};
+
+function getAvailableSources() {
+    return sources.map((source) => {
+        if (source.type == "separator") {
+            return {
+                type: source.type
+            }
+        } else {
+            const message = getMessage(source.name);
+            message.home = source.homeUrl;
+            return message;
+        }
+    });
 };
 
 function getSourceByPropertyAndValue(property, value) {
@@ -153,10 +185,7 @@ function copyFile(source, destination) {
 
 function setRendererWallpaper() {
     loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
-    const message = {
-        source: getCurrentSource(),
-        path: wallpaperPath
-    };
+    const message = getMessage(getCurrentSource());
     eventbusManager.sendRendererMessage("wallpaperChanged", message);
     eventEmitter.emit("wallpaperChanged", message);
     historyManager.addItem(message);
@@ -251,12 +280,6 @@ function init() {
     });
 };
 
-function getAvailableSources() {
-    return sources.map((element) => {
-        return element.name;
-    });
-};
-
 function getCurrentSource() {
     const config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
     return config ? config.name : null;
@@ -285,7 +308,6 @@ module.exports = {
     getCurrentWallpaperPath: getCurrentWallpaperPath,
     getCurrentSource: getCurrentSource,
     getAvailableSources: getAvailableSources,
-    getSourceDescriptions: getSourceDescriptions,
     setUserWallpaper: setUserWallpaper,
     onWallpaperChanged: onWallpaperChanged
 };
