@@ -4,6 +4,7 @@
 * Originally planned to retrieve the daily [Bing Wallpaper](https://www.bing.com/)
 * Multi other wallpaper sources are supported
     * [Ocean Exploration](https://oceanexplorer.noaa.gov/multimedia/daily-image/)
+    * [Astronomy Picture of the Day](https://apod.nasa.gov/apod/)
     * [Hello  Madam](https://www.bonjourmadame.fr/)
 * Custom user wallpaper can by set by drag and dropping an image to the application wallpaper screen
 * Multi-language support (French, English, Spanish) with auto-detection and fallback to English 
@@ -17,8 +18,8 @@
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.0.9-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.9/BingWallpaper-1.0.9-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.0.9-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.0.9/BingWallpaper-1.0.9-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.1.0-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.0/BingWallpaper-1.1.0-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.1.0-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.0/BingWallpaper-1.1.0-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
