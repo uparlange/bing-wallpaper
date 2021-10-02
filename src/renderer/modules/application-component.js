@@ -27,7 +27,7 @@ export default {
     },
     methods: {
         onDownloadProgress(message) {
-            this.progress.value = message.progress == 1 ? 0 : message.progress;
+            this.progress.value = message.progress;
         },
         onNewVersionAvailable(message) {
             rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL"], { version: message.version }).then((translations) => {

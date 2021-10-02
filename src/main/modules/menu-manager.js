@@ -21,19 +21,18 @@ function setActiveMenuItemOfList(menuItemIds, activeMenuItemId) {
 function getAvailableWallpaperSources() {
     const availableWallpaperSources = [];
     wallpaperManager.getAvailableSources().forEach(element => {
-        if (element.type == "item") {
+        availableWallpaperSources.push({
+            id: element.source,
+            label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+            checked: element.current,
+            type: "checkbox",
+            click: () => {
+                wallpaperManager.setSource(element.source);
+            }
+        });
+        if (element.separatorAfter) {
             availableWallpaperSources.push({
-                id: element.source,
-                label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
-                checked: element.current,
-                type: "checkbox",
-                click: () => {
-                    wallpaperManager.setSource(element.source);
-                }
-            });
-        } else {
-            availableWallpaperSources.push({
-                type: element.type
+                type: "separator"
             });
         }
     });
@@ -50,19 +49,18 @@ function getAvailableWallpaperSources() {
 function getAvailableViews() {
     const availableViews = [];
     viewManager.getAvailableViews().forEach(element => {
-        if (element.type == "item") {
+        availableViews.push({
+            id: element.view,
+            label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+            checked: element.current,
+            type: "checkbox",
+            click: () => {
+                viewManager.showView(element.view);
+            }
+        });
+        if (element.separatorAfter) {
             availableViews.push({
-                id: element.view,
-                label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
-                checked: element.current,
-                type: "checkbox",
-                click: () => {
-                    viewManager.showView(element.view);
-                }
-            });
-        } else {
-            availableViews.push({
-                type: element.type
+                type: "separator"
             });
         }
     });

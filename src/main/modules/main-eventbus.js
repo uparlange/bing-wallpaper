@@ -12,7 +12,7 @@ function init() {
         return historyManager.getItems();
     });
     eventbusManager.onRendererMessage("removeHistoryItem", (message) => {
-        historyManager.removeItem(message.id);
+        historyManager.removeItemById(message.id);
     });
     eventbusManager.onRendererMessage("removeAllHistoryItems", (message) => {
         historyManager.removeAllItems();

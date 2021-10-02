@@ -48,23 +48,34 @@ function getItems() {
     return items;
 };
 
-function removeItem(itemId) {
+function removeItemByIndex(index) {
+    const historyItem = items.splice(index, 1)[0];
+    try {
+        fs.unlinkSync(historyItem.path);
+    } catch (err) {
+        loggerManager.getLogger().error("HistoryManager - removeFileItem '" + historyItem.path + "', '" + err + "'");
+    }
+};
+
+function removeItemById(itemId) {
     const historyItemIndex = items.findIndex(element => element.id == itemId);
     if (historyItemIndex != -1) {
-        items.splice(historyItemIndex, 1);
+        removeItemByIndex(historyItemIndex);
         eventbusManager.sendRendererMessage("historyChanged");
     }
 };
 
 function removeAllItems() {
-    items.length = 0;
+    while (items.length > 0) {
+        removeItemByIndex(0);
+    }
     eventbusManager.sendRendererMessage("historyChanged");
 };
 
 module.exports = {
     init: init,
     addItem: addItem,
-    removeItem: removeItem,
+    removeItemById: removeItemById,
     removeAllItems: removeAllItems,
     getItems: getItems
 };

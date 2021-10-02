@@ -28,7 +28,7 @@ const sources = [
             // <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
             if (name === "link" &&
                 typeof (attributes.href) == "string" &&
-                attributes.href.indexOf("id=OHR") != -1) {
+                attributes.href.includes("id=OHR")) {
                 return "https://www.bing.com" + attributes.href;
             }
             return null;
@@ -36,9 +36,7 @@ const sources = [
     },
     {
         name: USER_SOURCE,
-    },
-    {
-        type: "separator"
+        separatorAfter: true
     },
     {
         name: "oceanexplorer",
@@ -60,8 +58,22 @@ const sources = [
             // <a href="image/2109/AldrinVisor_Apollo11_4096.jpg"></a>
             if (name === "a" && attributes.href.includes("image/")) {
                 return "https://apod.nasa.gov/apod/" + attributes.href;
+                // <iframe width="960" height="540" src="https://www.youtube.com/embed/tLC6Sy8f06s?rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>
+            } else if (name == "iframe" && attributes.src.includes("youtube")) {
+                const videoId = attributes.src.substring(attributes.src.lastIndexOf("/") + 1, attributes.src.indexOf("?"));
+                const imageUrls = [
+                    "https://img.youtube.com/vi/" + videoId + "/maxresdefault.jpg",
+                    "https://img.youtube.com/vi/" + videoId + "/sddefault.jpg"
+                ];
+                return (async () => {
+                    for (let imageUrl of imageUrls) {
+                        const test = await applicationManager.download({ url: imageUrl });
+                        if (test) {
+                            return imageUrl;
+                        }
+                    }
+                })();
             }
-            return null;
         }
     },
     {
@@ -98,7 +110,6 @@ function getLabelKey(source) {
 
 function getMessage(source) {
     return {
-        type: "item",
         source: source,
         path: wallpaperPath,
         labelKey: getLabelKey(source),
@@ -108,15 +119,10 @@ function getMessage(source) {
 
 function getAvailableSources() {
     return sources.map((source) => {
-        if (source.type == "separator") {
-            return {
-                type: source.type
-            }
-        } else {
-            const message = getMessage(source.name);
-            message.home = source.homeUrl;
-            return message;
-        }
+        const message = getMessage(source.name);
+        message.separatorAfter = source.separatorAfter;
+        message.home = source.homeUrl;
+        return message;
     });
 };
 
@@ -154,7 +160,10 @@ function parsePage(html, patternValidator) {
 
 function fetchPage(url) {
     return new Promise((resolve, reject) => {
-        applicationManager.fetch(url).then((res) => {
+        applicationManager.download({
+            url: url,
+            resultDecoder: new TextDecoder("utf-8")
+        }).then((res) => {
             resolve(res);
         });
     });
@@ -201,7 +210,10 @@ function setExternalWallpaper(config) {
     loggerManager.getLogger().info("WallpaperManager - Set " + config.name.toUpperCase() + " Wallpaper");
     const finalizeSetExternalWallpaper = (imageUrl) => {
         storageManager.setData(config.wallpaperStorageKey, imageUrl);
-        applicationManager.download(imageUrl, config.wallpaperPath).then((imagePath) => {
+        applicationManager.download({
+            url: imageUrl,
+            destination: config.wallpaperPath
+        }).then((imagePath) => {
             wallpaperPath = imagePath;
             loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
             completeApplyWallpaper();

@@ -1038,10 +1038,10 @@
     "lazy-val" "^1.0.5"
     "mime" "^2.5.2"
 
-"electron@^15.0.0":
-  "integrity" "sha512-LlBjN5nCJoC7EDrgfDQwEGSGSAo/o08nSP5uJxN2m+ZtNA69SxpnWv4yPgo1K08X/iQPoGhoZu6C8LYYlk1Dtg=="
-  "resolved" "https://registry.npmjs.org/electron/-/electron-15.0.0.tgz"
-  "version" "15.0.0"
+"electron@^16.0.0-alpha.3":
+  "integrity" "sha512-nmT6VySrZ9cjp/qK3cLmPHggU1+R4IYLPkEHqQA3e7jBsYskOOu1abisgp4a+muGjeEBTs1s+vka/VxUC3v9cA=="
+  "resolved" "https://registry.npmjs.org/electron/-/electron-16.0.0-alpha.3.tgz"
+  "version" "16.0.0-alpha.3"
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
@@ -1482,10 +1482,10 @@
   "resolved" "https://registry.npmjs.org/i18next-fs-backend/-/i18next-fs-backend-1.1.1.tgz"
   "version" "1.1.1"
 
-"i18next@^21.1.1":
-  "integrity" "sha512-oBEi+3MI/jEv0DifAmA+e47WAS55Sv6yG2CmZ0Kpz/VGu8rTQARJGRkwhMcLhcIi+JYmxmfBD/DQ/7Ho3FYryw=="
-  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.1.1.tgz"
-  "version" "21.1.1"
+"i18next@^21.2.3":
+  "integrity" "sha512-aOYql7b9dvcSlkp9mDBFiLPv3+3TVAbXM06lgGL8xWCf5yd0QlgQvvvyCin24WR4EMl4eiu+vijKdblYKs3kfw=="
+  "resolved" "https://registry.npmjs.org/i18next/-/i18next-21.2.3.tgz"
+  "version" "21.2.3"
   dependencies:
     "@babel/runtime" "^7.12.0"
 

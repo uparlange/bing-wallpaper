@@ -14,16 +14,14 @@ function getTouchbar(forceRefresh) {
     if (touchBar == null) {
         const items = [];
         viewManager.getAvailableViews().forEach(element => {
-            if (element.type == "item") {
-                items.push(new TouchBarButton({
-                    label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
-                    backgroundColor: element.current ? "#FFFFFF" : "#333",
-                    color: element.current ? "#333" : "#FFFFFF",
-                    click: () => {
-                        viewManager.showView(element.view);
-                    }
-                }));
-            }
+            items.push(new TouchBarButton({
+                label: i18nManager.getTranslations([element.labelKey])[element.labelKey],
+                backgroundColor: element.current ? "#FFFFFF" : "#333",
+                color: element.current ? "#333" : "#FFFFFF",
+                click: () => {
+                    viewManager.showView(element.view);
+                }
+            }));
         });
         touchBar = new TouchBar({ items: items });
     }

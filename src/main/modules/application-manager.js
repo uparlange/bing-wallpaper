@@ -164,39 +164,48 @@ function getApplicationFilename(version) {
     return `${getProductName()}-${version}-${arch}.${applicationUtils.isMac() ? "dmg" : "exe"}`;
 };
 
-function showStreamProgress(stream) {
-    stream.on("downloadProgress", (progress) => {
-        const message = {
-            progress: progress.percent
-        };
-        eventbusManager.sendRendererMessage("downloadProgress", message);
-        if (win != null) {
-            win.setProgressBar((progress.percent == 1) ? -1 : progress.percent);
+function showDownloadProgress(value) {
+    const message = {
+        progress: (value == 1) ? 0 : value
+    };
+    eventbusManager.sendRendererMessage("downloadProgress", message);
+    if (win != null) {
+        win.setProgressBar(value == 1 ? -1 : value);
+    }
+};
+
+function download(params) {
+    return new Promise((resolve, reject) => {
+        let logMessage = "ApplicationManager - download '" + params.url + "'";
+        if (params.destination != null) {
+            logMessage += " to '" + params.destination + "'";
         }
-    });
-};
-
-function download(url, destination) {
-    return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("ApplicationManager - download '" + url + "' to '" + destination + "'");
-        const ws = fs.createWriteStream(destination);
-        ws.on("finish", () => {
-            resolve(destination);
+        loggerManager.getLogger().info(logMessage);
+        /*
+        const stream = _download(params.url, {
+            rejectUnauthorized: false
         });
-        const stream = _download(url);
-        stream.pipe(ws);
-        showStreamProgress(stream);
-    });
-};
-
-function fetch(url) {
-    return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("ApplicationManager - fetch '" + url + "'");
-        const stream = _download(url);
+        */
+        const stream = _download(params.url);
+        stream.on("downloadProgress", (progress) => {
+            showDownloadProgress(progress.percent);
+        });
         stream.then((data) => {
-            resolve(new TextDecoder("utf-8").decode(data));
+            showDownloadProgress(1);
+            if (params.destination != null) {
+                fs.writeFileSync(params.destination, data);
+                resolve(params.destination);
+            } else {
+                if (params.resultDecoder != null) {
+                    data = params.resultDecoder.decode(data);
+                }
+                resolve(data);
+            }
+        }).catch((err) => {
+            loggerManager.getLogger().error("ApplicationManager - download : " + err);
+            showDownloadProgress(1);
+            resolve(null);
         });
-        showStreamProgress(stream);
     });
 };
 
@@ -211,7 +220,10 @@ function updateApplication(version) {
 
 function checkForUpdates() {
     if (connectionManager.isOnLine()) {
-        fetch("https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json").then((res) => {
+        download({
+            url: "https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json",
+            resultDecoder: new TextDecoder("utf-8")
+        }).then((res) => {
             const json = JSON.parse(res);
             if (compareVersion(json.version, pkg.version) > 0) {
                 const message = {
@@ -257,6 +269,5 @@ module.exports = {
     quitApplication: quitApplication,
     updateApplication: updateApplication,
     download: download,
-    fetch: fetch,
     openDevTools: openDevTools
 };

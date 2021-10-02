@@ -9,7 +9,8 @@ export default function () {
                 data() {
                     return {
                         dropActive: false,
-                        wallpaperPath: null
+                        wallpaperPath: null,
+                        wallpaperVisible: false
                     }
                 },
                 beforeMount() {
@@ -26,8 +27,10 @@ export default function () {
                         this.refreshWallpaper();
                     },
                     refreshWallpaper() {
+                        this.wallpaperVisible = false;
                         rendererEventbus.getCurrentWallpaperPath().then((path) => {
                             this.wallpaperPath = path + "?version=" + new Date().getTime();
+                            this.wallpaperVisible = true;
                         });
                     },
                     onDragOver(event) {

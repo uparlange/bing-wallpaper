@@ -1,6 +1,6 @@
 <div class="view no-scroll" style="margin-left:30px;margin-right:30px;">
     <table style="width:100%;border-collapse: collapse; ">
-        <tr v-for="source in sources" :key="source.source" v-show="source.type == 'item'">
+        <tr v-for="source in sources" :key="source.source">
             <td style="padding-top:30px;min-width:20px">
                 <span v-if="source.current">></span>
             </td>
