@@ -70,6 +70,7 @@ export default function () {
                     refreshItems() {
                         rendererEventbus.getHistoryItems().then((items) => {
                             this.items = items;
+                            this.selectedItem = null;
                         });
                     }
                 }

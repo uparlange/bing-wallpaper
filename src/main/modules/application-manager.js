@@ -210,11 +210,13 @@ function download(params) {
 };
 
 function updateApplication(version) {
-    const destination = path.join(app.getPath("temp"), getApplicationFilename(version));
-    download(getDownloadUrl(version), destination).then((destination) => {
+    download({
+        url: getDownloadUrl(version),
+        destination: path.join(app.getPath("temp"), getApplicationFilename(version))
+    }).then((destination) => {
         shell.openPath(destination).then(() => {
             quitApplication();
-        })
+        });
     });
 };
 

@@ -32,9 +32,6 @@ export default {
         onNewVersionAvailable(message) {
             rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL"], { version: message.version }).then((translations) => {
                 if (window.confirm(translations["NEW_VERSION_AVAILABLE_LABEL"])) {
-                    const message = {
-                        version: message.version
-                    };
                     rendererEventbus.updateMyApplication(message);
                 }
             });
