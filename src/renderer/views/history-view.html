@@ -1,13 +1,25 @@
 <div class="view">
-    <div style="height: 25px; margin-left:10px; margin-right:10px; padding-top:10px;">
+    <div style="position:absolute; left:0px; top:35px; right:0px; bottom:0px;">
+        <transition-group name="list">
+            <div @click="setSelectemItem(item)" v-for="item in items" :key="item.id"
+                style="cursor: pointer; float:left; width:calc(100%/3); height:calc((100% - 35px)/3);">
+                <img :class="{ 'img-selectable': true, 'img-selected': item == selectedItem }"
+                    style="width:100%; height:100%;" :src="item.path" :title="getTitle(item)">
+            </div>
+        </transition-group>
+    </div>
+    <div class="theme-color"
+        style="position:fixed; height: 25px; left:0px; right:0px; padding-right:10px; padding-left:10px; padding-top:10px;">
         <span style="float:left;">
             <span>{{ items.length }} {{ translations["WALLPAPER_LABEL"] }}(s)</span>
             <span v-if="selectedItem != null">
                 <span style="margin-left:10px;">|</span>
-                <a href="#" @click="setUserWallpaper()" style="cursor: pointer; margin-left:10px;">{{ translations["SET_LABEL"]
+                <a href="#" @click="setUserWallpaper()" style="cursor: pointer; margin-left:10px;">{{
+                    translations["SET_LABEL"]
                     }}</a>
                 <span style="margin-left:10px;">|</span>
-                <a href="#" @click="removeItem()" style="cursor: pointer; margin-left:10px;">{{ translations["REMOVE_LABEL"]
+                <a href="#" @click="removeItem()" style="cursor: pointer; margin-left:10px;">{{
+                    translations["REMOVE_LABEL"]
                     }}</a>
             </span>
         </span>
@@ -16,11 +28,4 @@
                 translations["REMOVE_ALL_LABEL"] }}</a>
         </span>
     </div>
-    <transition-group name="list">
-        <div @click="setSelectemItem(item)" v-for="item in items" :key="item.id"
-            style="cursor: pointer; float:left; width:calc(100%/3); height:calc((100% - 35px)/3);">
-            <img :class="{ 'img-selectable': true, 'img-selected': item == selectedItem }"
-                style="width:100%; height:100%;" :src="item.path" :title="getTitle(item)">
-        </div>
-    </transition-group>
 </div>

@@ -1,10 +1,12 @@
 const EventEmitter = require("events");
 
+const applicationUtils = require("./application-utils");
 const eventbusManager = require("./eventbus-manager");
 const storageManager = require("./storage-manager");
 const loggerManager = require("./logger-manager");
 
 const SOURCES_VIEW = "sources";
+const DEBUG_VIEW = "debug";
 
 const eventEmitter = new EventEmitter();
 const views = [
@@ -13,6 +15,9 @@ const views = [
     { id: "history", separatorAfter: true },
     { id: "about" },
 ];
+if (applicationUtils.isDebug()) {
+    views.unshift({ id: "debug", separatorAfter: true });
+}
 
 function getLabelKey(view) {
     return view.toUpperCase() + "_VIEW_LABEL";
@@ -56,6 +61,7 @@ function init() {
 
 module.exports = {
     SOURCES_VIEW: SOURCES_VIEW,
+    DEBUG_VIEW: DEBUG_VIEW,
     init: init,
     getAvailableViews: getAvailableViews,
     showView: showView,

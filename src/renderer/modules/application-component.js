@@ -30,8 +30,9 @@ export default {
             this.progress.value = message.progress;
         },
         onNewVersionAvailable(message) {
-            rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL"], { version: message.version }).then((translations) => {
-                if (window.confirm(translations["NEW_VERSION_AVAILABLE_LABEL"])) {
+            rendererEventbus.getTranslations(["NEW_VERSION_AVAILABLE_LABEL", "DO_YOU_WANT_TO_INSTALL_LABEL"], { version: message.version }).then((translations) => {
+                const confirmMessage = translations["NEW_VERSION_AVAILABLE_LABEL"] + ". " + translations["DO_YOU_WANT_TO_INSTALL_LABEL"];
+                if (window.confirm(confirmMessage)) {
                     rendererEventbus.updateMyApplication(message);
                 }
             });

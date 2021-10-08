@@ -4,6 +4,7 @@ const wallpaperManager = require("./wallpaper-manager");
 const applicationManager = require("./application-manager");
 const i18nManager = require("./i18n-manager");
 const historyManager = require("./history-manager");
+const debugManager = require("./debug-manager");
 const loggerManager = require("./logger-manager");
 
 function init() {
@@ -44,6 +45,10 @@ function init() {
     // i18n manager
     eventbusManager.onRendererInvoke("getTranslations", (message) => {
         return i18nManager.getTranslations(message.keyList, message.options);
+    });
+    // debug manager manager
+    eventbusManager.onRendererMessage("executeDebugAction", (message) => {
+        debugManager.executeDebugAction(message);
     });
     loggerManager.getLogger().info("MainEventbus - Init : OK");
 };

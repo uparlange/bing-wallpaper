@@ -40,6 +40,9 @@ window.eventbus.onMainMessage("historyChanged", function () {
 });
 
 export default {
+    executeDebugAction(message) {
+        sendMainMessage("executeDebugAction", message);
+    },
     removeHistoryItem(message) {
         sendMainMessage("removeHistoryItem", message);
     },

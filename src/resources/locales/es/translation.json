@@ -8,6 +8,7 @@
     "ABOUT_VIEW_LABEL": "A proposito",
     "SOURCES_VIEW_LABEL": "Gestión de fuentes",
     "HISTORY_VIEW_LABEL": "Histórico",
+    "DEBUG_VIEW_LABEL": "Debug",
     "LANGUAGE_LABEL": "Idioma",
     "FR_LANGUAGE_LABEL": "Français",
     "EN_LANGUAGE_LABEL": "English",
@@ -23,7 +24,8 @@
     "OCEANEXPLORER_WALLPAPER_SOURCE_LABEL": "Exploración oceánica",
     "BONJOURMADAME_WALLPAPER_SOURCE_LABEL": "Buenos días señora",
     "USER_WALLPAPER_SOURCE_LABEL": "Usuario",
-    "NEW_VERSION_AVAILABLE_LABEL": "Nueva versión '{{version}}' disponible. ¿Quiere instalarlo?",
+    "NEW_VERSION_AVAILABLE_LABEL": "Nueva versión {{version}} disponible",
+    "DO_YOU_WANT_TO_INSTALL_LABEL": "¿Quiere instalarlo?",
     "MANAGE_LABEL": "Administrar",
     "SET_LABEL": "Establecer",
     "THEME_LABEL": "Tema",
@@ -34,5 +36,6 @@
     "REMOVE_ALL_LABEL": "Eliminar todos",
     "CREATION_DATE_LABEL": "Fecha de creación",
     "UPDATE_DATE_LABEL": "Fecha de actualización",
-    "APOD_WALLPAPER_SOURCE_LABEL": "Imagen astronómica del día"
+    "APOD_WALLPAPER_SOURCE_LABEL": "Imagen astronómica del día",
+    "INFORMATION_LABEL": "Información"
 }

@@ -99,31 +99,38 @@ function getAvailableThemes() {
     return availableThemes;
 };
 
+function getMainMenu() {
+    const mainMenu = [];
+    if (applicationUtils.isDebug()) {
+        mainMenu.push({
+            label: i18nManager.getTranslations(["DEBUG_LABEL"])["DEBUG_LABEL"],
+            visible: applicationUtils.isDebug(),
+            click: () => {
+                viewManager.showView(viewManager.DEBUG_VIEW);
+            }
+        });
+        mainMenu.push({
+            type: "separator"
+        });
+    }
+    mainMenu.push({
+        label: i18nManager.getTranslations(["QUIT_LABEL"])["QUIT_LABEL"],
+        click: () => {
+            applicationManager.quitApplication();
+        }
+    });
+    return mainMenu;
+}
+
 function refresh() {
     try {
         const translations = i18nManager.getTranslations([
-            "DEBUG_LABEL", "QUIT_LABEL", "VIEW_LABEL",
-            "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
-            "WALLPAPER_LABEL", "LAUNCH_LABEL", "LAUNCH_MINIMIZED_LABEL",
-            "THEME_LABEL"]);
+            "VIEW_LABEL", "LANGUAGE_LABEL", "PREFERENCES_LABEL", "LAUNCH_AT_STARTUP_LABEL",
+            "WALLPAPER_LABEL", "LAUNCH_LABEL", "LAUNCH_MINIMIZED_LABEL", "THEME_LABEL"]);
         const template = [
             {
                 label: applicationManager.getProductName(),
-                submenu: [
-                    {
-                        label: translations["DEBUG_LABEL"],
-                        visible: applicationUtils.isDebug(),
-                        click: () => {
-                            applicationManager.openDevTools();
-                        }
-                    },
-                    {
-                        label: translations["QUIT_LABEL"],
-                        click: () => {
-                            applicationManager.quitApplication();
-                        }
-                    }
-                ]
+                submenu: getMainMenu()
             },
             {
                 label: translations["VIEW_LABEL"],

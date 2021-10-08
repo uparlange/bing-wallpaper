@@ -41,22 +41,22 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^16.0.0-alpha.3",
-    "electron-builder": "^22.14.3"
+    "electron": "^16.0.0-alpha.6",
+    "electron-builder": "^22.14.4"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
     "dayjs": "^1.10.7",
     "download": "^8.0.0",
     "htmlparser2": "^7.1.2",
-    "i18next": "^21.2.3",
+    "i18next": "^21.2.4",
     "i18next-electron-language-detector": "^0.0.10",
     "i18next-fs-backend": "^1.1.1",
     "log4js": "^6.3.0",
     "md5-file": "^5.0.0",
     "mitt": "^3.0.0",
     "progressbar.js": "^1.1.0",
-    "vue": "^3.2.19",
+    "vue": "^3.2.20",
     "vue-router": "^4.0.11",
     "wallpaper": "^5.0.1"
   }

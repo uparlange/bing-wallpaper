@@ -1,14 +1,14 @@
 @media (prefers-color-scheme: dark) 
 {
-  body 
-  { 
-    background: #333; 
-    color: white; 
-  }
-
   a
   { 
     color: #91ADD4;
+  }
+
+  .theme-color
+  { 
+    background: #333; 
+    color: white; 
   }
   
   .td-border-bottom-line 
@@ -22,8 +22,9 @@
   }
 }
 
-@media (prefers-color-scheme: light) {
-  body 
+@media (prefers-color-scheme: light) 
+{
+  .theme-color
   { 
     background: white; 
     color: black; 

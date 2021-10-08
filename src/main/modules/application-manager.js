@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { app, shell, BrowserWindow } = require("electron");
+const { app, shell, BrowserWindow, Notification } = require("electron");
 const path = require("path");
 const AutoLaunch = require("auto-launch");
 const fs = require("fs");
@@ -75,7 +75,7 @@ function createWindow(devToolsAtLaunch) {
             win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
                 setMainWindowTouchbar();
                 viewManager.showView(viewManager.getCurrentView());
-                checkForUpdates();
+                checkNewVersion();
                 if (createWindowFirstTime) {
                     createWindowFirstTime = false;
                     if (isLaunchedMinimized()) {
@@ -111,7 +111,7 @@ function initAutoLauncher() {
 function initAutoUpdater() {
     return new Promise((resolve, reject) => {
         electron.powerMonitor.on("unlock-screen", () => {
-            checkForUpdates();
+            checkNewVersion();
         });
         resolve();
     });
@@ -220,18 +220,27 @@ function updateApplication(version) {
     });
 };
 
-function checkForUpdates() {
+function showNotification(title, body) {
+    new Notification({ title: title, body: body }).show();
+};
+
+function checkNewVersion(version) {
     if (connectionManager.isOnLine()) {
         download({
             url: "https://raw.githubusercontent.com/uparlange/bing-wallpaper/master/package.json",
             resultDecoder: new TextDecoder("utf-8")
         }).then((res) => {
-            const json = JSON.parse(res);
-            if (compareVersion(json.version, pkg.version) > 0) {
+            const github = JSON.parse(res);
+            const applicationVersion = version ? version : pkg.version;
+            if (compareVersion(github.version, applicationVersion) > 0) {
                 const message = {
-                    version: json.version
+                    version: github.version
                 };
-                eventbusManager.sendRendererMessage("newVersionAvailable", message);
+                const translations = i18nManager.getTranslations(["INFORMATION_LABEL", "NEW_VERSION_AVAILABLE_LABEL"], message);
+                showNotification(translations["INFORMATION_LABEL"], translations["NEW_VERSION_AVAILABLE_LABEL"]);
+                setTimeout(() => {
+                    eventbusManager.sendRendererMessage("newVersionAvailable", message);
+                }, 500);
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
             }
@@ -257,6 +266,10 @@ function openDevTools() {
     }
 };
 
+function openPath(path) {
+    shell.openPath(path);
+};
+
 module.exports = {
     init: init,
     getVersions: getVersions,
@@ -267,9 +280,11 @@ module.exports = {
     toggleLaunchMinimized: toggleLaunchMinimized,
     toggleLaunchAtStartup: toggleLaunchAtStartup,
     openExternal: openExternal,
+    openPath: openPath,
     createWindow: createWindow,
     quitApplication: quitApplication,
     updateApplication: updateApplication,
     download: download,
-    openDevTools: openDevTools
+    openDevTools: openDevTools,
+    checkNewVersion: checkNewVersion
 };
