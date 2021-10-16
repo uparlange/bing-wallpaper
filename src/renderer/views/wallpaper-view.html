@@ -5,4 +5,8 @@
         v-show="wallpaperVisible">
     <img style="position: absolute;right: -5px;bottom: -20px;width: 100px;height: 100px;" v-if="!dropActive"
         src="../resources/images/dragdrop.svg">
+    <div style="position:absolute; right:10px; top:10px; width:24px; height:24px; background-color: white;">
+        <img style="width:20px; height:20px; margin-top:2px; margin-left:2px;"
+            :src="'./../resources/images/' + iconFileName" v-show="iconVisible">
+    </div>
 </div>

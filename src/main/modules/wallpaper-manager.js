@@ -22,6 +22,7 @@ const USER_SOURCE = "user";
 const sources = [
     {
         name: BING_SOURCE,
+        iconFileName: "logo_bing.png",
         homeUrl: "https://www.bing.com",
         needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
@@ -36,10 +37,12 @@ const sources = [
     },
     {
         name: USER_SOURCE,
+        iconFileName: "icon.png",
         separatorAfter: true
     },
     {
         name: "oceanexplorer",
+        iconFileName: "logo_noaa.png",
         get homeUrl() {
             // https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210912.html
             return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + ".html"
@@ -52,6 +55,7 @@ const sources = [
     },
     {
         name: "apod",
+        iconFileName: "logo_nasa.png",
         homeUrl: "https://apod.nasa.gov/apod/",
         needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
@@ -78,6 +82,7 @@ const sources = [
     },
     {
         name: "bonjourmadame",
+        iconFileName: "logo_bonjourmadame.png",
         homeUrl: "https://www.bonjourmadame.fr/",
         needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
@@ -110,16 +115,17 @@ function getLabelKey(source) {
 
 function getMessage(source) {
     return {
-        source: source,
+        source: source.name,
         path: wallpaperPath,
-        labelKey: getLabelKey(source),
-        current: getCurrentSource() == source
+        iconFileName: source.iconFileName,
+        labelKey: getLabelKey(source.name),
+        current: getCurrentSource() == source.name
     };
 };
 
 function getAvailableSources() {
     return sources.map((source) => {
-        const message = getMessage(source.name);
+        const message = getMessage(source);
         message.separatorAfter = source.separatorAfter;
         message.home = source.homeUrl;
         return message;
@@ -127,14 +133,14 @@ function getAvailableSources() {
 };
 
 function getSourceByPropertyAndValue(property, value) {
-    let config = null;
+    let source = null;
     sources.forEach(element => {
         if (element[property] == value) {
-            config = element;
+            source = element;
             return;
         }
     });
-    return config;
+    return source;
 };
 
 function parsePage(html, patternValidator) {
@@ -194,7 +200,7 @@ function copyFile(source, destination) {
 
 function setRendererWallpaper() {
     loggerManager.getLogger().info("WallpaperManager - Set Renderer Wallpaper");
-    const message = getMessage(getCurrentSource());
+    const message = getCurrentWallpaperSource();
     eventbusManager.sendRendererMessage("wallpaperChanged", message);
     eventEmitter.emit("wallpaperChanged", message);
     historyManager.addItem(message);
@@ -206,71 +212,68 @@ function completeApplyWallpaper() {
     });
 };
 
-function setExternalWallpaper(config) {
-    loggerManager.getLogger().info("WallpaperManager - Set " + config.name.toUpperCase() + " Wallpaper");
-    const finalizeSetExternalWallpaper = (imageUrl) => {
-        storageManager.setData(config.wallpaperStorageKey, imageUrl);
+function setExternalWallpaper(source) {
+    loggerManager.getLogger().info("WallpaperManager - Set " + source.name.toUpperCase() + " Wallpaper");
+    const finalizeSetUserWallpaper = (imagePath) => {
+        loggerManager.getLogger().info("WallpaperManager - Apply " + source.name.toUpperCase() + " Wallpaper");
+        wallpaperPath = imagePath;
+        completeApplyWallpaper();
+    };
+    const downloadImage = (imageUrl) => {
+        storageManager.setData(source.wallpaperStorageKey, imageUrl);
         applicationManager.download({
             url: imageUrl,
-            destination: config.wallpaperPath
+            destination: source.wallpaperPath
         }).then((imagePath) => {
-            wallpaperPath = imagePath;
-            loggerManager.getLogger().info("WallpaperManager - Apply " + config.name.toUpperCase() + " Wallpaper");
-            completeApplyWallpaper();
+            finalizeSetUserWallpaper(imagePath);
         });
     };
-    if (connectionManager.isOnLine()) {
-        if (config.needPageParsing) {
-            fetchPage(config.homeUrl).then((htmlContent) => {
-                parsePage(htmlContent, config.imagePatternValidator).then((imageUrl) => {
-                    finalizeSetExternalWallpaper(imageUrl);
+    const wallpaperUrl = storageManager.getData(source.wallpaperStorageKey);
+    const wallpaperNeedUpdate = dayjs(wallpaperUrl.date).format("YYYYMMDD") != dayjs(new Date()).format("YYYYMMDD");
+    if (wallpaperUrl.value == null || wallpaperNeedUpdate) {
+        if (connectionManager.isOnLine()) {
+            if (source.needPageParsing) {
+                fetchPage(source.homeUrl).then((htmlContent) => {
+                    parsePage(htmlContent, source.imagePatternValidator).then((imageUrl) => {
+                        downloadImage(imageUrl);
+                    });
                 });
-            });
-        } else {
-            finalizeSetExternalWallpaper(config.imageUrl);
+            } else {
+                downloadImage(source.imageUrl);
+            }
         }
     } else {
-        completeApplyWallpaper();
+        finalizeSetUserWallpaper(source.wallpaperPath);
     }
 };
 
 function setUserWallpaper(path) {
     loggerManager.getLogger().info("WallpaperManager - Set " + USER_SOURCE.toUpperCase() + " Wallpaper");
-    const finalizeSetUserWallpaper = () => {
+    const finalizeSetUserWallpaper = (imagePath) => {
         loggerManager.getLogger().info("WallpaperManager - Apply " + USER_SOURCE.toUpperCase() + " Wallpaper");
+        wallpaperPath = imagePath;
         completeApplyWallpaper();
     };
     if (path != null) {
         copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
-            wallpaperPath = imagePath;
-            finalizeSetUserWallpaper();
+            finalizeSetUserWallpaper(imagePath);
         });
     } else {
-        wallpaperPath = USER_WALLPAPER_PATH;
-        finalizeSetUserWallpaper();
+        finalizeSetUserWallpaper(USER_WALLPAPER_PATH);
     }
 };
 
-function externalWallpaperNeedUpdate(key) {
-    const wallpaperUrl = storageManager.getData(key);
-    return dayjs(wallpaperUrl.date).format("YYYYMMDD") != dayjs(new Date()).format("YYYYMMDD");
-}
-
 function checkWallpaper() {
     loggerManager.getLogger().info("WallpaperManager - Check Wallpaper");
-    let config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
-    if (config != null) {
-        if (config.name != USER_SOURCE && externalWallpaperNeedUpdate(config.wallpaperStorageKey)) {
-            setExternalWallpaper(config);
-        } else {
-            setRendererWallpaper();
-        }
+    let source = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
+    if (source != null) {
+        setSource(source.name);
     } else {
         fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
             if (err) {
                 copyFile(wallpaperPath, USER_WALLPAPER_PATH);
-                config = getSourceByPropertyAndValue("name", BING_SOURCE);
-                setExternalWallpaper(config);
+                setSource(USER_SOURCE);
+                setSource(BING_SOURCE);
             }
         });
     }
@@ -293,16 +296,28 @@ function init() {
 };
 
 function getCurrentSource() {
-    const config = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
-    return config ? config.name : null;
+    const source = getSourceByPropertyAndValue("wallpaperPath", wallpaperPath);
+    return source ? source.name : null;
 };
 
-function setSource(source) {
-    const config = getSourceByPropertyAndValue("name", source);
-    if (config.name == USER_SOURCE) {
+function showNextWallpaper() {
+    const index = sources.findIndex((element) => element.name == getCurrentSource());
+    const nextWallpaper = (index < (sources.length - 1)) ? sources[index + 1].name : sources[0].name;
+    setSource(nextWallpaper);
+};
+
+function showPreviousWallpaper() {
+    const index = sources.findIndex((element) => element.name == getCurrentSource());
+    const previousWallpaper = (index > 0) ? sources[index - 1].name : sources[sources.length - 1].name;
+    setSource(previousWallpaper);
+};
+
+function setSource(sourceName) {
+    const source = getSourceByPropertyAndValue("name", sourceName);
+    if (source.name == USER_SOURCE) {
         setUserWallpaper();
     } else {
-        setExternalWallpaper(config);
+        setExternalWallpaper(source);
     }
 };
 
@@ -310,16 +325,19 @@ function onWallpaperChanged(callback) {
     eventEmitter.on("wallpaperChanged", callback);
 };
 
-function getCurrentWallpaperPath() {
-    return wallpaperPath;
+function getCurrentWallpaperSource() {
+    const source = getSourceByPropertyAndValue("name", getCurrentSource());
+    return source ? getMessage(source) : {};
 };
 
 module.exports = {
     init: init,
     setSource: setSource,
-    getCurrentWallpaperPath: getCurrentWallpaperPath,
+    getCurrentWallpaperSource: getCurrentWallpaperSource,
     getCurrentSource: getCurrentSource,
     getAvailableSources: getAvailableSources,
     setUserWallpaper: setUserWallpaper,
+    showNextWallpaper: showNextWallpaper,
+    showPreviousWallpaper: showPreviousWallpaper,
     onWallpaperChanged: onWallpaperChanged
 };

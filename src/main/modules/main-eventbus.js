@@ -19,8 +19,8 @@ function init() {
         historyManager.removeAllItems();
     });
     // wallpaper manager
-    eventbusManager.onRendererInvoke("getCurrentWallpaperPath", () => {
-        return wallpaperManager.getCurrentWallpaperPath();
+    eventbusManager.onRendererInvoke("getCurrentWallpaperSource", () => {
+        return wallpaperManager.getCurrentWallpaperSource();
     });
     eventbusManager.onRendererInvoke("getWallpaperAvailableSources", () => {
         return wallpaperManager.getAvailableSources();

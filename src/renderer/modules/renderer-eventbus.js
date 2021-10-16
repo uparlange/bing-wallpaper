@@ -52,9 +52,6 @@ export default {
     setWallpaperSource(message) {
         sendMainMessage("setWallpaperSource", message);
     },
-    setWallpaperSource(message) {
-        sendMainMessage("setWallpaperSource", message);
-    },
     setUserWallpaper(message) {
         sendMainMessage("setUserWallpaper", message);
     },
@@ -107,10 +104,10 @@ export default {
             });
         });
     },
-    getCurrentWallpaperPath() {
+    getCurrentWallpaperSource() {
         return new Promise((resolve, reject) => {
-            window.eventbus.sendMainInvoke("getCurrentWallpaperPath").then((path) => {
-                resolve(path);
+            window.eventbus.sendMainInvoke("getCurrentWallpaperSource").then((source) => {
+                resolve(source);
             });
         });
     },

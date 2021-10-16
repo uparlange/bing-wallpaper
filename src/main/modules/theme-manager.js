@@ -34,6 +34,12 @@ function getCurrentTheme() {
     return storageManager.getData("theme", nativeTheme.themeSource).value;
 };
 
+function setNextTheme() {
+    const index = themes.findIndex((element) => element == getCurrentTheme());
+    const nextTheme = (index < (themes.length - 1)) ? themes[index + 1] : themes[0];
+    setTheme(nextTheme);
+};
+
 function setTheme(theme) {
     storageManager.setData("theme", theme);
     nativeTheme.themeSource = theme;
@@ -49,5 +55,6 @@ module.exports = {
     getAvailableThemes: getAvailableThemes,
     getCurrentTheme: getCurrentTheme,
     setTheme: setTheme,
+    setNextTheme: setNextTheme,
     onThemeChanged: onThemeChanged
 };

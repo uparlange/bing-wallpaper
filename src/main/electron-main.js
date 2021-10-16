@@ -11,10 +11,12 @@ const viewManager = require("./modules/view-manager");
 const touchbarManager = require("./modules/touchbar-manager");
 const historyManager = require("./modules/history-manager");
 const themeManager = require("./modules/theme-manager");
+const shortcutManager = require("./modules/shortcut-manager");
 
 app.whenReady().then(function () {
     mainEventbus.init();
     storageManager.init().then(i18nManager.init).then(applicationManager.init).then(() => {
+        shortcutManager.init();
         menuManager.init();
         trayManager.init();
         touchbarManager.init();

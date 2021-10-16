@@ -31,6 +31,18 @@ function getMessage(view) {
     };
 };
 
+function showNextView() {
+    const index = views.findIndex((element) => element.id == getCurrentView());
+    const nextView = (index < (views.length - 1)) ? views[index + 1].id : views[0].id;
+    showView(nextView);
+};
+
+function showPreviousView() {
+    const index = views.findIndex((element) => element.id == getCurrentView());
+    const previousView = (index > 0) ? views[index - 1].id : views[views.length - 1].id;
+    showView(previousView);
+};
+
 function showView(view) {
     loggerManager.getLogger().info("ViewManager - Show View '" + view + "'");
     storageManager.setData("view", view);
@@ -65,6 +77,8 @@ module.exports = {
     init: init,
     getAvailableViews: getAvailableViews,
     showView: showView,
+    showNextView: showNextView,
+    showPreviousView: showPreviousView,
     getCurrentView: getCurrentView,
     onViewChanged: onViewChanged
 };

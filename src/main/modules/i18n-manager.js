@@ -57,6 +57,12 @@ function getCurrentLanguage() {
     return storageManager.getData("language", i18next.language.split("-")[0]).value;
 };
 
+function setNextLanguage() {
+    const index = availableLanguages.findIndex((element) => element == getCurrentLanguage());
+    const nextLanguage = (index < (availableLanguages.length - 1)) ? availableLanguages[index + 1] : availableLanguages[0];
+    setLanguage(nextLanguage);
+};
+
 function setLanguage(lng) {
     return new Promise((resolve, reject) => {
         storageManager.setData("language", lng);
@@ -86,5 +92,6 @@ module.exports = {
     getTranslations: getTranslations,
     getCurrentLanguage: getCurrentLanguage,
     setLanguage: setLanguage,
+    setNextLanguage: setNextLanguage,
     onLanguageChanged: onLanguageChanged
 };

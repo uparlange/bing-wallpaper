@@ -10,7 +10,9 @@ export default function () {
                     return {
                         dropActive: false,
                         wallpaperPath: null,
-                        wallpaperVisible: false
+                        wallpaperVisible: false,
+                        iconFileName: null,
+                        iconVisible: false,
                     }
                 },
                 beforeMount() {
@@ -28,9 +30,12 @@ export default function () {
                     },
                     refreshWallpaper() {
                         this.wallpaperVisible = false;
-                        rendererEventbus.getCurrentWallpaperPath().then((path) => {
-                            this.wallpaperPath = path + "?version=" + new Date().getTime();
+                        this.iconVisible = false;
+                        rendererEventbus.getCurrentWallpaperSource().then((source) => {
+                            this.wallpaperPath = source.path + "?version=" + new Date().getTime();
                             this.wallpaperVisible = true;
+                            this.iconFileName = source.iconFileName + "?version=" + new Date().getTime();
+                            this.iconVisible = true;
                         });
                     },
                     onDragOver(event) {
