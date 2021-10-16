@@ -15,7 +15,7 @@
 * Auto update support
 * Dark mode support
 * Touchbar support (MacBook Pro)
-* Shortcuts support
+* Shortcuts support (Command for MacOS and Control for Windows)
     * CommandOrControl + Right : Show next view
     * CommandOrControl + Left : Show previous view
     * CommandOrControl + D : Show debug view
