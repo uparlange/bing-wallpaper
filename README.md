@@ -15,11 +15,19 @@
 * Auto update support
 * Dark mode support
 * Touchbar support (MacBook Pro)
+* Shortcuts support
+    * CommandOrControl + Right : Show next view
+    * CommandOrControl + Left : Show previous view
+    * CommandOrControl + D : Show debug view
+    * CommandOrControl + Up : Show previous wallpaper
+    * CommandOrControl + Down : Show next wallpaper
+    * CommandOrControl + L : Change language
+    * CommandOrControl + T : Change theme
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.1.1-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.1/BingWallpaper-1.1.1-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.1.1-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.1/BingWallpaper-1.1.1-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.1.2-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.2/BingWallpaper-1.1.2-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.1.2-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.2/BingWallpaper-1.1.2-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
