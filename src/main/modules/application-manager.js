@@ -15,6 +15,8 @@ const touchbarManager = require("./touchbar-manager");
 const i18nManager = require("./i18n-manager");
 const applicationUtils = require("./application-utils");
 
+const APPLICATION_ICON = path.join(__dirname, "..", "..", "resources", "images", "icon.png");
+
 let autoLauncher = null;
 let launchAtStartup = false;
 let win = null;
@@ -64,7 +66,7 @@ function createWindow(devToolsAtLaunch) {
                 width: 640,
                 height: 400,
                 resizable: applicationUtils.isDebug(),
-                icon: path.join(__dirname, "..", "..", "resources", "images", "icon.png"),
+                icon: APPLICATION_ICON,
                 webPreferences: {
                     preload: path.join(__dirname, "..", "electron-preload.js")
                 }
@@ -221,7 +223,23 @@ function updateApplication(version) {
 };
 
 function showNotification(title, body) {
-    new Notification({ title: title, body: body }).show();
+    return new Promise((resolve, reject) => {
+        if (Notification.isSupported()) {
+            const notification = new Notification({
+                icon: APPLICATION_ICON,
+                title: title,
+                body: body
+            });
+            notification.show();
+            notification.addListener("show", () => {
+                resolve();
+            });
+        } else {
+            setTimeout(() => {
+                resolve();
+            });
+        }
+    });
 };
 
 function checkNewVersion(version) {
@@ -237,10 +255,9 @@ function checkNewVersion(version) {
                     version: github.version
                 };
                 const translations = i18nManager.getTranslations(["INFORMATION_LABEL", "NEW_VERSION_AVAILABLE_LABEL"], message);
-                showNotification(translations["INFORMATION_LABEL"], translations["NEW_VERSION_AVAILABLE_LABEL"]);
-                setTimeout(() => {
+                showNotification(translations["INFORMATION_LABEL"], translations["NEW_VERSION_AVAILABLE_LABEL"]).then(() => {
                     eventbusManager.sendRendererMessage("newVersionAvailable", message);
-                }, 500);
+                });
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
             }

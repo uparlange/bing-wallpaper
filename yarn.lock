@@ -1038,10 +1038,10 @@
     "lazy-val" "^1.0.5"
     "mime" "^2.5.2"
 
-"electron@^16.0.0-alpha.7":
-  "integrity" "sha512-M9v3ROMNjQHPxlDUEFmbwQSG9fHrJa+/op+H3JGlxzxfuwKis5Cl7hMPIx63rm9I+cYlcnU1Psb66n03hXj0lg=="
-  "resolved" "https://registry.npmjs.org/electron/-/electron-16.0.0-alpha.8.tgz"
-  "version" "16.0.0-alpha.8"
+"electron@^16.0.0-beta.1":
+  "integrity" "sha512-f6k9CkcHCOrxndidE1r9DGhrCRUuGPL9bkRMrqwH9ExijFjed81kZ0wKYrIPk97TcAmUlz63085TuiOjiQjgbg=="
+  "resolved" "https://registry.npmjs.org/electron/-/electron-16.0.0-beta.1.tgz"
+  "version" "16.0.0-beta.1"
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"

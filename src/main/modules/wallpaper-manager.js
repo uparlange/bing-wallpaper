@@ -87,7 +87,7 @@ const sources = [
         needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
             // <img loading="eager" class="alignnone wp-image-3325 size-full jetpack-lazy-image jetpack-lazy-image--handled" src="https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=960%2C1428" alt="" width="960" height="1428" data-recalc-dims="1" srcset="https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?w=1070&amp;ssl=1 1070w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=202%2C300&amp;ssl=1 202w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=688%2C1024&amp;ssl=1 688w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=768%2C1143&amp;ssl=1 768w, https://i2.wp.com/bonjourmadame.fr/wp-content/uploads/2021/09/210916-1.jpg?resize=1032%2C1536&amp;ssl=1 1032w" data-lazy-loaded="1" sizes="(max-width: 960px) 100vw, 960px">
-            if (name === "img" && attributes.class && attributes.class.includes("size-full")) {
+            if (name === "img" && attributes.class && attributes.class.includes("size")) {
                 const { width } = screen.getPrimaryDisplay().workAreaSize
                 const url = attributes.src.split("?")[0] + "?resize=" + width;
                 return url;
