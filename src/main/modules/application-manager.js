@@ -233,10 +233,10 @@ function showNotification(title, body) {
                 title: title,
                 body: body
             });
-            notification.show();
-            notification.addListener("show", () => {
+            notification.on("show", () => {
                 resolve();
             });
+            notification.show();
         } else {
             setTimeout(() => {
                 resolve();
