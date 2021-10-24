@@ -134,6 +134,9 @@ function init() {
             viewManager.onViewChanged((message) => {
                 setMainWindowTouchbar(true);
             });
+            if(applicationUtils.isWindows()) {
+                app.setAppUserModelId(getProductName());
+            }
             loggerManager.getLogger().info("ApplicationManager - Init : OK");
             resolve();
         });
