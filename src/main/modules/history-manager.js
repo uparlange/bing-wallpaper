@@ -22,17 +22,17 @@ function completeAddItem(historyItem) {
 
 function addItem(item) {
     md5File(item.path).then((hash) => {
-        const historyItem = {
-            id: hash,
-            source: item.source,
-            path: path.join(app.getPath("userData"), "historyWallpaper" + hash + ".jpg")
-        };
-        const historyItemIndex = items.findIndex(element => element.id == historyItem.id);
+        const historyItemIndex = items.findIndex(element => element.id == hash);
         if (historyItemIndex != -1) {
             item = items.splice(historyItemIndex, 1)[0];
-            completeAddItem(historyItem);
+            completeAddItem(item);
         } else {
-            historyItem.created = new Date();
+            const historyItem = {
+                id: hash,
+                created: new Date(),
+                source: item.source,
+                path: path.join(app.getPath("userData"), "historyWallpaper" + hash + ".jpg")
+            };
             fs.copyFile(item.path, historyItem.path, (err) => {
                 if (err) {
                     loggerManager.getLogger().error("HistoryManager - Copy file '" + item.path + "' to '" + historyItem.path + "', '" + err + "'");

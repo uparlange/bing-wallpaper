@@ -9,10 +9,8 @@ export default function () {
                 data() {
                     return {
                         dropActive: false,
-                        wallpaperPath: null,
-                        wallpaperVisible: false,
-                        iconFileName: null,
-                        iconVisible: false,
+                        wallpaperPath: "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+                        iconPath: "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
                     }
                 },
                 beforeMount() {
@@ -29,13 +27,9 @@ export default function () {
                         this.refreshWallpaper();
                     },
                     refreshWallpaper() {
-                        this.wallpaperVisible = false;
-                        this.iconVisible = false;
                         rendererEventbus.getCurrentWallpaperSource().then((source) => {
                             this.wallpaperPath = source.path + "?version=" + new Date().getTime();
-                            this.wallpaperVisible = true;
-                            this.iconFileName = source.iconFileName + "?version=" + new Date().getTime();
-                            this.iconVisible = true;
+                            this.iconPath = "./../resources/images/" + source.iconFileName + "?version=" + new Date().getTime();
                         });
                     },
                     onDragOver(event) {
