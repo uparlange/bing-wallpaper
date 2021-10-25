@@ -263,6 +263,7 @@ function showConfirmDialog(message) {
     return new Promise((resolve, reject) => {
         const translations = i18nManager.getTranslations(["YES_LABEL", "NO_LABEL"]);
         dialog.showMessageBox(win, {
+            cancelId: 1,
             type: "question",
             buttons: [translations["YES_LABEL"], translations["NO_LABEL"]],
             message: message,
