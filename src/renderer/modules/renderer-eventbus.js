@@ -27,9 +27,6 @@ window.eventbus.onMainMessage("viewChanged", function (message) {
 });
 
 // application manager
-window.eventbus.onMainMessage("newVersionAvailable", function (message) {
-    eventEmitter.emit("newVersionAvailable", message);
-});
 window.eventbus.onMainMessage("downloadProgress", function (message) {
     eventEmitter.emit("downloadProgress", message);
 });
@@ -54,9 +51,6 @@ export default {
     },
     setUserWallpaper(message) {
         sendMainMessage("setUserWallpaper", message);
-    },
-    updateMyApplication(message) {
-        sendMainMessage("updateMyApplication", message);
     },
     openExternal(message) {
         sendMainMessage("openExternal", message);
@@ -90,12 +84,6 @@ export default {
     },
     offViewChanged(callback) {
         removeEventListener("viewChanged", callback);
-    },
-    onNewVersionAvailable(callback) {
-        addEventListener("newVersionAvailable", callback);
-    },
-    offNewVersionAvailable(callback) {
-        removeEventListener("newVersionAvailable", callback);
     },
     getVersions() {
         return new Promise((resolve, reject) => {

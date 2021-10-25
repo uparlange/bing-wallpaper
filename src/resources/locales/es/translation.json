@@ -37,5 +37,7 @@
     "CREATION_DATE_LABEL": "Fecha de creación",
     "UPDATE_DATE_LABEL": "Fecha de actualización",
     "APOD_WALLPAPER_SOURCE_LABEL": "Imagen astronómica del día",
-    "INFORMATION_LABEL": "Información"
+    "INFORMATION_LABEL": "Información",
+    "YES_LABEL": "Sí",
+    "NO_LABEL": "No"
 }

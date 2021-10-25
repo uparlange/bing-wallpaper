@@ -35,10 +35,6 @@ function init() {
     eventbusManager.onRendererMessage("openExternal", (message) => {
         applicationManager.openExternal(message.url);
     });
-    eventbusManager.onRendererMessage("updateMyApplication", (message) => {
-        // 'updateApplication' event seems used internaly by electron
-        applicationManager.updateApplication(message.version);
-    });
     eventbusManager.onRendererInvoke("getVersions", () => {
         return applicationManager.getVersions();
     });

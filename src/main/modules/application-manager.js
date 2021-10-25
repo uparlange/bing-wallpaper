@@ -1,5 +1,5 @@
 const electron = require("electron");
-const { app, shell, BrowserWindow, Notification } = require("electron");
+const { app, shell, BrowserWindow, Notification, dialog } = require("electron");
 const path = require("path");
 const AutoLaunch = require("auto-launch");
 const fs = require("fs");
@@ -21,6 +21,7 @@ let autoLauncher = null;
 let launchAtStartup = false;
 let win = null;
 let createWindowFirstTime = true;
+let resizeTimeout = null;
 
 function getMainWindow() {
     return win;
@@ -67,10 +68,15 @@ function createWindow(devToolsAtLaunch) {
                 height: 400,
                 resizable: applicationUtils.isDebug(),
                 icon: APPLICATION_ICON,
+                show: false,
                 webPreferences: {
                     preload: path.join(__dirname, "..", "electron-preload.js")
                 }
             });
+            const windowPosition = storageManager.getData("windowPosition", []).value;
+            if (windowPosition.length == 2) {
+                win.setPosition(windowPosition[0], windowPosition[1]);
+            }
             if (devToolsAtLaunch) {
                 openDevTools();
             }
@@ -85,6 +91,18 @@ function createWindow(devToolsAtLaunch) {
                     }
                 }
                 resolve();
+            });
+            win.once("ready-to-show", () => {
+                win.show()
+            });
+            win.on("moved", () => {
+                if (resizeTimeout != null) {
+                    clearTimeout(resizeTimeout);
+                }
+                resizeTimeout = setTimeout(() => {
+                    resizeTimeout = null;
+                    storageManager.setData("windowPosition", win.getPosition());
+                }, 500);
             });
             win.on("closed", () => {
                 win = null;
@@ -134,7 +152,7 @@ function init() {
             viewManager.onViewChanged((message) => {
                 setMainWindowTouchbar(true);
             });
-            if(applicationUtils.isWindows()) {
+            if (applicationUtils.isWindows()) {
                 app.setAppUserModelId(getProductName());
             }
             loggerManager.getLogger().info("ApplicationManager - Init : OK");
@@ -233,15 +251,25 @@ function showNotification(title, body) {
                 title: title,
                 body: body
             });
-            notification.on("show", () => {
-                resolve();
-            });
             notification.show();
-        } else {
-            setTimeout(() => {
-                resolve();
-            });
         }
+        setTimeout(() => {
+            resolve();
+        }, 500);
+    });
+};
+
+function showConfirmDialog(message) {
+    return new Promise((resolve, reject) => {
+        const translations = i18nManager.getTranslations(["YES_LABEL", "NO_LABEL"]);
+        dialog.showMessageBox(win, {
+            type: "question",
+            buttons: [translations["YES_LABEL"], translations["NO_LABEL"]],
+            message: message,
+            icon: APPLICATION_ICON
+        }).then((box) => {
+            resolve(box.response == 0);
+        });
     });
 };
 
@@ -254,12 +282,15 @@ function checkNewVersion(version) {
             const github = JSON.parse(res);
             const applicationVersion = version ? version : pkg.version;
             if (compareVersion(github.version, applicationVersion) > 0) {
-                const message = {
-                    version: github.version
-                };
-                const translations = i18nManager.getTranslations(["INFORMATION_LABEL", "NEW_VERSION_AVAILABLE_LABEL"], message);
+                const translations = i18nManager.getTranslations([
+                    "INFORMATION_LABEL", "NEW_VERSION_AVAILABLE_LABEL", "DO_YOU_WANT_TO_INSTALL_LABEL"], { version: github.version });
                 showNotification(translations["INFORMATION_LABEL"], translations["NEW_VERSION_AVAILABLE_LABEL"]).then(() => {
-                    eventbusManager.sendRendererMessage("newVersionAvailable", message);
+                    const message = translations["NEW_VERSION_AVAILABLE_LABEL"] + ". " + translations["DO_YOU_WANT_TO_INSTALL_LABEL"];
+                    showConfirmDialog(message).then((confirm) => {
+                        if (confirm) {
+                            updateApplication(github.version);
+                        }
+                    });
                 });
             } else {
                 loggerManager.getLogger().info("ApplicationManager - No new version available");
@@ -303,8 +334,9 @@ module.exports = {
     openPath: openPath,
     createWindow: createWindow,
     quitApplication: quitApplication,
-    updateApplication: updateApplication,
     download: download,
     openDevTools: openDevTools,
-    checkNewVersion: checkNewVersion
+    checkNewVersion: checkNewVersion,
+    showNotification: showNotification,
+    showConfirmDialog: showConfirmDialog
 };
