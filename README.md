@@ -8,7 +8,7 @@
     * [Hello  Madam](https://www.bonjourmadame.fr/)
 * Custom user wallpaper can by set by drag and dropping an image to the application wallpaper screen
 * Multi-language support (French, English, Spanish) with auto-detection and fallback to English 
-* User preferences support (last displayed view, language, theme)
+* User preferences support (last displayed view, language, theme, screen position)
 * Auto launch support (launch at startup, launch minimized)
 * Tray icon support
 * Online / Offline support
@@ -26,8 +26,8 @@
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.1.3-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.3/BingWallpaper-1.1.3-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.1.3-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.3/BingWallpaper-1.1.3-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.1.4-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.4/BingWallpaper-1.1.4-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.1.4-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.4/BingWallpaper-1.1.4-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
