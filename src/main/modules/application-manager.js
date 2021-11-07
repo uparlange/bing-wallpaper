@@ -1,7 +1,7 @@
 const electron = require("electron");
 const { app, shell, BrowserWindow, Notification, dialog } = require("electron");
 const path = require("path");
-const AutoLaunch = require("auto-launch");
+const AutoLaunch = require("easy-auto-launch");
 const fs = require("fs");
 const _download = require("download");
 

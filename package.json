@@ -45,9 +45,9 @@
     "electron-builder": "^22.14.4"
   },
   "dependencies": {
-    "auto-launch": "^5.0.5",
     "dayjs": "^1.10.7",
     "download": "^8.0.0",
+    "easy-auto-launch": "^6.0.0",
     "htmlparser2": "^7.1.2",
     "i18next": "^21.3.0",
     "i18next-electron-language-detector": "^0.0.10",
