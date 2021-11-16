@@ -41,17 +41,17 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^16.0.0-beta.7",
+    "electron": "^16.0.0",
     "electron-builder": "^22.14.4"
   },
   "dependencies": {
     "dayjs": "^1.10.7",
     "download": "^8.0.0",
     "easy-auto-launch": "^6.0.0",
-    "htmlparser2": "^7.1.2",
-    "i18next": "^21.3.0",
+    "htmlparser2": "^7.2.0",
+    "i18next": "^21.5.2",
     "i18next-electron-language-detector": "^0.0.10",
-    "i18next-fs-backend": "^1.1.1",
+    "i18next-fs-backend": "^1.1.4",
     "log4js": "^6.3.0",
     "md5-file": "^5.0.0",
     "mitt": "^3.0.0",
