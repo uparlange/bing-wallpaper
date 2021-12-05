@@ -1,6 +1,8 @@
 import applicationUtils from "./application-utils.js";
 import rendererEventbus from "./renderer-eventbus.js";
 
+const EMPTY_IMG_SRC = "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
 export default function () {
     return new Promise((resolve, reject) => {
         applicationUtils.loadTemplate(import.meta.url).then((template) => {
@@ -8,9 +10,7 @@ export default function () {
                 template: template,
                 data() {
                     return {
-                        dropActive: false,
-                        wallpaperPath: "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
-                        iconPath: "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+                        dropActive: false
                     }
                 },
                 beforeMount() {
@@ -28,8 +28,16 @@ export default function () {
                     },
                     refreshWallpaper() {
                         rendererEventbus.getCurrentWallpaperSource().then((source) => {
-                            this.wallpaperPath = source.path + "?version=" + new Date().getTime();
-                            this.iconPath = "./../resources/images/" + source.iconFileName + "?version=" + new Date().getTime();
+                            let wallpaperSrc = EMPTY_IMG_SRC;
+                            let iconSrc = EMPTY_IMG_SRC;
+                            if (source.path) {
+                                wallpaperSrc = source.path + "?version=" + new Date().getTime();
+                            }
+                            if (source.iconFileName) {
+                                iconSrc = "./../resources/images/" + source.iconFileName + "?version=" + new Date().getTime();
+                            }
+                            this.$refs.wallpaper.src = wallpaperSrc;
+                            this.$refs.icon.src = iconSrc;
                         });
                     },
                     onDragOver(event) {

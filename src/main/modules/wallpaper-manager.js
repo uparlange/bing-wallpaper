@@ -1,7 +1,6 @@
 const { app, screen } = require("electron");
 const electron = require("electron");
 const htmlparser2 = require("htmlparser2");
-const wallpaper = require("wallpaper");
 const fs = require("fs");
 const path = require("path");
 const dayjs = require("dayjs");
@@ -108,6 +107,7 @@ sources.forEach(element => {
 });
 
 let wallpaperPath = null;
+let wallpaperModule = null;
 
 function getLabelKey(source) {
     return source.toUpperCase() + "_WALLPAPER_SOURCE_LABEL"
@@ -178,7 +178,7 @@ function fetchPage(url) {
 function applyWallpaper(path) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + path + "'");
-        wallpaper.set(path).then(() => {
+        wallpaperModule.setWallpaper(path).then(() => {
             resolve(path);
         });
     });
@@ -288,11 +288,15 @@ function init() {
         loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
         checkWallpaper();
     });
-    wallpaper.get().then((path) => {
-        wallpaperPath = path;
-        checkWallpaper();
-        loggerManager.getLogger().info("WallpaperManager - Init : OK");
+    import("wallpaper").then(module => {
+        wallpaperModule = module;
+        wallpaperModule.getWallpaper().then((path) => {
+            wallpaperPath = path;
+            checkWallpaper();
+            loggerManager.getLogger().info("WallpaperManager - Init : OK");
+        });
     });
+    
 };
 
 function getCurrentSource() {
