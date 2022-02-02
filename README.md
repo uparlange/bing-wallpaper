@@ -24,11 +24,12 @@
     * CommandOrControl + T : Change theme
     * CommandOrControl + D : Show debug view
     * CommandOrControl + C : Open DevTools
+* Screen saver page support
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.1.5-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.5/BingWallpaper-1.1.5-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.1.5-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.5/BingWallpaper-1.1.5-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.1.6-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.6/BingWallpaper-1.1.6-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.1.6-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.6/BingWallpaper-1.1.6-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
@@ -38,5 +39,7 @@
 ![Sources screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/resources/screenshots/sources-screen.png?raw=true)
 
 ![History screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/resources/screenshots/history-screen.png?raw=true)
+
+![Screen saver screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/resources/screenshots/screensaver-screen.png?raw=true)
 
 ![About screenshot](https://github.com/uparlange/bing-wallpaper/blob/master/resources/screenshots/about-screen.png?raw=true)
