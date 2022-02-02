@@ -5,6 +5,7 @@
     "DEBUG_LABEL": "Depurar",
     "VIEW_LABEL": "Vista",
     "WALLPAPER_VIEW_LABEL": "Fondo de pantalla",
+    "SCREENSAVER_VIEW_LABEL": "Protector de pantalla",
     "ABOUT_VIEW_LABEL": "A proposito",
     "SOURCES_VIEW_LABEL": "Gestión de fuentes",
     "HISTORY_VIEW_LABEL": "Histórico",
@@ -39,5 +40,6 @@
     "APOD_WALLPAPER_SOURCE_LABEL": "Imagen astronómica del día",
     "INFORMATION_LABEL": "Información",
     "YES_LABEL": "Sí",
-    "NO_LABEL": "No"
+    "NO_LABEL": "No",
+    "FLIQLO_DESCRIPTION_LABEL": "Fliqlo es un protector de pantalla de reloj que le permite hacer que su pantalla se vea como un reloj giratorio. Muestra la hora con animación de volteo en grandes números blancos sobre un fondo negro. Gracias a su visibilidad, puedes consultar la hora incluso a distancia."
 }

@@ -4,6 +4,7 @@ const htmlparser2 = require("htmlparser2");
 const fs = require("fs");
 const path = require("path");
 const dayjs = require("dayjs");
+const wallpaper = require("wallpaper");
 const EventEmitter = require("events");
 
 const loggerManager = require("./logger-manager");
@@ -37,6 +38,7 @@ const sources = [
     {
         name: USER_SOURCE,
         iconFileName: "icon.png",
+        homeUrl: null,
         separatorAfter: true
     },
     {
@@ -44,12 +46,14 @@ const sources = [
         iconFileName: "logo_noaa.png",
         get homeUrl() {
             // https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210912.html
-            return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + ".html"
+            // @TODO force 2021 until new screenshots are available in 2022
+            return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/2021" + dayjs().format("MMDD") + ".html"
         },
         needPageParsing: false,
         get imageUrl() {
             //https://oceanexplorer.noaa.gov/multimedia/daily-image/media/20210911-hires.jpg
-            return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/" + dayjs().format("YYYYMMDD") + "-hires.jpg";
+            // @TODO force 2021 until new screenshots are available in 2022
+            return "https://oceanexplorer.noaa.gov/multimedia/daily-image/media/2021" + dayjs().format("MMDD") + "-hires.jpg";
         }
     },
     {
@@ -107,7 +111,6 @@ sources.forEach(element => {
 });
 
 let wallpaperPath = null;
-let wallpaperModule = null;
 
 function getLabelKey(source) {
     return source.toUpperCase() + "_WALLPAPER_SOURCE_LABEL"
@@ -117,6 +120,7 @@ function getMessage(source) {
     return {
         source: source.name,
         path: wallpaperPath,
+        homeUrl: source.homeUrl,
         iconFileName: source.iconFileName,
         labelKey: getLabelKey(source.name),
         current: getCurrentSource() == source.name
@@ -127,7 +131,6 @@ function getAvailableSources() {
     return sources.map((source) => {
         const message = getMessage(source);
         message.separatorAfter = source.separatorAfter;
-        message.home = source.homeUrl;
         return message;
     });
 };
@@ -178,7 +181,7 @@ function fetchPage(url) {
 function applyWallpaper(path) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + path + "'");
-        wallpaperModule.setWallpaper(path).then(() => {
+        wallpaper.set(path).then(() => {
             resolve(path);
         });
     });
@@ -288,15 +291,13 @@ function init() {
         loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
         checkWallpaper();
     });
-    import("wallpaper").then(module => {
-        wallpaperModule = module;
-        wallpaperModule.getWallpaper().then((path) => {
-            wallpaperPath = path;
-            checkWallpaper();
-            loggerManager.getLogger().info("WallpaperManager - Init : OK");
-        });
+    wallpaper.get().then((path) => {
+        wallpaperPath = path;
+        checkWallpaper();
+        loggerManager.getLogger().info("WallpaperManager - Init : OK");
+    }).catch((err) => {
+        loggerManager.getLogger().error("WallpaperManager - Init : " + err);
     });
-    
 };
 
 function getCurrentSource() {

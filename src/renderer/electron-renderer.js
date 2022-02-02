@@ -5,9 +5,11 @@ import sourcesComponent from "./modules/sources-component.js";
 import historyComponent from "./modules/history-component.js";
 import debugComponent from "./modules/debug-component.js";
 import progressBarComponent from "./modules/progress-bar-component.js";
+import screensaverComponent from "./modules/screensaver-component.js";
 
 const routes = [
     { path: "/wallpaper", component: wallpaperComponent, meta: { transition: null } },
+    { path: "/screensaver", component: screensaverComponent, meta: { transition: null } },
     { path: "/about", component: aboutComponent, meta: { transition: null } },
     { path: "/sources", component: sourcesComponent, meta: { transition: null } },
     { path: "/history", component: historyComponent, meta: { transition: null } },

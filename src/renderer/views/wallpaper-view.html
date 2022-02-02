@@ -1,10 +1,12 @@
 <div :class="{ view: true, 'no-scroll': true, 'drop-zone': true, 'drop-active': dropActive }"
     style="position: absolute;top: 0px;left: 0px;right: 0px;bottom: 0px;" @dragover="onDragOver($event)"
     @dragenter="onDragEnter($event)" @dragleave="onDragLeave($event)" @drop="onDrop($event)">
-    <img ref="wallpaper" style="object-fit: fill;width: 100%;height:100%;">
+    <img :src="wallpaperSrc" style="object-fit: fill;width: 100%;height:100%;">
     <img style="position: absolute;right: -5px;bottom: -20px;width: 100px;height: 100px;" v-if="!dropActive"
         src="../resources/images/dragdrop.svg">
     <div style="position:absolute; right:10px; top:10px; width:24px; height:24px; background-color: white;">
-        <img ref="icon" style="width:20px; height:20px; margin-top:2px; margin-left:2px;">
+        <a href="#" @click="openHomeUrl()" style="outline:none;">
+            <img :src="iconSrc" style="width:20px; height:20px; margin-top:2px; margin-left:2px;">
+        </a>
     </div>
 </div>

@@ -10,7 +10,10 @@ export default function () {
                 template: template,
                 data() {
                     return {
-                        dropActive: false
+                        dropActive: false,
+                        wallpaperSrc: EMPTY_IMG_SRC,
+                        iconSrc: EMPTY_IMG_SRC,
+                        homeUrl: null
                     }
                 },
                 beforeMount() {
@@ -23,6 +26,14 @@ export default function () {
                     rendererEventbus.offWallpaperChanged(this.onWallpaperChanged);
                 },
                 methods: {
+                    openHomeUrl() {
+                        if (this.homeUrl) {
+                            const message = {
+                                url: this.homeUrl
+                            };
+                            rendererEventbus.openExternal(message);
+                        }
+                    },
                     onWallpaperChanged(message) {
                         this.refreshWallpaper();
                     },
@@ -36,8 +47,9 @@ export default function () {
                             if (source.iconFileName) {
                                 iconSrc = "./../resources/images/" + source.iconFileName + "?version=" + new Date().getTime();
                             }
-                            this.$refs.wallpaper.src = wallpaperSrc;
-                            this.$refs.icon.src = iconSrc;
+                            this.wallpaperSrc = wallpaperSrc;
+                            this.iconSrc = iconSrc;
+                            this.homeUrl = source.homeUrl;
                         });
                     },
                     onDragOver(event) {

@@ -10,9 +10,10 @@ const DEBUG_VIEW = "debug";
 
 const eventEmitter = new EventEmitter();
 const views = [
-    { id: "wallpaper", separatorAfter: true },
+    { id: "wallpaper" },
     { id: SOURCES_VIEW },
     { id: "history", separatorAfter: true },
+    { id: "screensaver", separatorAfter: true },
     { id: "about" },
 ];
 if (applicationUtils.isDebug()) {

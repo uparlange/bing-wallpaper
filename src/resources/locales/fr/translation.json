@@ -5,6 +5,7 @@
     "DEBUG_LABEL": "Déboguer",
     "VIEW_LABEL": "Vue",
     "WALLPAPER_VIEW_LABEL": "Fond d'écran",
+    "SCREENSAVER_VIEW_LABEL": "Economiseur d'écran",
     "ABOUT_VIEW_LABEL": "A propos",
     "SOURCES_VIEW_LABEL": "Gestion des sources",
     "HISTORY_VIEW_LABEL": "Historique",
@@ -39,5 +40,6 @@
     "APOD_WALLPAPER_SOURCE_LABEL": "Image astronomique du jour",
     "INFORMATION_LABEL": "Information",
     "YES_LABEL": "Oui",
-    "NO_LABEL": "Non"
+    "NO_LABEL": "Non",
+    "FLIQLO_DESCRIPTION_LABEL": "Fliqlo est un économiseur d'écran qui vous permet de faire ressembler votre écran à une horloge à bascule. Il affiche l'heure en grands chiffres blancs sur fond noir avec une animation 'flip'. Grâce à sa visibilité, vous pouvez même consulter l'heure à distance."
 }

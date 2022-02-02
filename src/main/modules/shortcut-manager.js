@@ -5,8 +5,13 @@ const viewManager = require("./view-manager");
 const wallpaperManager = require("./wallpaper-manager");
 const i18nManager = require("./i18n-manager");
 const themeManager = require("./theme-manager");
+const applicationManager = require("./application-manager");
 
 function init() {
+    // application manager
+    globalShortcut.register("CommandOrControl+C", () => {
+        applicationManager.openDevTools();
+    });
     // view manager
     globalShortcut.register("CommandOrControl+Right", () => {
         viewManager.showNextView();

@@ -16,13 +16,14 @@
 * Dark mode support
 * Touchbar support (MacBook Pro)
 * Shortcuts support (Command for MacOS and Control for Windows)
-    * CommandOrControl + Right : Show next view
-    * CommandOrControl + Left : Show previous view
-    * CommandOrControl + D : Show debug view
     * CommandOrControl + Up : Show previous wallpaper
     * CommandOrControl + Down : Show next wallpaper
+    * CommandOrControl + Left : Show previous view
+    * CommandOrControl + Right : Show next view
     * CommandOrControl + L : Change language
     * CommandOrControl + T : Change theme
+    * CommandOrControl + D : Show debug view
+    * CommandOrControl + C : Open DevTools
 
 # Downloads
 

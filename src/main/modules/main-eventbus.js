@@ -42,7 +42,7 @@ function init() {
     eventbusManager.onRendererInvoke("getTranslations", (message) => {
         return i18nManager.getTranslations(message.keyList, message.options);
     });
-    // debug manager manager
+    // debug manager
     eventbusManager.onRendererMessage("executeDebugAction", (message) => {
         debugManager.executeDebugAction(message);
     });

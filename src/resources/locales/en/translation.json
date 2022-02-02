@@ -5,6 +5,7 @@
     "DEBUG_LABEL": "Debug",
     "VIEW_LABEL": "View",
     "WALLPAPER_VIEW_LABEL": "Wallpaper",
+    "SCREENSAVER_VIEW_LABEL": "Screen saver",
     "ABOUT_VIEW_LABEL": "About",
     "SOURCES_VIEW_LABEL": "Sources management",
     "HISTORY_VIEW_LABEL": "History",
@@ -39,5 +40,6 @@
     "APOD_WALLPAPER_SOURCE_LABEL": "Astronomy Picture of the Day",
     "INFORMATION_LABEL": "Information",
     "YES_LABEL": "Yes",
-    "NO_LABEL": "No"
+    "NO_LABEL": "No",
+    "FLIQLO_DESCRIPTION_LABEL": "Fliqlo is a clock screensaver that allows you to make your screen look like a flip clock. It displays the time with flip animation in large white numerals against a black background. Thanks to its visibility, you can check the time even from a distance."
 }
