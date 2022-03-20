@@ -9,7 +9,7 @@ const applicationManager = require("./application-manager");
 
 function init() {
     // application manager
-    globalShortcut.register("CommandOrControl+C", () => {
+    globalShortcut.register("CommandOrControl+O", () => {
         applicationManager.openDevTools();
     });
     // view manager
@@ -40,6 +40,12 @@ function init() {
     loggerManager.getLogger().info("ShortcutManager - Init : OK");
 };
 
+function destroy() {
+    globalShortcut.unregisterAll();
+    loggerManager.getLogger().info("ShortcutManager - Destroy : OK");
+};
+
 module.exports = {
-    init: init
+    init: init,
+    destroy: destroy
 };

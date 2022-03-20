@@ -36,3 +36,7 @@ app.on("activate", function () {
 app.on("window-all-closed", function () {
     // Ovveride default behaviour
 });
+
+app.on("will-quit", () => {
+    shortcutManager.destroy();
+});

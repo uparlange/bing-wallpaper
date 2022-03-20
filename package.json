@@ -41,8 +41,8 @@
     "dist": "electron-builder"
   },
   "devDependencies": {
-    "electron": "^17.0.0",
-    "electron-builder": "^22.14.4"
+    "electron": "^18.0.0-beta.4",
+    "electron-builder": "^23.0.3"
   },
   "dependencies": {
     "dayjs": "^1.10.7",

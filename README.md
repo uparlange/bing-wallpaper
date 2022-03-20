@@ -23,7 +23,7 @@
     * CommandOrControl + L : Change language
     * CommandOrControl + T : Change theme
     * CommandOrControl + D : Show debug view
-    * CommandOrControl + C : Open DevTools
+    * CommandOrControl + O : Open DevTools
 * Screen saver page support
 
 # Downloads
