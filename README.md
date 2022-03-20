@@ -28,8 +28,8 @@
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.1.6-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.6/BingWallpaper-1.1.6-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.1.6-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.6/BingWallpaper-1.1.6-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.1.7-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.7/BingWallpaper-1.1.7-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.1.7-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.7/BingWallpaper-1.1.7-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
