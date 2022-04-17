@@ -15,21 +15,23 @@
 * Auto update support
 * Dark mode support
 * Touchbar support (MacBook Pro)
-* Shortcuts support (Command for MacOS and Control for Windows)
-    * CommandOrControl + Up : Show previous wallpaper
-    * CommandOrControl + Down : Show next wallpaper
-    * CommandOrControl + Left : Show previous view
-    * CommandOrControl + Right : Show next view
-    * CommandOrControl + L : Change language
-    * CommandOrControl + T : Change theme
-    * CommandOrControl + D : Show debug view
-    * CommandOrControl + O : Open DevTools
+* Shortcuts support
+    * Available when application view is opened
+    * Shortcut list (use 'Command' for MacOS and 'Control' for Windows)
+        * CommandOrControl + Up : Show previous wallpaper
+        * CommandOrControl + Down : Show next wallpaper
+        * CommandOrControl + Left : Show previous view
+        * CommandOrControl + Right : Show next view
+        * CommandOrControl + L : Change language
+        * CommandOrControl + T : Change theme
+        * CommandOrControl + D : Show debug view
+        * CommandOrControl + O : Open DevTools
 * Screen saver page support
 
 # Downloads
 
-* [MacOS (M1) : BingWallpaper-1.1.7-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.7/BingWallpaper-1.1.7-arm64.dmg)
-* [Windows (x64) : BingWallpaper-1.1.7-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.7/BingWallpaper-1.1.7-x64.exe)
+* [MacOS (M1) : BingWallpaper-1.1.8-arm64.dmg](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.8/BingWallpaper-1.1.8-arm64.dmg)
+* [Windows (x64) : BingWallpaper-1.1.8-x64.exe](https://github.com/uparlange/bing-wallpaper/releases/download/v1.1.8/BingWallpaper-1.1.8-x64.exe)
 * Linux : Todo, maybe ....
 
 # Screenshots
