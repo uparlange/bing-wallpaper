@@ -3,6 +3,7 @@ const { app, shell, BrowserWindow, Notification, dialog } = require("electron");
 const path = require("path");
 const AutoLaunch = require("easy-auto-launch");
 const fs = require("fs");
+const EventEmitter = require("events");
 const _download = require("download");
 
 const pkg = require("./../../../package.json");
@@ -16,6 +17,8 @@ const i18nManager = require("./i18n-manager");
 const applicationUtils = require("./application-utils");
 
 const APPLICATION_ICON = path.join(__dirname, "..", "..", "resources", "images", "icon.png");
+
+const eventEmitter = new EventEmitter();
 
 let autoLauncher = null;
 let launchAtStartup = false;
@@ -93,7 +96,8 @@ function createWindow(devToolsAtLaunch) {
                 resolve();
             });
             win.once("ready-to-show", () => {
-                win.show()
+                win.show();
+                eventEmitter.emit("windowStatusChanged", { opened: true });
             });
             win.on("moved", () => {
                 if (resizeTimeout != null) {
@@ -106,6 +110,7 @@ function createWindow(devToolsAtLaunch) {
             });
             win.on("closed", () => {
                 win = null;
+                eventEmitter.emit("windowStatusChanged", { opened: false });
             });
         } else {
             setTimeout(() => {
@@ -322,6 +327,10 @@ function openPath(path) {
     shell.openPath(path);
 };
 
+function onWindowStatusChanged(callback) {
+    eventEmitter.on("windowStatusChanged", callback);
+};
+
 module.exports = {
     init: init,
     getVersions: getVersions,
@@ -339,5 +348,6 @@ module.exports = {
     openDevTools: openDevTools,
     checkNewVersion: checkNewVersion,
     showNotification: showNotification,
-    showConfirmDialog: showConfirmDialog
+    showConfirmDialog: showConfirmDialog,
+    onWindowStatusChanged: onWindowStatusChanged
 };
