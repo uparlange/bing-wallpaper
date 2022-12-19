@@ -73,6 +73,8 @@ function createWindow(devToolsAtLaunch) {
                 icon: APPLICATION_ICON,
                 show: false,
                 webPreferences: {
+                    // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-200
+                    sandbox: false,
                     preload: path.join(__dirname, "..", "electron-preload.js")
                 }
             });
