@@ -11,7 +11,7 @@ let tray = null;
 function refresh() {
     try {
         if (tray == null) {
-            const icon = nativeImage.createFromPath(path.join(__dirname, "..", "..", "resources", "images", "tray.png"))
+            const icon = nativeImage.createFromPath(path.join(__dirname, "resources", "images", "tray.png"))
             tray = new Tray(icon);
             tray.setToolTip(applicationManager.getProductName());
             if (applicationUtils.isWindows()) {

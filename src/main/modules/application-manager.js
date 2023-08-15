@@ -16,7 +16,7 @@ import touchbarManager from "./touchbar-manager";
 import i18nManager from "./i18n-manager";
 import applicationUtils from "./application-utils";
 
-const APPLICATION_ICON = path.join(__dirname, "..", "..", "resources", "images", "icon.png");
+const APPLICATION_ICON = path.join(__dirname, "resources", "images", "icon.png");
 
 const eventEmitter = new EventEmitter();
 
