@@ -1,9 +1,9 @@
-const EventEmitter = require("events");
+import EventEmitter from "events";
 
-const applicationUtils = require("./application-utils");
-const eventbusManager = require("./eventbus-manager");
-const storageManager = require("./storage-manager");
-const loggerManager = require("./logger-manager");
+import applicationUtils from "./application-utils";
+import eventbusManager from "./eventbus-manager";
+import storageManager from "./storage-manager";
+import loggerManager from "./logger-manager";
 
 const SOURCES_VIEW = "sources";
 const DEBUG_VIEW = "debug";
@@ -72,7 +72,7 @@ function init() {
     loggerManager.getLogger().info("ViewManager - Init : OK");
 };
 
-module.exports = {
+export default {
     SOURCES_VIEW: SOURCES_VIEW,
     DEBUG_VIEW: DEBUG_VIEW,
     init: init,

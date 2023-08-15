@@ -1,8 +1,8 @@
-const { app } = require("electron");
-const fs = require("fs");
-const path = require("path");
+import { app } from "electron";
+import fs from "fs";
+import path from "path";
 
-const loggerManager = require("./logger-manager");
+import loggerManager from "./logger-manager";
 
 const STORAGE_PATH = path.join(app.getPath("userData"), "storage.json");
 const reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
@@ -65,7 +65,7 @@ function init() {
     });
 };
 
-module.exports = {
+export default {
     init: init,
     setData: setData,
     getData: getData,

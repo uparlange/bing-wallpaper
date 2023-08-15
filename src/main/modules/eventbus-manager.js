@@ -1,11 +1,13 @@
-const { ipcMain, ipcRenderer } = require("electron");
+import { ipcMain, ipcRenderer } from "electron";
 
 function sendRendererMessage(eventName, message) {
-    const applicationManager = require("./application-manager");
-    const win = applicationManager.getMainWindow();
-    if (win != null) {
-        win.webContents.send(eventName, message);
-    }
+    import("./application-manager").then((obj) => {
+        const applicationManager = obj.default;
+        const win = applicationManager.getMainWindow();
+        if (win != null) {
+            win.webContents.send(eventName, message);
+        }
+    });
 };
 
 function sendMainMessage(eventName, message) {
@@ -38,7 +40,7 @@ function onRendererInvoke(eventName, callback) {
     });
 };
 
-module.exports = {
+export default {
     sendRendererMessage: sendRendererMessage,
     onRendererMessage: onRendererMessage,
     onRendererInvoke: onRendererInvoke,

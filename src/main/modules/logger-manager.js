@@ -1,6 +1,6 @@
-const { app } = require("electron");
-const log4js = require("log4js");
-const path = require("path");
+import { app } from "electron";
+import log4js from "log4js";
+import path from "path";
 
 const APPLICATION_LOG_PATH = path.join(app.getPath("userData"), "application.log");
 
@@ -22,6 +22,6 @@ function getLogger() {
     return logger;
 };
 
-module.exports = {
+export default {
     getLogger: getLogger
 };

@@ -1,11 +1,11 @@
-const { app } = require("electron");
-const md5File = require("md5-file");
-const fs = require("fs");
-const path = require("path");
+import { app } from "electron";
+import md5File from "md5-file";
+import fs from "fs";
+import path from "path";
 
-const loggerManager = require("./logger-manager");
-const storageManager = require("./storage-manager");
-const eventbusManager = require("./eventbus-manager");
+import loggerManager from "./logger-manager";
+import storageManager from "./storage-manager";
+import eventbusManager from "./eventbus-manager";
 
 let items = [];
 
@@ -72,7 +72,7 @@ function removeAllItems() {
     eventbusManager.sendRendererMessage("historyChanged");
 };
 
-module.exports = {
+export default {
     init: init,
     addItem: addItem,
     removeItemById: removeItemById,

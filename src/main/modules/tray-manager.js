@@ -1,10 +1,10 @@
-const { Menu, app, Tray, nativeImage } = require("electron");
-const path = require("path");
+import { Menu, app, Tray, nativeImage } from "electron";
+import path from "path";
 
-const applicationManager = require("./application-manager");
-const i18nManager = require("./i18n-manager");
-const loggerManager = require("./logger-manager");
-const applicationUtils = require("./application-utils");
+import applicationManager from "./application-manager";
+import i18nManager from "./i18n-manager";
+import loggerManager from "./logger-manager";
+import applicationUtils from "./application-utils";
 
 let tray = null;
 
@@ -52,6 +52,6 @@ function init() {
     loggerManager.getLogger().info("TrayManager - Init : OK");
 };
 
-module.exports = {
+export default {
     init: init
 };

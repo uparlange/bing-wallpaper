@@ -10,7 +10,7 @@ function isDebug() {
     return process.argv[2] == "--dev";
 };
 
-module.exports = {
+export default {
     isMac: isMac,
     isWindows: isWindows,
     isDebug: isDebug

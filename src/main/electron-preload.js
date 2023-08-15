@@ -1,6 +1,6 @@
-const { contextBridge } = require("electron");
+import { contextBridge } from "electron";
 
-const eventbusManager = require("./modules/eventbus-manager");
+import eventbusManager from "./modules/eventbus-manager";
 
 // Eventbus Manager
 contextBridge.exposeInMainWorld("eventbus", {

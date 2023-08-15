@@ -1,11 +1,11 @@
-const { globalShortcut } = require("electron");
+import { globalShortcut } from "electron";
 
-const loggerManager = require("./logger-manager");
-const viewManager = require("./view-manager");
-const wallpaperManager = require("./wallpaper-manager");
-const i18nManager = require("./i18n-manager");
-const themeManager = require("./theme-manager");
-const applicationManager = require("./application-manager");
+import loggerManager from "./logger-manager";
+import viewManager from "./view-manager";
+import wallpaperManager from "./wallpaper-manager";
+import i18nManager from "./i18n-manager";
+import themeManager from "./theme-manager";
+import applicationManager from "./application-manager";
 
 let enable = false;
 
@@ -70,7 +70,7 @@ function destroy() {
     loggerManager.getLogger().info("ShortcutManager - Destroy : OK");
 };
 
-module.exports = {
+export default {
     init: init,
     enableAll: enableAll,
     disableAll: disableAll,

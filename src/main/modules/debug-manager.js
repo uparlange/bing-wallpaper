@@ -1,6 +1,6 @@
-const { app } = require("electron");
+import { app } from "electron";
 
-const applicationManager = require("./application-manager");
+import applicationManager from "./application-manager";
 
 const actions = {
     openDevTools() {
@@ -21,6 +21,6 @@ function executeDebugAction(message) {
     actions[message.action]();
 };
 
-module.exports = {
+export default {
     executeDebugAction: executeDebugAction
 };

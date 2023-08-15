@@ -1,12 +1,12 @@
-const { Menu } = require("electron");
+import { Menu } from "electron";
 
-const applicationManager = require("./application-manager");
-const wallpaperManager = require("./wallpaper-manager");
-const i18nManager = require("./i18n-manager");
-const viewManager = require("./view-manager");
-const loggerManager = require("./logger-manager");
-const themeManager = require("./theme-manager");
-const applicationUtils = require("./application-utils");
+import applicationManager from "./application-manager";
+import wallpaperManager from "./wallpaper-manager";
+import i18nManager from "./i18n-manager";
+import viewManager from "./view-manager";
+import loggerManager from "./logger-manager";
+import themeManager from "./theme-manager";
+import applicationUtils from "./application-utils";
 
 function changeMenuItemChecked(menuItemId, checked) {
     Menu.getApplicationMenu().getMenuItemById(menuItemId).checked = checked;
@@ -207,6 +207,6 @@ function init() {
     loggerManager.getLogger().info("MenuManager - Init : OK");
 };
 
-module.exports = {
+export default {
     init: init
 };

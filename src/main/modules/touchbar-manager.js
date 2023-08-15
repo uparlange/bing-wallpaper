@@ -1,9 +1,9 @@
-const { TouchBar } = require("electron")
-const { TouchBarButton } = TouchBar
+import { TouchBar } from "electron";
+const { TouchBarButton } = TouchBar;
 
-const viewManager = require("./view-manager");
-const loggerManager = require("./logger-manager");
-const i18nManager = require("./i18n-manager");
+import viewManager from "./view-manager";
+import loggerManager from "./logger-manager";
+import i18nManager from "./i18n-manager";
 
 let touchBar = null;
 
@@ -32,7 +32,7 @@ function init() {
     loggerManager.getLogger().info("TouchbarManager - Init : OK");
 };
 
-module.exports = {
+export default {
     init: init,
     getTouchbar: getTouchbar
 };

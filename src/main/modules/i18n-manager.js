@@ -1,13 +1,13 @@
-const i18next = require("i18next");
-const LanguageDetector = require("i18next-electron-language-detector");
-const backend = require("i18next-fs-backend");
-const path = require("path");
-const EventEmitter = require("events");
+import i18next from "i18next";
+import LanguageDetector from "i18next-electron-language-detector";
+import backend from "i18next-fs-backend";
+import path from "path";
+import EventEmitter from "events";
 
-const applicationUtils = require("./application-utils");
-const storageManager = require("./storage-manager");
-const eventbusManager = require("./eventbus-manager");
-const loggerManager = require("./logger-manager");
+import applicationUtils from "./application-utils";
+import storageManager from "./storage-manager";
+import eventbusManager from "./eventbus-manager";
+import loggerManager from "./logger-manager";
 
 const eventEmitter = new EventEmitter();
 const availableLanguages = ["fr", "en", "es"];
@@ -28,8 +28,8 @@ function init() {
     return new Promise((resolve, reject) => {
         i18next.use(LanguageDetector).use(backend).init({
             backend: {
-                loadPath: path.join(__dirname, "..", "..", "resources", "locales", "{{lng}}", "{{ns}}.json"),
-                addPath: path.join(__dirname, "..", "..", "resources", "locales", "{{lng}}", "{{ns}}.missing.json")
+                loadPath: path.join(__dirname, "resources", "locales", "{{lng}}", "{{ns}}.json"),
+                addPath: path.join(__dirname, "resources", "locales", "{{lng}}", "{{ns}}.missing.json")
             },
             supportedLngs: availableLanguages,
             fallbackLng: "en",
@@ -86,7 +86,7 @@ function getAvailableLanguages() {
     });
 };
 
-module.exports = {
+export default {
     init: init,
     getAvailableLanguages: getAvailableLanguages,
     getTranslations: getTranslations,

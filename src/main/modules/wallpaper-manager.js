@@ -1,18 +1,18 @@
-const { app, screen } = require("electron");
-const electron = require("electron");
-const htmlparser2 = require("htmlparser2");
-const fs = require("fs");
-const path = require("path");
-const dayjs = require("dayjs");
-const wallpaper = require("wallpaper");
-const EventEmitter = require("events");
+import { app, screen } from "electron";
+import { getWallpaper, setWallpaper } from "wallpaper";
+import electron from "electron";
+import * as htmlparser2 from "htmlparser2";
+import fs from "fs";
+import path from "path";
+import dayjs from "dayjs";
+import EventEmitter from "events";
 
-const loggerManager = require("./logger-manager");
-const eventbusManager = require("./eventbus-manager");
-const storageManager = require("./storage-manager");
-const connectionManager = require("./connection-manager");
-const applicationManager = require("./application-manager");
-const historyManager = require("./history-manager");
+import loggerManager from "./logger-manager";
+import eventbusManager from "./eventbus-manager";
+import storageManager from "./storage-manager";
+import connectionManager from "./connection-manager";
+import applicationManager from "./application-manager";
+import historyManager from "./history-manager";
 
 const eventEmitter = new EventEmitter();
 
@@ -26,11 +26,9 @@ const sources = [
         homeUrl: "https://www.bing.com",
         needPageParsing: true,
         imagePatternValidator: (name, attributes) => {
-            // <link rel="preload" href="/th?id=OHR.SkyPool_FR-FR7548516899_1920x1080.jpg&amp;rf=LaDigue_1920x1080.jpg" as="image" id="preloadBg">
-            if (name === "link" &&
-                typeof (attributes.href) == "string" &&
-                attributes.href.includes("id=OHR")) {
-                return "https://www.bing.com" + attributes.href;
+            // <meta property="og:image" content="https://www.bing.com/th?id=OHR.WildLupine_FR-FR0066475130_tmb.jpg&amp;rf=">
+            if (name === "meta" && attributes.property == "og:image") {
+                return attributes.content;
             }
             return null;
         }
@@ -181,7 +179,7 @@ function fetchPage(url) {
 function applyWallpaper(path) {
     return new Promise((resolve, reject) => {
         loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + path + "'");
-        wallpaper.set(path).then(() => {
+        setWallpaper(path).then(() => {
             resolve(path);
         });
     });
@@ -291,7 +289,7 @@ function init() {
         loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
         checkWallpaper();
     });
-    wallpaper.get().then((path) => {
+    getWallpaper().then((path) => {
         wallpaperPath = path;
         checkWallpaper();
         loggerManager.getLogger().info("WallpaperManager - Init : OK");
@@ -335,7 +333,7 @@ function getCurrentWallpaperSource() {
     return source ? getMessage(source) : {};
 };
 
-module.exports = {
+export default {
     init: init,
     setSource: setSource,
     getCurrentWallpaperSource: getCurrentWallpaperSource,

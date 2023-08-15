@@ -1,20 +1,20 @@
-const electron = require("electron");
-const { app, shell, BrowserWindow, Notification, dialog } = require("electron");
-const path = require("path");
-const AutoLaunch = require("easy-auto-launch");
-const fs = require("fs");
-const EventEmitter = require("events");
-const _download = require("download");
+import electron from "electron";
+import { app, shell, BrowserWindow, Notification, dialog } from "electron";
+import path from "path";
+import AutoLaunch from "easy-auto-launch";
+import fs from "fs";
+import EventEmitter from "events";
+import _download from "download";
 
-const pkg = require("./../../../package.json");
-const storageManager = require("./storage-manager");
-const viewManager = require("./view-manager");
-const loggerManager = require("./logger-manager");
-const eventbusManager = require("./eventbus-manager");
-const connectionManager = require("./connection-manager");
-const touchbarManager = require("./touchbar-manager");
-const i18nManager = require("./i18n-manager");
-const applicationUtils = require("./application-utils");
+import pkg from "./../../../package.json";
+import storageManager from "./storage-manager";
+import viewManager from "./view-manager";
+import loggerManager from "./logger-manager";
+import eventbusManager from "./eventbus-manager";
+import connectionManager from "./connection-manager";
+import touchbarManager from "./touchbar-manager";
+import i18nManager from "./i18n-manager";
+import applicationUtils from "./application-utils";
 
 const APPLICATION_ICON = path.join(__dirname, "..", "..", "resources", "images", "icon.png");
 
@@ -75,7 +75,7 @@ function createWindow(devToolsAtLaunch) {
                 webPreferences: {
                     // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-200
                     sandbox: false,
-                    preload: path.join(__dirname, "..", "electron-preload.js")
+                    preload: path.join(__dirname, "preload.js")
                 }
             });
             const windowPosition = storageManager.getData("windowPosition", []).value;
@@ -85,7 +85,7 @@ function createWindow(devToolsAtLaunch) {
             if (devToolsAtLaunch) {
                 openDevTools();
             }
-            win.loadFile(path.join(__dirname, "..", "..", "renderer", "index.html")).then(() => {
+            win.loadFile(path.join(__dirname, "renderer", "index.html")).then(() => {
                 setMainWindowTouchbar();
                 viewManager.showView(viewManager.getCurrentView());
                 checkNewVersion();
@@ -333,7 +333,7 @@ function onWindowStatusChanged(callback) {
     eventEmitter.on("windowStatusChanged", callback);
 };
 
-module.exports = {
+export default {
     init: init,
     getVersions: getVersions,
     getMainWindow: getMainWindow,

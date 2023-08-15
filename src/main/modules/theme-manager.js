@@ -1,8 +1,8 @@
-const { nativeTheme } = require("electron");
-const EventEmitter = require("events");
+import { nativeTheme } from "electron";
+import EventEmitter from "events";
 
-const loggerManager = require("./logger-manager");
-const storageManager = require("./storage-manager");
+import loggerManager from "./logger-manager";
+import storageManager from "./storage-manager";
 
 const eventEmitter = new EventEmitter();
 const themes = ["system", "light", "dark"];
@@ -50,7 +50,7 @@ function onThemeChanged(callback) {
     eventEmitter.on("themeChanged", callback);
 };
 
-module.exports = {
+export default {
     init: init,
     getAvailableThemes: getAvailableThemes,
     getCurrentTheme: getCurrentTheme,

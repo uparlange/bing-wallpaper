@@ -1,17 +1,17 @@
-const { app } = require("electron");
+import { app } from "electron";
 
-const mainEventbus = require("./modules/main-eventbus");
-const applicationManager = require("./modules/application-manager");
-const wallpaperManager = require("./modules/wallpaper-manager");
-const menuManager = require("./modules/menu-manager");
-const i18nManager = require("./modules/i18n-manager");
-const storageManager = require("./modules/storage-manager");
-const trayManager = require("./modules/tray-manager");
-const viewManager = require("./modules/view-manager");
-const touchbarManager = require("./modules/touchbar-manager");
-const historyManager = require("./modules/history-manager");
-const themeManager = require("./modules/theme-manager");
-const shortcutManager = require("./modules/shortcut-manager");
+import mainEventbus from "./modules/main-eventbus";
+import applicationManager from "./modules/application-manager";
+import wallpaperManager from "./modules/wallpaper-manager";
+import menuManager from "./modules/menu-manager";
+import i18nManager from "./modules/i18n-manager";
+import storageManager from "./modules/storage-manager";
+import trayManager from "./modules/tray-manager";
+import viewManager from "./modules/view-manager";
+import touchbarManager from "./modules/touchbar-manager";
+import historyManager from "./modules/history-manager";
+import themeManager from "./modules/theme-manager";
+import shortcutManager from "./modules/shortcut-manager";
 
 app.whenReady().then(function () {
     mainEventbus.init();

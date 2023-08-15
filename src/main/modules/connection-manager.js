@@ -1,7 +1,7 @@
-const EventEmitter = require("events");
+import EventEmitter from "events";
 
-const eventbusManager = require("./eventbus-manager");
-const loggerManager = require("./logger-manager");
+import eventbusManager from "./eventbus-manager";
+import loggerManager from "./logger-manager";
 
 const eventEmitter = new EventEmitter();
 
@@ -28,7 +28,7 @@ eventbusManager.onRendererMessage("connectionChanged", (status) => {
     }
 });
 
-module.exports = {
+export default {
     isOnLine: isOnLine,
     onConnectionChanged: onConnectionChanged
 };

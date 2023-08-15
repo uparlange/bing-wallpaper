@@ -1,11 +1,10 @@
-const eventbusManager = require("./eventbus-manager");
-const viewManager = require("./view-manager");
-const wallpaperManager = require("./wallpaper-manager");
-const applicationManager = require("./application-manager");
-const i18nManager = require("./i18n-manager");
-const historyManager = require("./history-manager");
-const debugManager = require("./debug-manager");
-const loggerManager = require("./logger-manager");
+import eventbusManager from "./eventbus-manager";
+import wallpaperManager from "./wallpaper-manager";
+import applicationManager from "./application-manager";
+import i18nManager from "./i18n-manager";
+import historyManager from "./history-manager";
+import debugManager from "./debug-manager";
+import loggerManager from "./logger-manager";
 
 function init() {
     // history manager
@@ -49,6 +48,6 @@ function init() {
     loggerManager.getLogger().info("MainEventbus - Init : OK");
 };
 
-module.exports = {
+export default {
     init: init
 };
