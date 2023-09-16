@@ -37,32 +37,32 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "prestart": "node prepare-build.js",
-    "start": "concurrently -k \"build-electron -d\" \"wait-on build/.build-electron-done && electron .\"",
+    "start": "concurrently -k \"build-electron -d\" \"wait-on build/.build-electron-done && electron . --dev\"",
     "predist": "node prepare-build.js",
     "dist": "concurrently -k \"build-electron -d\" \"wait-on build/.build-electron-done && electron-builder\""
   },
   "devDependencies": {
     "build-electron": "^1.0.5",
-    "concurrently": "^8.2.0",
-    "electron": "^26.0.0",
-    "electron-builder": "^24.6.3",
-    "wait-on": "^7.0.1",
-    "fs-extra": "^11.1.1"
+    "concurrently": "^8.2.1",
+    "electron": "^26.2.1",
+    "electron-builder": "^24.6.4",
+    "fs-extra": "^11.1.1",
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "dayjs": "^1.11.9",
     "download": "^8.0.0",
     "easy-auto-launch": "^6.0.2",
     "htmlparser2": "^9.0.0",
-    "i18next": "^23.4.4",
+    "i18next": "^23.5.1",
     "i18next-electron-language-detector": "^0.0.10",
-    "i18next-fs-backend": "^2.1.5",
+    "i18next-fs-backend": "^2.2.0",
     "log4js": "^6.9.1",
     "md5-file": "^5.0.0",
     "mitt": "^3.0.1",
     "progressbar.js": "^1.1.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4",
-    "wallpaper": "^7.0.0"
+    "wallpaper": "^6.1.1"
   }
 }
