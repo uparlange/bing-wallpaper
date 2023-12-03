@@ -176,11 +176,13 @@ function fetchPage(url) {
     });
 };
 
-function applyWallpaper(path) {
+function applyWallpaper(filePath) {
     return new Promise((resolve, reject) => {
-        loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + path + "'");
-        setWallpaper(path).then(() => {
-            resolve(path);
+        loggerManager.getLogger().info("WallpaperManager - Set wallpaper '" + filePath + "'");
+        setWallpaper(filePath).then(() => {
+            resolve(filePath);
+        }).catch((err) => {
+            resolve(filePath);
         });
     });
 };
@@ -248,19 +250,26 @@ function setExternalWallpaper(source) {
     }
 };
 
-function setUserWallpaper(path) {
+function setUserWallpaper(filePath) {
     loggerManager.getLogger().info("WallpaperManager - Set " + USER_SOURCE.toUpperCase() + " Wallpaper");
     const finalizeSetUserWallpaper = (imagePath) => {
         loggerManager.getLogger().info("WallpaperManager - Apply " + USER_SOURCE.toUpperCase() + " Wallpaper");
         wallpaperPath = imagePath;
         completeApplyWallpaper();
     };
-    if (path != null) {
-        copyFile(path, USER_WALLPAPER_PATH).then((imagePath) => {
+    if (filePath != null) {
+        copyFile(filePath, USER_WALLPAPER_PATH).then((imagePath) => {
             finalizeSetUserWallpaper(imagePath);
         });
     } else {
-        finalizeSetUserWallpaper(USER_WALLPAPER_PATH);
+        if (!fs.existsSync(USER_WALLPAPER_PATH)) {
+            const defaultWallpaperPath = path.join(__dirname, "resources/", "images", "default.jpg");
+            copyFile(defaultWallpaperPath, USER_WALLPAPER_PATH).then((imagePath) => {
+                finalizeSetUserWallpaper(imagePath);
+            });
+        } else {
+            finalizeSetUserWallpaper(USER_WALLPAPER_PATH)
+        }
     }
 };
 
@@ -270,13 +279,7 @@ function checkWallpaper() {
     if (source != null) {
         setSource(source.name);
     } else {
-        fs.access(USER_WALLPAPER_PATH, fs.constants.F_OK, (err) => {
-            if (err) {
-                copyFile(wallpaperPath, USER_WALLPAPER_PATH);
-                setSource(USER_SOURCE);
-                setSource(BING_SOURCE);
-            }
-        });
+        setUserWallpaper();
     }
 };
 
@@ -289,8 +292,8 @@ function init() {
         loggerManager.getLogger().info("WallpaperManager - Online '" + onLine + "'");
         checkWallpaper();
     });
-    getWallpaper().then((path) => {
-        wallpaperPath = path;
+    getWallpaper().then((filePath) => {
+        wallpaperPath = filePath;
         checkWallpaper();
         loggerManager.getLogger().info("WallpaperManager - Init : OK");
     }).catch((err) => {
